@@ -1,6 +1,8 @@
 ///
-/// @Author Champlain Marius Bakop
+/// @Author Champlain Marius Bakop<br>
+/// 
 /// @email champlainmarius20@gmail.com
+/// 
 /// @github ChamplainLeCode
 ///
 ///
@@ -11,6 +13,13 @@
 library karee_core.route;
 
 import 'package:flutter/cupertino.dart' as cupertino;
+import 'package:flutter/material.dart';
+import 'package:karee_core/src/constances/constances.dart' show KareeConstants;
+import 'package:karee_core/src/errors/errors_solutions.dart' show KareeErrorCode;
+import 'package:karee_core/src/errors/exceptions/no_action_found_error.dart';
+import 'package:karee_core/src/errors/exceptions/no_route_found_error.dart';
+import 'package:karee_core/src/routes/internal_route.dart';
+import 'package:karee_core/src/widgets/karee_router_error_widget.dart';
 import '../screens/screens.dart' show screens;
 import '../controllers/controller.dart';
 
@@ -41,7 +50,7 @@ class Route {
   static Map<String, dynamic> routeMap = {};
 
   static void on(String s, dynamic action) {
-    assert(s != null && action != null);
+    assert(action != null);
     routeMap[s] = action;
   }
 }
@@ -51,20 +60,24 @@ class Route {
 /// Can be use for application navigation, or to request data.
 doRouting(String control, String method, dynamic params) {
   try {
-    if (ControllerReflectable.reflectors[control].hasReflectee) {
+    var controllerInstance = ControllerReflectable.reflectors[control];
+    if ( controllerInstance?.hasReflectee ?? false) {
       if (params is List) {
-        return ControllerReflectable.reflectors[control].invoke(method, params);
+        return controllerInstance?.invoke(method, params);
       } else {
         if (params == null) {
-          return ControllerReflectable.reflectors[control].invoke(method, []);
+          return controllerInstance?.invoke(method, []);
         }
-        return ControllerReflectable.reflectors[control]
-            .invoke(method, [params]);
+        return controllerInstance?.invoke(method, [params]);
       }
     }
   } catch (ex, stack) {
     print(ex);
-    print(stack);
+    KareeRouter.goto('__karee_internal__error__', parameter: {
+          #title: (ex as dynamic).message,
+          #stack: stack,
+          #env: (params == null ? [] : params is List ? params : [])..reversed.toList()..addAll([control, method]),
+          #errorCode: KareeErrorCode.NO_ROUTE_FOUND});
   }
 }
 
@@ -80,34 +93,58 @@ doRouting(String control, String method, dynamic params) {
 ///
 ///
 class KareeRouter {
-  static cupertino.BuildContext context;
+  static final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
   static dynamic goto(String routeName, {dynamic parameter}) {
     dynamic action = Route.routeMap[routeName];
-    if (action != null) {
-      if (action is Function) {
-        if (parameter == null) {
-          return action();
-        } else
-          return action(parameter);
-      } else if (action is String) {
-        List<String> li = action.split('@');
-        if (li.length == 2) {
-          String controllerName = li[0];
-          String methodName = li[1];
-          return doRouting(controllerName, methodName, parameter);
+    try{
+      if (action != null) {
+        if (action is Function) {
+          if (parameter == null) {
+            return action();
+          } else
+            return action(parameter);
+        } else if (action is String) {
+          List<String> li = action.split('@');
+          if (li.length == 2) {
+            String controllerName = li[0];
+            String methodName = li[1];
+            return doRouting(controllerName, methodName, parameter);
+          }
         }
+        throw NoActionFoundError(routeName, parameter);
+      } else {
+        throw NoRouteFoundError(routeName, parameter);
+        // cupertino.Navigator.push(ctxt, launchErrorPage);
+        // print('No action for this route');
       }
-    } else {
-      print('No action for this route');
+    } catch(e, st){
+        // rethrow;
+      if(e is NoActionFoundError){
+        goto(KareeConstants.KAREE_ERROR_PATH, parameter: {
+          #title: e.message,
+          #stack: st,
+          #env: [routeName, parameter],
+          #errorCode: KareeErrorCode.NO_ROUTE_FOUND});
+      }else if( e is NoRouteFoundError ){
+        goto(KareeConstants.KAREE_ERROR_PATH, parameter: {
+          #title: e.message,
+          #stack: st,
+          #env: [routeName, if(parameter != null)parameter],
+          #errorCode: KareeErrorCode.NO_ROUTE_FOUND});
+
+      }
     }
   }
 
   ///
   /// General router for application. Overload by Karee to override default navigator
   ///
-  static get getRouter => (cupertino.RouteSettings rs) => appRoute(rs);
+  static get getRouter => (cupertino.RouteSettings rs) {
+    
+    return appRoute(rs);
 
+  };
   static cupertino.Route<dynamic> appRoute(cupertino.RouteSettings settings) {
     try {
       return cupertino.PageRouteBuilder(
@@ -134,29 +171,47 @@ class KareeRouter {
   /// isInitial to `true`
   ///
   static cupertino.Widget initialScreen() {
-    return screens
-        .firstWhere((routeItem) => routeItem[#initial] ?? false)[#screen]
-        ?.call();
+    try{
+      
+      return screens
+          .firstWhere((routeItem) => routeItem[#initial] ?? false)[#screen]
+          ?.call();
+     }catch(e, st){
+       return KareeRouterErrorWidget('No Initial Screen found', st, KareeErrorCode.NO_INITIAL_SCREEN, [""]);
+     }
   }
 
   ///
   /// This function return the screen view from its name
   ///
-  static cupertino.Widget componentForRouteName(String s) =>
-      screens.firstWhere((routeItem) => routeItem[#name] == s)['screen'];
+  static cupertino.Widget componentForRouteName(String s) {
+    try{
+      final scr = screens.firstWhere(
+        (routeItem) {
+          print("\n### Screen name = ${routeItem[#name]}, Widget = $routeItem match ? = $s");
+          return routeItem[#name] == s;
+        },
+        orElse: () => {#screen: null}
+      )['screen' as Symbol];
+      return scr;
+    }catch(e,st){
+      return KareeRouterErrorWidget('No Screen found with name `$s`', st, KareeErrorCode.SCREEN_NOT_FOUND, [s]);
+    }
+  }
 
   ///
   /// Implementation of navigator to goback to previous context
   ///
-  static goBack(cupertino.BuildContext context) {
-    cupertino.Navigator.of(context).pop(true);
+  static goBack([@Deprecated("The context is not necessary for this version, and will completely removed in 2.0.1") cupertino.BuildContext? context]) {
+    if(KareeRouter.navigatorKey.currentState!.canPop())
+        KareeRouter.navigatorKey.currentState!.pop(true);
   }
 
   ///
   /// Default Karee Router
   ///
   static router(cupertino.BuildContext context) {
-    KareeRouter.context = context;
+    launchInternalRoute();
     return appRoute;
   }
 }
@@ -166,7 +221,7 @@ class KareeRouter {
 ///
 class RouteTransition<T> extends cupertino.CupertinoPageRoute<T> {
   RouteTransition(
-      {cupertino.WidgetBuilder builder, cupertino.RouteSettings settings})
+      {required cupertino.WidgetBuilder builder, required cupertino.RouteSettings settings})
       : super(builder: builder, settings: settings, maintainState: true);
 
   @override

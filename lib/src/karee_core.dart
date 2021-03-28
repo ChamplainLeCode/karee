@@ -15,4 +15,10 @@ export './routes/Router.dart' show Route, KareeRouter, doRouting, RouteMode;
 export './screens/screens.dart' show screen, subscribeScreen;
 
 /// package for core widget
-export './widgets/karee_material_app.dart' show KareeMaterialApp;
+export './widgets/widget.dart' show KareeMaterialApp;
+
+/// package for enumerations and constances
+export './constances/constances.dart' show KareeInstanceProfile, KareeConstants;
+
+/// package for errors management in Karee
+export './errors/errors.dart' show ErrorContactAddress;
