@@ -242,6 +242,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "4.0.1"
+  karee_inject:
+    dependency: "direct main"
+    description:
+      path: "../karee_inject"
+      relative: true
+    source: path
+    version: "0.0.0"
   logging:
     dependency: transitive
     description:
@@ -326,13 +333,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "3.0.1"
-  screen_tracker:
-    dependency: "direct main"
-    description:
-      name: screen_tracker
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "2.0.0"
   shelf:
     dependency: transitive
     description:
