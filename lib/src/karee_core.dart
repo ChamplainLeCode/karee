@@ -22,3 +22,6 @@ export './constances/constances.dart' show KareeInstanceProfile, KareeConstants;
 
 /// package for errors management in Karee
 export './errors/errors.dart' show ErrorContactAddress;
+
+/// package for application configurations
+export './resources/app_config.dart' show loadAppConfig, readConfig;
