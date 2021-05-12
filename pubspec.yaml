@@ -13,7 +13,6 @@ dependencies:
   # screen_tracker: ^2.0.0
   karee_inject:
     path: ../karee_inject
-  reflectable: ^3.0.1
   yaml: ^3.1.0
 
 dev_dependencies:

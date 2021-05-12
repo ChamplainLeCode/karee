@@ -15,7 +15,7 @@ export './routes/Router.dart' show Route, KareeRouter, doRouting, RouteMode;
 export './screens/screens.dart' show screen, subscribeScreen;
 
 /// package for core widget
-export './widgets/widget.dart' show KareeMaterialApp;
+export './widgets/widget.dart' show KareeMaterialApp, RouterWidget;
 
 /// package for enumerations and constances
 export './constances/constances.dart' show KareeInstanceProfile, KareeConstants;

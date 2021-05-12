@@ -1,10 +1,30 @@
 import 'package:flutter/material.dart'
-    show BuildContext, Color, ErrorWidget, FlutterErrorDetails, GenerateAppTitle, Intent, Key, Locale, LocaleListResolutionCallback, LocaleResolutionCallback, LocalizationsDelegate, LogicalKeySet, MaterialApp, NavigatorObserver, StatelessWidget, ThemeData, ThemeMode, Widget, WidgetBuilder;
+    show
+        BuildContext,
+        Color,
+        ErrorWidget,
+        FlutterErrorDetails,
+        GenerateAppTitle,
+        Intent,
+        Key,
+        Locale,
+        LocaleListResolutionCallback,
+        LocaleResolutionCallback,
+        LocalizationsDelegate,
+        LogicalKeySet,
+        MaterialApp,
+        NavigatorObserver,
+        StatelessWidget,
+        ThemeData,
+        ThemeMode,
+        Widget,
+        WidgetBuilder;
 import 'package:karee_core/src/errors/error_contact_address.dart';
 import 'package:karee_core/src/errors/errors_solutions.dart';
 import 'package:karee_core/src/widgets/karee_router_error_widget.dart';
 import '../routes/Router.dart' show KareeRouter;
 import 'package:karee_core/src/constances/constances.dart' show KareeInstanceProfile;
+
 ///
 /// @Author Champlain Marius Bakop
 /// @Email champlainmarius20@gmail.com
@@ -65,25 +85,20 @@ class KareeMaterialApp extends StatelessWidget {
       this.debugShowCheckedModeBanner = true,
       this.shortcuts,
       this.profile = KareeInstanceProfile.development,
-      this.errorContactAddress}){
-        
-        assert(profile == KareeInstanceProfile.development || profile == KareeInstanceProfile.production && errorContactAddress != null);
-        
-        KareeMaterialApp.globalProfile = profile;
-        KareeMaterialApp.globalErrorContactAddress = errorContactAddress;
+      this.errorContactAddress}) {
+    assert(profile == KareeInstanceProfile.development ||
+        profile == KareeInstanceProfile.production && errorContactAddress != null);
 
-      }
+    KareeMaterialApp.globalProfile = profile;
+    KareeMaterialApp.globalErrorContactAddress = errorContactAddress;
+  }
 
   @override
-  Widget build(BuildContext context) {  
-    
-    ErrorWidget.builder = (FlutterErrorDetails detail){
-          return KareeRouterErrorWidget(
-            detail.summary.name, 
-            detail.stack, 
-            KareeErrorCode.NO_ROUTE_FOUND, 
-            detail.context!.getChildren().map((e) => e.name ?? '').toList());
-    };      
+  Widget build(BuildContext context) {
+    ErrorWidget.builder = (FlutterErrorDetails detail) {
+      return KareeRouterErrorWidget(detail.summary.name, detail.stack, KareeErrorCode.NO_ROUTE_FOUND,
+          detail.context!.getChildren().map((e) => e.name ?? '').toList());
+    };
     return MaterialApp(
       key: this.key,
       navigatorKey: KareeRouter.navigatorKey,

@@ -3,6 +3,7 @@ library karee_core.screens;
 
 import 'package:flutter/material.dart' as cupertino;
 import 'package:karee_core/src/constances/constances.dart' show KareeConstants;
+import 'package:karee_core/src/errors/errors_solutions.dart';
 import 'package:karee_core/src/widgets/karee_router_error_widget.dart';
 import '../routes/Router.dart';
 
@@ -23,8 +24,16 @@ void subscribeScreen(Map<Symbol, dynamic> screen) => screens.add(screen);
 ///
 void screen(String name, RouteMode mode,
     {dynamic parameter,
+    Symbol? routerName,
     RouteDirection direction = RouteDirection.LEFT_TO_RIGHT,
     cupertino.BuildContext? context}) {
+  assert((routerName != null && mode == RouteMode.NONE) || (routerName == null && mode != RouteMode.NONE));
+
+  /// Internal Routing using RouterWidget
+  if (routerName != null) {
+    doInternalRouting(routerName, name, parameter);
+    return;
+  }
   switch (mode) {
     case RouteMode.REPLACE:
       KareeRouter.navigatorKey.currentState?.pushReplacementNamed(name, arguments: parameter);
