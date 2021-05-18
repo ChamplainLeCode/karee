@@ -1,18 +1,16 @@
-library karee_core.configuration;
-
 import 'package:flutter/services.dart';
+import 'package:karee_core/karee_core.dart';
 import 'package:yaml/yaml.dart';
 
 late final YamlMap _appConfig;
 final Map<String, dynamic> appConfig = {};
 
 Future<void> loadAppConfig() async {
-  var stringConfig = await PlatformAssetBundle().loadString('resources/config/application.yaml');
+  var stringConfig = await PlatformAssetBundle().loadString(KareeConstants.kApplicationRessourceFile);
   _appConfig = loadYaml(stringConfig);
   _appConfig.forEach((key, value) {
     _loadYamlMap(key, value);
   });
-  print(appConfig);
 }
 
 void _loadYamlMap(String parentKey, YamlMap m) {

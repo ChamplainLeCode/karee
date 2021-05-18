@@ -1,19 +1,7 @@
-///
-/// @Author Champlain Marius Bakop<br>
-///
-/// @email champlainmarius20@gmail.com
-///
-/// @github ChamplainLeCode
-///
-///
-/// This library contains the set of tools used to manage navigation
-/// in Karee Application
-///
-
-library karee_core.route;
-
 import 'package:flutter/cupertino.dart' as cupertino;
 import 'package:flutter/material.dart';
+import '../errors/exceptions/widget_error.dart';
+import '../widgets/library.dart' show StatefulScreen, StatelessScreen;
 import '../constances/constances.dart' show KareeConstants;
 import '../errors/errors_solutions.dart' show KareeErrorCode;
 import '../errors/exceptions/no_action_found_error.dart';
@@ -21,12 +9,12 @@ import '../errors/exceptions/no_route_found_error.dart';
 import '../routes/internal_route.dart';
 import '../widgets/karee_router_error_widget.dart';
 import '../widgets/router_widget.dart';
-import '../screens/screens.dart' show screens;
+import '../screens/screens.dart' show screen, screens;
 import '../controllers/controller.dart';
 
 ///
+/// cash of RouterWidget mounted
 ///
-
 Map<Symbol, RouterWidgetState> _internalRouter = {};
 
 ///
@@ -37,7 +25,7 @@ Map<Symbol, RouterWidgetState> _internalRouter = {};
 /// RouteMode.PUSH: Used to add new navigation context on last one
 /// RouteMode.REPLACE: If you want to pop current context and add new one without make two calls KareeRouter.goBack and KareeRouter.goto
 
-enum RouteMode { REPLACE, PUSH, POP, EMPTY, NONE }
+enum RouteMode { REPLACE, PUSH, EMPTY, NONE }
 
 ///
 /// RouteDirection: Not yet implemented, it will be use as screen entry direction
@@ -61,8 +49,17 @@ class Route {
   }
 }
 
+/// When a new Router Widget is added in Flutter tree, it is automatically registered
+/// available internal router cache
 void subscribeRouterWidget(Symbol name, RouterWidgetState state) => _internalRouter[name] = state;
 
+/// When a new Router Widget is removed from Flutter tree, it is automatically unregistered
+/// available internal router cache
+void unsubscribeRouterWidget(Symbol name, RouterWidgetState state) {
+  _internalRouter.removeWhere((key, value) => key == name && value == state);
+}
+
+/// Function used to get router from cache buy it name
 RouterWidgetState? findRouterByName(
   Symbol name,
 ) {
@@ -73,29 +70,53 @@ RouterWidgetState? findRouterByName(
 }
 
 ///
+/// Use to perform internal routing.
 ///
-void doInternalRouting(Symbol routerName, String screenName, dynamic parameter) {
+/// see [RoutableWidget]
+/// see [RouterWidget]
+void doInternalRouting(Symbol routerName, dynamic screenName, dynamic param) {
   try {
     var router = findRouterByName(routerName);
 
     if (router == null) {
       throw Exception('Unable to find router with name ${routerName.toString()}');
     }
-    var widget = screens.firstWhere((routeItem) => routeItem[#name] == screenName)[#screen]?.call();
-    final RouteSettings settings = RouteSettings(
-      name: screenName,
-      arguments: parameter,
-    );
-    router.load(widget);
+    if (screenName is String || screenName is cupertino.Widget) {
+      var widget;
+      if (screenName is Widget) {
+        widget = screenName;
+      } else {
+        widget = screens.firstWhere((routeItem) => routeItem[#name] == screenName)[#screen]?.call();
+      }
+      if (widget is RoutableWidget) {
+        router.load(widget..onParam(param));
+        return;
+      }
+
+      throw NotRoutableWidgetException(routerName.toString(), widget.runtimeType);
+    } else {}
+  } on NotRoutableWidgetException catch (e, stack) {
+    KareeRouter.goto(KareeConstants.kareeErrorPath, parameter: {
+      #title: '${e.message}',
+      #stack: stack,
+      #env: (param == null
+          ? []
+          : param is List
+              ? param
+              : [])
+        ..reversed.toList()
+        ..addAll([screenName, routerName, e.widgetType]),
+      #errorCode: KareeErrorCode.NOT_ROUTABLE_WIDGET
+    });
   } on StateError catch (e, stack) {
     print(e);
-    KareeRouter.goto(KareeConstants.KAREE_ERROR_PATH, parameter: {
+    KareeRouter.goto(KareeConstants.kareeErrorPath, parameter: {
       #title: 'No screen found with name $screenName',
       #stack: stack,
-      #env: (parameter == null
+      #env: (param == null
           ? []
-          : parameter is List
-              ? parameter
+          : param is List
+              ? param
               : [])
         ..reversed.toList()
         ..addAll([screenName, routerName]),
@@ -103,16 +124,16 @@ void doInternalRouting(Symbol routerName, String screenName, dynamic parameter) 
     });
   } catch (ex, stack) {
     print(ex);
-    KareeRouter.goto(KareeConstants.KAREE_ERROR_PATH, parameter: {
+    KareeRouter.goto(KareeConstants.kareeErrorPath, parameter: {
       #title: (ex as dynamic).message,
       #stack: stack,
-      #env: (parameter == null
+      #env: (param == null
           ? []
-          : parameter is List
-              ? parameter
+          : param is List
+              ? param
               : [])
         ..reversed.toList()
-        ..addAll([screenName, routerName]),
+        ..addAll([screenName, '#' + routerName.toString().substring(8, routerName.toString().length - 3)]),
       #errorCode: KareeErrorCode.NO_ROUTE_FOUND
     });
   }
@@ -136,7 +157,7 @@ dynamic doRouting(String control, String method, dynamic params) {
     }
   } catch (ex, stack) {
     print(ex);
-    KareeRouter.goto('__karee_internal__error__', parameter: {
+    KareeRouter.goto(KareeConstants.kareeErrorPath, parameter: {
       #title: (ex as dynamic).message,
       #stack: stack,
       #env: (params == null
@@ -165,8 +186,11 @@ dynamic doRouting(String control, String method, dynamic params) {
 class KareeRouter {
   static final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
   static BuildContext? currentContext;
+  static String? currentRoute;
 
+  static dynamic lastArguments;
   static dynamic goto(String routeName, {dynamic parameter}) {
+    currentRoute = routeName;
     dynamic action = Route.routeMap[routeName];
     try {
       if (action != null) {
@@ -192,14 +216,14 @@ class KareeRouter {
     } catch (e, st) {
       // rethrow;
       if (e is NoActionFoundError) {
-        goto(KareeConstants.KAREE_ERROR_PATH, parameter: {
+        screen(KareeConstants.kareeErrorPath, RouteMode.PUSH, argument: {
           #title: e.message,
           #stack: st,
           #env: [routeName, parameter],
           #errorCode: KareeErrorCode.NO_ROUTE_FOUND
         });
       } else if (e is NoRouteFoundError) {
-        goto(KareeConstants.KAREE_ERROR_PATH, parameter: {
+        screen(KareeConstants.kareeErrorPath, RouteMode.PUSH, argument: {
           #title: e.message,
           #stack: st,
           #env: [routeName, if (parameter != null) parameter],
@@ -217,21 +241,50 @@ class KareeRouter {
       };
   static cupertino.Route<dynamic> appRoute(cupertino.RouteSettings settings) {
     try {
+      var widget = settings.name == null || settings.name == '/'
+          ? initialScreen()
+          : screens.firstWhere((routeItem) => routeItem[#name] == settings.name, orElse: () {
+              return {#screen: () => null};
+            })[#screen]?.call();
+      if (widget == null) {
+        throw NoRouteFoundError(settings.name, settings.arguments);
+      }
+
+      if (!(widget is StatelessScreen) && !(widget is StatefulScreen) && !(widget is RoutableWidget)) {
+        throw NotManagableWidgetException(widget);
+      }
+      if (settings.arguments != null) {
+        KareeRouter.lastArguments = settings.arguments;
+      }
       return cupertino.PageRouteBuilder(
-          settings: settings,
+          settings:
+              RouteSettings(name: KareeRouter.currentRoute, arguments: settings.arguments ?? KareeRouter.lastArguments),
           transitionDuration: Duration(milliseconds: 0),
           pageBuilder: (_, a1, a2) {
             // KareeRouter.currentContext = _;
-            return settings.name == null || settings.name == '/'
-                ? initialScreen()
-                : screens.firstWhere((routeItem) => routeItem[#name] == settings.name)[#screen]?.call();
+            return widget;
           });
-    } catch (e) {
-      return new RouteTransition(
-          builder: (_) {
-            return cupertino.Center(child: cupertino.Text("No Route found"));
-          },
-          settings: settings);
+    } on NoRouteFoundError catch (e, st) {
+      KareeRouter.lastArguments = [
+        settings.name!,
+        KareeRouter.currentRoute!,
+        if (settings.arguments != null) settings.arguments.toString()
+      ];
+      return cupertino.PageRouteBuilder(
+          transitionDuration: Duration(milliseconds: 0),
+          pageBuilder: (_, a1, a2) => KareeRouterErrorWidget('No screen found with name ${settings.name}', st,
+              KareeErrorCode.SCREEN_NOT_FOUND, KareeRouter.lastArguments));
+    } on NotManagableWidgetException catch (ex, st) {
+      KareeRouter.lastArguments = [
+        ex.screen.toString(),
+        settings.name!,
+        KareeRouter.currentRoute!,
+        if (settings.arguments != null) settings.arguments.toString()
+      ];
+      return cupertino.PageRouteBuilder(
+          transitionDuration: Duration(milliseconds: 0),
+          pageBuilder: (_, a1, a2) =>
+              KareeRouterErrorWidget(ex.message, st, KareeErrorCode.NOT_KAREE_SCREEN, KareeRouter.lastArguments));
     }
   }
 
@@ -268,13 +321,14 @@ class KareeRouter {
   static goBack(
       [@Deprecated("The context is not necessary for this version, and will completely removed in 2.0.1")
           cupertino.BuildContext? context]) {
-    if (KareeRouter.navigatorKey.currentState!.canPop()) KareeRouter.navigatorKey.currentState!.pop(true);
+    if (KareeRouter.navigatorKey.currentState!.canPop()) KareeRouter.navigatorKey.currentState!.pop();
   }
 
   ///
   /// Default Karee Router
   ///
   static router(cupertino.BuildContext context) {
+    KareeRouter.currentContext = context;
     launchInternalRoute();
     return appRoute;
   }

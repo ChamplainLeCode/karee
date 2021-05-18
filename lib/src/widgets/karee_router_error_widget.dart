@@ -2,15 +2,15 @@ import 'dart:async';
 
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
-import 'package:karee_core/src/constances/constances.dart' show KareeConstants, KareeInstanceProfile;
-import 'package:karee_core/src/errors/errors_solutions.dart';
-import 'package:karee_core/src/routes/Router.dart';
-import 'package:karee_core/src/screens/screens.dart';
-import 'package:karee_core/src/widgets/karee_material_app.dart';
-import 'package:karee_core/src/widgets/karee_router_default_error_widget.dart';
+import '../constances/library.dart' show KareeConstants, KareeInstanceProfile;
+import '../errors/errors_solutions.dart';
+import '../routes/Router.dart';
+import '../screens/screens.dart';
+import '../widgets/karee_material_app.dart';
+import '../widgets/karee_router_default_error_widget.dart';
+import './library.dart' show StatefulScreen, ScreenState;
 
-class KareeRouterErrorWidget extends StatefulWidget {
-
+class KareeRouterErrorWidget extends StatefulScreen {
   final String? _title;
   final StackTrace? _stack;
   final List<String>? env;
@@ -18,11 +18,11 @@ class KareeRouterErrorWidget extends StatefulWidget {
 
   KareeRouterErrorWidget([this._title, this._stack, this.errorCode, this.env]);
   @override
-  _KareeRouterErrorWidgetState createState() => _KareeRouterErrorWidgetState(this._title, this._stack, this.env, this.errorCode);
+  _KareeRouterErrorWidgetState createState() =>
+      _KareeRouterErrorWidgetState(this._title, this._stack, this.env, this.errorCode);
 }
 
-class _KareeRouterErrorWidgetState extends State<KareeRouterErrorWidget> with SingleTickerProviderStateMixin{
-
+class _KareeRouterErrorWidgetState extends ScreenState<KareeRouterErrorWidget> with SingleTickerProviderStateMixin {
   TabController? tabController;
 
   String? _title;
@@ -35,264 +35,209 @@ class _KareeRouterErrorWidgetState extends State<KareeRouterErrorWidget> with Si
   @override
   void initState() {
     tabController = TabController(length: 2, vsync: this);
-    if(kIsWeb)
-      print(_stack);
     super.initState();
   }
 
-
   Future<List<StackErrorEntry>> get loadStackTrace async {
     int i = 0;
-           
-        List<String> trace = _stack
-          .toString()
-          .split('\n');
-        if(trace.length>0)
-          return trace
-            .map((e){
-              if(e.length>0){
-                e = e.substring(e.indexOf(' ')).trim();
-              }
-              return new StackErrorEntry(e, i++);
-            })
-            .toList();
-        return [
-          StackErrorEntry("Error (path/package) ",i++)
-        ];
-    
+    List<String> trace = _stack?.toString().split('\n') ?? [];
+    if (trace.length > 0)
+      return trace.map((e) {
+        if (e.length > 0) {
+          e = kIsWeb ? e.trim() : e.substring(e.indexOf(' ')).trim();
+        }
+        return new StackErrorEntry(e, i++);
+      }).toList();
+    return [StackErrorEntry("Error (path/package) ", ++i)];
   }
 
   @override
-  Widget build(BuildContext context) {
-
-    if(KareeMaterialApp.globalProfile == KareeInstanceProfile.development)
-      return devErrorScreen();
+  Widget builder(BuildContext context) {
+    if (KareeMaterialApp.globalProfile == KareeInstanceProfile.development) return devErrorScreen();
     return prodErrorScreen();
   }
 
-  Widget prodErrorScreen(){
-    var prodErrorWidgetBuilder = screens
-          .lastWhere(
-              (entry) => entry[#name] == KareeConstants.KAREE_ERROR_SCREEN_NAME, 
-              orElse: () => {#screen: null}
-          )[#screen];
-    print('fetch = ${prodErrorWidgetBuilder!().runtimeType} widget = ${widget.runtimeType}');
-    if( 
-        prodErrorWidgetBuilder == null ||
-        prodErrorWidgetBuilder!().runtimeType == widget.runtimeType
-    )
-        return KareeRouterDefaultProdErrorWidget();
+  Widget prodErrorScreen() {
+    var prodErrorWidgetBuilder = screens.lastWhere((entry) => entry[#name] == KareeConstants.kareeErrorScreenName,
+        orElse: () => {#screen: null})[#screen];
+    if (prodErrorWidgetBuilder == null || prodErrorWidgetBuilder!().runtimeType == widget.runtimeType)
+      return KareeRouterDefaultProdErrorWidget();
 
-      return prodErrorWidgetBuilder();
+    return prodErrorWidgetBuilder();
   }
 
-  Widget devErrorScreen(){
+  Widget devErrorScreen() {
     var params = Map<Symbol, dynamic>.from((ModalRoute.of(context)?.settings.arguments ?? {}) as Map);
-    _title     = _title ?? params[#title];
-    _stack     = _stack ?? params[#stack];
-    env        = env ?? (params[#env] as List).map((e) => e.toString()).toList();
-    errorCode  = errorCode ?? params[#errorCode] ;
+    _title = _title ?? params[#title];
+    _stack = _stack ?? params[#stack];
+    env = env ?? (params[#env] as List).map((e) => e.toString()).toList();
+    errorCode = errorCode ?? params[#errorCode];
 
     return Scaffold(
-      appBar: PreferredSize(
-        child: Container(
-            decoration: BoxDecoration(
-              color: Color(0xFF2A2A2A),
-
-            ),
-            padding: EdgeInsets.only(
-              top: 30,
-              left: 20
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                Row(
+        appBar: PreferredSize(
+            child: Container(
+                decoration: BoxDecoration(
+                  color: Color(0xFF2A2A2A),
+                ),
+                padding: EdgeInsets.only(top: 30, left: 20),
+                child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
-                    TextButton(
-                      child: Icon(Icons.west_rounded, 
-                        size: 15,
-                        color: Colors.white,),
-                      onPressed: () => KareeRouter.goBack()
+                    Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          TextButton(
+                              child: Icon(
+                                Icons.west_rounded,
+                                size: 15,
+                                color: Colors.white,
+                              ),
+                              onPressed: () => KareeRouter.goBack()),
+                          Container(
+                            child: Text(
+                              "Exception",
+                              style: TextStyle(color: Color(0xFFD04C46), fontWeight: FontWeight.w400),
+                            ),
+                            padding: EdgeInsets.only(top: 15),
+                          )
+                        ]),
+                    SizedBox(height: 10),
+                    Text(
+                      _title ?? '',
+                      style: TextStyle(color: Color(0xFFA2AFA3), fontWeight: FontWeight.w400),
                     ),
-                    Container(
-                      child: Text("Exception",
-                        style: TextStyle(
-                          color: Color(0xFFD04C46),
-                          fontWeight: FontWeight.w400
-                        ),
-                      ),
-                      padding: EdgeInsets.only(top: 15),
-                    )
-                  ]
-                ),
-                SizedBox(height: 10),
-                Text(_title ?? '',
-                  style: TextStyle(
-                    color: Color(0xFFA2AFA3),
-                    fontWeight: FontWeight.w400
-                  ),
-                ),
-                SizedBox(height: 10),
-              ],
-            )
-          ),
-        preferredSize: Size.fromHeight(100)
-      ),
-      body: Column(
-        children: [
+                    SizedBox(height: 10),
+                  ],
+                )),
+            preferredSize: Size.fromHeight(100)),
+        body: Column(children: [
           Container(
             height: 40,
-            color: Colors.black87,//(0xFFEEEEEE),
+            color: Colors.black87, //(0xFFEEEEEE),
             child: TabBar(
               unselectedLabelStyle: TextStyle(color: Colors.white30),
               labelColor: Colors.white,
               indicatorColor: Colors.white,
-              tabs: [
-                Tab(
-                  text: 'Solution'
-                ),
-                Tab(
-                  text: 'All Frame'
-                )
-              ],
+              tabs: [Tab(text: 'Solution'), Tab(text: 'All Frame')],
               controller: tabController,
             ),
           ),
           Expanded(
-            child: TabBarView(
-                controller: tabController,
-                children: [
-                  Container(
-                    color: Colors.black87,
-                    child: SingleChildScrollView(
+              child: TabBarView(
+            controller: tabController,
+            children: [
+              Container(
+                  color: Colors.black87,
+                  child: SingleChildScrollView(
                       child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          Container(
-                            margin: EdgeInsets.only(top: 20, left: 20),
-                            child: Text("Environment", style: TextStyle(color: Colors.white38, fontWeight: FontWeight.bold, fontSize: 12)),
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      Container(
+                        margin: EdgeInsets.only(top: 20, left: 20),
+                        child: Text("Environment",
+                            style: TextStyle(color: Colors.white38, fontWeight: FontWeight.bold, fontSize: 12)),
+                      ),
+                      Card(
+                        elevation: 5,
+                        margin: EdgeInsets.only(left: 20, right: 20, top: 10),
+                        child: Container(
+                          alignment: Alignment.centerLeft,
+                          width: double.infinity,
+                          margin: EdgeInsets.only(left: 20, top: 5, bottom: 5),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: env
+                                    ?.map((e) => RichText(
+                                            text: TextSpan(
+                                                style: TextStyle(color: Colors.white38),
+                                                text: '${(env ?? []).indexOf(e) + 1}. ',
+                                                children: [
+                                              TextSpan(
+                                                text: "\" $e \"",
+                                                style: TextStyle(color: Colors.white),
+                                              )
+                                            ])))
+                                    .toList() ??
+                                [],
                           ),
-                          Card(
-                            elevation: 5,
-                            margin: EdgeInsets.only(left: 20, right: 20, top: 10),
-                            child: Container(
-                              alignment: Alignment.centerLeft,
-                              width: double.infinity,
-                              margin: EdgeInsets.only(
-                                left: 20,
-                                top: 5,
-                                bottom: 5
-                              ),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                children: 
-                                  env
-                                  ?.map((e) => RichText(
-                                    text: TextSpan(
-                                      style: TextStyle(color: Colors.white38),
-                                      text: '${(env??[]).indexOf(e)+1}. ',
-                                      children: [
-                                        TextSpan(
-                                          text: "\" $e \"",
-                                          style: TextStyle(color: Colors.white),
-                                        )
-                                      ]
-                                    )
-                                  ))
-                                  .toList() ?? [],
-                              ),
-                            ),
-                            color: Colors.white10,
+                        ),
+                        color: Colors.white10,
+                      ),
+                      Container(
+                        margin: EdgeInsets.only(top: 20, left: 20),
+                        child: Text("Proposal",
+                            style: TextStyle(color: Colors.white38, fontWeight: FontWeight.bold, fontSize: 12)),
+                      ),
+                      errorSolution[errorCode]?.call(context, env as List) ?? Container()
+                    ],
+                  ))),
+              SizedBox(
+                  height: 100,
+                  child: FutureBuilder<List<StackErrorEntry>>(
+                    future: loadStackTrace,
+                    builder: (context, snapshot) {
+                      if (snapshot.hasError)
+                        return Center(
+                          child: TextButton(
+                            child: Text('Error occurs ${snapshot.error}'),
+                            onPressed: null,
                           ),
-                          Container(
-                            margin: EdgeInsets.only(top: 20, left: 20),
-                            child: Text("Proposal", style: TextStyle(color: Colors.white38, fontWeight: FontWeight.bold, fontSize: 12)),
-                          ),
-                          errorSolution[errorCode]?.call(context) ?? Container()
-                        ],
-                      )
-                    )
-                  ),
-                  SizedBox(
-                    height: 100,
-                    child: FutureBuilder<List<StackErrorEntry>>(
-                          future: loadStackTrace,
-                          builder: (context, snapshot) {
-                            if(snapshot.hasError)
-                              return Center(
-                                child: TextButton(
-                                  child: Text('Error occurs'),
-                                  onPressed: null,
-                                ),
-                              );
-                            if(!snapshot.hasData)
-                              return Center(
-                                child: CircularProgressIndicator(),
-                              );
-                            
-                            return ListView.builder(
-                              itemCount: snapshot.data?.length ?? 0,
-                              itemBuilder: (ctx, index) {
-                                
-                                StackErrorEntry? item = snapshot.data?.elementAt(index);
-                                return Container(
-                                  height: 60,
-                                  color: (item?.index ?? 0 ) %2 == 0 ? Colors.transparent : Colors.black12,
-                                  child: ListTile(
-                                    title: Row(
-                                      children: [
-                                        Container(
-                                            padding: EdgeInsets.all(3),
-                                            margin: EdgeInsets.only(right: 5),
-                                            decoration: BoxDecoration(
-                                              color: Color(0xFF2A2A2A),
-                                              borderRadius: BorderRadius.circular(5)
-                                            ),
-                                            child: Text('${item?.index}', style: TextStyle(color: Colors.white, fontSize: 10))),
-                                        Expanded(
-                                          child: Container( child: Text(item?.title ?? '', style: TextStyle(color: Colors.black87, fontSize: 12))))
-                                      ]),
-                                    subtitle: Text(item?.path ?? '', style: TextStyle(fontSize: 10)),
-                                  )
-                                  // child: Text('kdkd $index'),
-                              );
-                              }
-                            );
-                          },
-                        )
-                      
-                  )
-                ],
-              )
-          )
-        ]
-      )
-    );
-  }
+                        );
+                      if (!snapshot.hasData)
+                        return Center(
+                          child: CircularProgressIndicator(),
+                        );
 
+                      return ListView.builder(
+                          itemCount: snapshot.data?.length ?? 0,
+                          itemBuilder: (ctx, index) {
+                            StackErrorEntry? item = snapshot.data?.elementAt(index);
+                            return Container(
+                                height: 60,
+                                color: (item?.index ?? 0) % 2 == 0 ? Colors.transparent : Colors.black12,
+                                child: ListTile(
+                                  title: Row(children: [
+                                    Container(
+                                        padding: EdgeInsets.all(3),
+                                        margin: EdgeInsets.only(right: 5),
+                                        decoration: BoxDecoration(
+                                            color: Color(0xFF2A2A2A), borderRadius: BorderRadius.circular(5)),
+                                        child: Text('${item?.index}',
+                                            style: TextStyle(color: Colors.white, fontSize: 10))),
+                                    Expanded(
+                                        child: Container(
+                                            child: Text(item?.title ?? '',
+                                                style: TextStyle(color: Colors.black87, fontSize: 12))))
+                                  ]),
+                                  subtitle: Text(item?.path ?? '', style: TextStyle(fontSize: 10)),
+                                )
+                                // child: Text('kdkd $index'),
+                                );
+                          });
+                    },
+                  ))
+            ],
+          ))
+        ]));
+  }
 }
 
-class StackErrorEntry{
+class StackErrorEntry {
   String? title, path;
   int? index;
 
-  StackErrorEntry(String e, this.index){
-    if(e.length > 0){
+  StackErrorEntry(String e, this.index) {
+    if (e.length > 0) {
       int indexEndTitle = e.indexOf('(');
-      this.title = e.substring(0, indexEndTitle);
-      this.path = e.substring(indexEndTitle+1, e.lastIndexOf(')'));
+      int? lastIndex;
+      this.title = kIsWeb ? e.substring((lastIndex = e.lastIndexOf(' '))) : e.substring(0, indexEndTitle);
+      this.path = kIsWeb ? e.substring(0, lastIndex).trim() : e.substring(indexEndTitle + 1, e.lastIndexOf(')'));
     }
   }
 
-  String toString() => {
-    #title: title,
-    #path: path,
-    #index: index
-  }.toString();
+  String toString() => {#title: title, #path: path, #index: index}.toString();
 }

@@ -3,15 +3,16 @@ import './../routes/Router.dart';
 
 class RouterWidget extends StatefulWidget {
   final Symbol name;
+  final Widget initial;
 
-  RouterWidget({required this.name});
+  RouterWidget({required this.name, required this.initial});
 
   @override
   RouterWidgetState createState() => _RouterWidgetState();
 }
 
 abstract class RouterWidgetState extends State<RouterWidget> {
-  load(Widget child);
+  load(RoutableWidget child);
 }
 
 class _RouterWidgetState extends RouterWidgetState {
@@ -21,8 +22,14 @@ class _RouterWidgetState extends RouterWidgetState {
     super.initState();
   }
 
+  @override
+  dispose() {
+    unsubscribeRouterWidget(widget.name, this);
+    super.dispose();
+  }
+
   Widget? child;
-  void load(Widget child) {
+  void load(RoutableWidget child) {
     this.child = child;
     setState(() {});
   }
@@ -30,8 +37,25 @@ class _RouterWidgetState extends RouterWidgetState {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: Colors.red,
-      child: child ?? Container(),
+      // color: Colors.red,
+      constraints: BoxConstraints(),
+      child: child ?? widget.initial,
     );
+  }
+}
+
+abstract class RoutableWidget extends StatelessWidget {
+  late final dynamic? _parameter;
+  void onParam(Object? parameters) {
+    _parameter = parameters;
+  }
+
+  Widget builder(BuildContext context, dynamic parameter);
+
+  @override
+  Widget build(BuildContext context) {
+    return StatefulBuilder(builder: (ctx, st) {
+      return builder(context, _parameter);
+    });
   }
 }
