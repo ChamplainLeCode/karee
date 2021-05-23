@@ -1,18 +1,14 @@
 /// `Karee Core` Base library for Karee
 library karee_core;
 
-/// package for Screen Annotation management
-export 'package:screen_tracker/screen_tracker.dart' show Screen;
+export './constances/library.dart';
 
-/// package for Controller management
-export './controllers/controller.dart'
-    show ControllerReflectable, Controller, subscribeController;
+export './controllers/controller.dart';
 
-/// package for Route & Router management
-export './routes/Router.dart' show Route, KareeRouter, doRouting, RouteMode;
+export './errors/library.dart';
 
-/// package for screen management
-export './screens/screens.dart' show screen, subscribeScreen;
+export './observables/library.dart' show Of, Observer;
 
-/// package for core widget
-export './widgets/karee_material_app.dart' show KareeMaterialApp;
+export './resources/library.dart' show loadAppConfig, readConfig;
+
+export './screens/library.dart' show subscribeScreen;

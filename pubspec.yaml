@@ -1,21 +1,24 @@
 name: karee_core
 description: Karee core files, Karee core represents a set of amazing libraries, that work together to offer very powerful MVC experience in Flutter App Development
-version: 1.0.0
+version: 2.0.0
 homepage: https://github.com/ChamplainLeCode/karee_core
-
+publish_to: 'none'
 environment:
-  sdk: ">=2.7.0 <3.0.0"
-  flutter: ">=1.17.0 <2.0.0"
+  sdk: '>=2.12.0 <3.0.0'
+  flutter: ">=1.17.0"
 
 dependencies:
   flutter:
     sdk: flutter
-  screengen: ^1.0.1
-  screen_tracker: ^1.0.1
-  reflectable: ^2.2.0
+  # screen_tracker: ^2.0.0
+  karee_inject:
+    path: ../karee_inject
+  yaml: ^3.1.0
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
 
 flutter:
+  assets:
+    - assets/
