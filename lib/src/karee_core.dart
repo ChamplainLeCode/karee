@@ -12,3 +12,5 @@ export './observables/library.dart' show Of, Observer;
 export './resources/library.dart' show loadAppConfig, readConfig;
 
 export './screens/library.dart' show subscribeScreen;
+
+export './utils/app_language.dart';

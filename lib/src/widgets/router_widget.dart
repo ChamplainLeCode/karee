@@ -37,7 +37,6 @@ class _RouterWidgetState extends RouterWidgetState {
   @override
   Widget build(BuildContext context) {
     return Container(
-      // color: Colors.red,
       constraints: BoxConstraints(),
       child: child ?? widget.initial,
     );
@@ -54,8 +53,6 @@ abstract class RoutableWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return StatefulBuilder(builder: (ctx, st) {
-      return builder(context, _parameter);
-    });
+    return builder(context, _parameter);
   }
 }

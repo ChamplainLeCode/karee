@@ -233,9 +233,14 @@ class StackErrorEntry {
   StackErrorEntry(String e, this.index) {
     if (e.length > 0) {
       int indexEndTitle = e.indexOf('(');
+      int indexBeginTile = e.lastIndexOf(')');
       int? lastIndex;
-      this.title = kIsWeb ? e.substring((lastIndex = e.lastIndexOf(' '))) : e.substring(0, indexEndTitle);
-      this.path = kIsWeb ? e.substring(0, lastIndex).trim() : e.substring(indexEndTitle + 1, e.lastIndexOf(')'));
+      this.title = kIsWeb
+          ? e.substring((lastIndex = e.lastIndexOf(' ')))
+          : e.substring(0, indexEndTitle > 0 ? indexEndTitle : e.length);
+      this.path = kIsWeb
+          ? e.substring(0, lastIndex).trim()
+          : e.substring(indexEndTitle + 1, indexBeginTile > 0 ? indexBeginTile : e.length);
     }
   }
 

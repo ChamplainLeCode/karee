@@ -15,6 +15,7 @@ import 'package:flutter/material.dart'
         TextSpan,
         TextStyle,
         Widget;
+import '../constances/constances.dart';
 import '../routes/Router.dart' show RouteMode;
 
 enum KareeErrorCode {
@@ -24,7 +25,8 @@ enum KareeErrorCode {
   GENERAL_ERROR,
   NOT_ROUTABLE_WIDGET,
   NOT_KAREE_SCREEN,
-  BAD_USE_OF_ROUTABLE_WIDGET
+  BAD_USE_OF_ROUTABLE_WIDGET,
+  NO_TRANSLATION_FILE
 }
 var errorSolution = <KareeErrorCode, Widget Function(BuildContext ct, List env)>{
   KareeErrorCode.NO_INITIAL_SCREEN: (BuildContext context, List<dynamic>? environment) => Card(
@@ -292,6 +294,46 @@ var errorSolution = <KareeErrorCode, Widget Function(BuildContext ct, List env)>
                         text: "   StatefulScreen  ",
                         style: TextStyle(color: Colors.teal, fontWeight: FontWeight.normal)),
                   ])),
+            ],
+          ),
+        ),
+        color: Colors.white10,
+      ),
+  KareeErrorCode.NO_TRANSLATION_FILE: (BuildContext context, List<dynamic>? environment) => Card(
+        elevation: 1,
+        margin: EdgeInsets.only(left: 20, right: 20, top: 10),
+        child: Container(
+          alignment: Alignment.centerLeft,
+          width: MediaQuery.of(context).size.width,
+          padding: EdgeInsets.only(left: 10, top: 5, bottom: 5, right: 10),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              RichText(
+                  textAlign: TextAlign.justify,
+                  text: TextSpan(
+                      style: TextStyle(
+                        fontSize: 12,
+                        fontWeight: FontWeight.w300,
+                      ),
+                      children: [
+                        TextSpan(
+                          text: "Try to add ",
+                          style: TextStyle(color: Colors.white),
+                        ),
+                        TextSpan(
+                          text: "${environment?.first} ",
+                          style: TextStyle(color: Colors.deepOrange),
+                        ),
+                        TextSpan(
+                          text: "into translation directory ",
+                          style: TextStyle(color: Colors.white),
+                        ),
+                        TextSpan(
+                          text: "${KareeConstants.kApplicationLocalizationRessourcDir}",
+                          style: TextStyle(color: Colors.deepOrange),
+                        ),
+                      ])),
             ],
           ),
         ),
