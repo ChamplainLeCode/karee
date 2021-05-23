@@ -1,8 +1,9 @@
-/// `Karee Core Screen` Library that manages screens in Karee Core
-library karee_core.screens;
-
 import 'package:flutter/material.dart' as cupertino;
+import 'package:flutter/widgets.dart';
+import 'package:karee_core/karee_core.dart';
 import 'package:karee_core/src/constances/constances.dart' show KareeConstants;
+import 'package:karee_core/src/errors/errors_solutions.dart';
+import 'package:karee_core/src/errors/exceptions/widget_error.dart';
 import 'package:karee_core/src/widgets/karee_router_error_widget.dart';
 import '../routes/Router.dart';
 
@@ -10,7 +11,7 @@ import '../routes/Router.dart';
 /// karee application.
 ///
 List<Map<Symbol, dynamic>> screens = [
-  {#name: KareeConstants.KAREE_ERROR_SCREEN_NAME, #screen: () => KareeRouterErrorWidget()}
+  {#name: KareeConstants.kareeErrorScreenName, #screen: () => KareeRouterErrorWidget()}
 ];
 
 /// subscribeScreen Function: Function use by application to subscribes their
@@ -21,24 +22,82 @@ void subscribeScreen(Map<Symbol, dynamic> screen) => screens.add(screen);
 /// screen Function: Function use by core KareeRouter to launch screen on
 /// navigate
 ///
-void screen(String name, RouteMode mode,
-    {dynamic parameter,
+void screen(dynamic screen, RouteMode mode,
+    {dynamic argument,
+    Symbol? routerName,
     RouteDirection direction = RouteDirection.LEFT_TO_RIGHT,
     cupertino.BuildContext? context}) {
-  switch (mode) {
-    case RouteMode.REPLACE:
-      KareeRouter.navigatorKey.currentState?.pushReplacementNamed(name, arguments: parameter);
-      break;
-    case RouteMode.POP:
-      KareeRouter.navigatorKey.currentState?.pop(name);
-      break;
-    case RouteMode.PUSH:
-      KareeRouter.navigatorKey.currentState?.pushNamed(name, arguments: parameter);
-      break;
-    case RouteMode.EMPTY:
-      KareeRouter.navigatorKey.currentState?.pushNamedAndRemoveUntil(name, (_) => false, arguments: parameter);
-      break;
-    default:
-      KareeRouter.navigatorKey.currentState?.pop(false);
+  try {
+    if (!(screen is String) &&
+        !(screen is StatelessScreen) &&
+        !(screen is StatefulScreen) &&
+        !(screen is RoutableWidget)) {
+      throw NotManagableWidgetException(screen);
+    }
+    if (routerName != null && mode != RouteMode.NONE) {
+      throw BadUseOfRouterWidgetException(routerName, mode);
+    }
+
+    /// Internal Routing using RouterWidget
+    if (routerName != null) {
+      doInternalRouting(routerName, screen, argument);
+      return;
+    }
+    switch (mode) {
+      case RouteMode.REPLACE:
+        if (screen is String) {
+          KareeRouter.navigatorKey.currentState?.pushReplacementNamed(screen, arguments: argument);
+        } else {
+          var settings = RouteSettings(
+            arguments: argument,
+          );
+          KareeRouter.navigatorKey.currentState
+              ?.pushReplacement(cupertino.MaterialPageRoute(builder: (_) => screen, settings: settings));
+        }
+        break;
+      case RouteMode.PUSH:
+        if (screen is String) {
+          KareeRouter.navigatorKey.currentState?.pushNamed(screen, arguments: argument);
+        } else {
+          var settings = RouteSettings(
+            arguments: argument,
+          );
+          KareeRouter.navigatorKey.currentState
+              ?.push(cupertino.MaterialPageRoute(builder: (_) => screen, settings: settings));
+        }
+        break;
+      case RouteMode.EMPTY:
+        if (screen is String) {
+          KareeRouter.navigatorKey.currentState?.pushNamedAndRemoveUntil(screen, (_) => false, arguments: argument);
+        } else {
+          var settings = RouteSettings(
+            arguments: argument,
+          );
+          KareeRouter.navigatorKey.currentState?.pushAndRemoveUntil(
+              cupertino.MaterialPageRoute(builder: (_) => screen, settings: settings), (route) => false);
+        }
+        break;
+      default:
+        KareeRouter.navigatorKey.currentState?.pop(false);
+    }
+  } on NotManagableWidgetException catch (ex, st) {
+    KareeRouter.goto(KareeConstants.kareeErrorPath, parameter: {
+      #title: ex.message,
+      #stack: st,
+      #env: [screen, KareeRouter.currentRoute!, mode, argument],
+      #errorCode: KareeErrorCode.NOT_KAREE_SCREEN
+    });
+  } on BadUseOfRouterWidgetException catch (ex, st) {
+    KareeRouter.goto(KareeConstants.kareeErrorPath, parameter: {
+      #title: ex.message,
+      #stack: st,
+      #env: [
+        '#${routerName.toString().substring(8, routerName.toString().length - 2)}',
+        mode,
+        KareeRouter.currentRoute!,
+        argument
+      ],
+      #errorCode: KareeErrorCode.BAD_USE_OF_ROUTABLE_WIDGET
+    });
   }
 }

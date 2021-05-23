@@ -1,22 +1,40 @@
 import 'package:flutter/material.dart'
-    show BuildContext, Color, ErrorWidget, FlutterErrorDetails, GenerateAppTitle, Intent, Key, Locale, LocaleListResolutionCallback, LocaleResolutionCallback, LocalizationsDelegate, LogicalKeySet, MaterialApp, NavigatorObserver, StatelessWidget, ThemeData, ThemeMode, Widget, WidgetBuilder;
-import 'package:karee_core/src/errors/error_contact_address.dart';
-import 'package:karee_core/src/errors/errors_solutions.dart';
-import 'package:karee_core/src/widgets/karee_router_error_widget.dart';
+    show
+        Action,
+        BuildContext,
+        Color,
+        ErrorWidget,
+        FlutterErrorDetails,
+        GenerateAppTitle,
+        GlobalKey,
+        Intent,
+        Key,
+        Locale,
+        LocaleListResolutionCallback,
+        LocaleResolutionCallback,
+        LocalizationsDelegate,
+        LogicalKeySet,
+        MaterialApp,
+        NavigatorObserver,
+        ScaffoldMessengerState,
+        StatelessWidget,
+        ThemeData,
+        ThemeMode,
+        Widget,
+        WidgetBuilder;
+import '../errors/library.dart';
+import '../widgets/library.dart';
 import '../routes/Router.dart' show KareeRouter;
-import 'package:karee_core/src/constances/constances.dart' show KareeInstanceProfile;
+import '../constances/library.dart' show KareeInstanceProfile;
+import '../observables/library.dart' show Of, Observer;
+
 ///
-/// @Author Champlain Marius Bakop
-/// @Email champlainmarius20@gmail.com
-/// @Github ChamplainLeCode
+/// ### KareeMaterialApp
 ///
-///
-///
-/// KareeMaterialApp simple Material App based on Flutter MaterialApp
-/// with custom Router for Karee
+/// Simple Material App based on Flutter MaterialApp
+/// with custom configuration for Karee
 ///
 class KareeMaterialApp extends StatelessWidget {
-  final Map<String, WidgetBuilder> routes;
   final List<NavigatorObserver> navigatorObservers;
   final String title;
   final GenerateAppTitle? onGenerateTitle;
@@ -39,12 +57,36 @@ class KareeMaterialApp extends StatelessWidget {
   final KareeInstanceProfile profile;
   final ErrorContactAddress? errorContactAddress;
 
+  /// Set of observables that can be what in all the application.
+  ///
+  /// see [Of]
+  ///
+  /// see [Observer]
+  final List<Of> observables;
+
+  /// Global Application profile on execution
+  ///
+  /// see [KareeInstanceProfile]
   static KareeInstanceProfile? globalProfile;
+
+  /// Global Application Contact address
+  /// see [ErrorContactAddress]
   static ErrorContactAddress? globalErrorContactAddress;
+
+  final Map<Type, Action<Intent>>? actions;
+
+  final ThemeData? highContrastDarkTheme;
+
+  final ThemeData? highContrastTheme;
+
+  final GlobalKey<ScaffoldMessengerState>? scaffoldMessengerKey;
+
+  final String? restorationScopeId;
 
   KareeMaterialApp(
       {Key? key,
-      this.routes = const <String, WidgetBuilder>{},
+      this.restorationScopeId,
+      this.scaffoldMessengerKey,
       this.navigatorObservers = const <NavigatorObserver>[],
       this.title = '',
       this.onGenerateTitle,
@@ -65,49 +107,58 @@ class KareeMaterialApp extends StatelessWidget {
       this.debugShowCheckedModeBanner = true,
       this.shortcuts,
       this.profile = KareeInstanceProfile.development,
-      this.errorContactAddress}){
-        
-        assert(profile == KareeInstanceProfile.development || profile == KareeInstanceProfile.production && errorContactAddress != null);
-        
-        KareeMaterialApp.globalProfile = profile;
-        KareeMaterialApp.globalErrorContactAddress = errorContactAddress;
+      this.actions,
+      this.highContrastDarkTheme,
+      this.highContrastTheme,
+      this.observables = const <Of>[],
+      this.errorContactAddress}) {
+    assert(profile == KareeInstanceProfile.development ||
+        profile == KareeInstanceProfile.production && errorContactAddress != null);
 
-      }
+    KareeMaterialApp.globalProfile = profile;
+    KareeMaterialApp.globalErrorContactAddress = errorContactAddress;
+  }
 
   @override
-  Widget build(BuildContext context) {  
-    
-    ErrorWidget.builder = (FlutterErrorDetails detail){
-          return KareeRouterErrorWidget(
-            detail.summary.name, 
-            detail.stack, 
-            KareeErrorCode.NO_ROUTE_FOUND, 
-            detail.context!.getChildren().map((e) => e.name ?? '').toList());
-    };      
-    return MaterialApp(
-      key: this.key,
-      navigatorKey: KareeRouter.navigatorKey,
-      navigatorObservers: this.navigatorObservers,
-      title: this.title,
-      routes: const <String, WidgetBuilder>{},
-      onGenerateTitle: this.onGenerateTitle,
-      color: this.color,
-      theme: this.theme,
-      darkTheme: this.darkTheme,
-      themeMode: this.themeMode,
-      locale: this.locale,
-      localizationsDelegates: this.localizationsDelegates,
-      localeListResolutionCallback: this.localeListResolutionCallback,
-      localeResolutionCallback: this.localeResolutionCallback,
-      supportedLocales: this.supportedLocales,
-      debugShowMaterialGrid: this.debugShowMaterialGrid,
-      showPerformanceOverlay: this.showPerformanceOverlay,
-      checkerboardRasterCacheImages: this.checkerboardRasterCacheImages,
-      checkerboardOffscreenLayers: this.checkerboardOffscreenLayers,
-      showSemanticsDebugger: this.showSemanticsDebugger,
-      debugShowCheckedModeBanner: this.debugShowCheckedModeBanner,
-      shortcuts: this.shortcuts,
-      onGenerateRoute: KareeRouter.router(context),
-    );
+  Widget build(BuildContext context) {
+    ErrorWidget.builder = (FlutterErrorDetails detail) {
+      return KareeRouterErrorWidget(detail.summary.name, detail.stack, KareeErrorCode.NO_ROUTE_FOUND,
+          detail.context!.getChildren().map((e) => e.name ?? '').toList());
+    };
+    return Observer.withProviders(
+        providers: observables,
+        child: (ctx) {
+          print('\n################### PROVIDERS CHANGED $observables');
+          return MaterialApp(
+            highContrastDarkTheme: this.highContrastDarkTheme,
+            highContrastTheme: highContrastTheme,
+            restorationScopeId: this.restorationScopeId,
+            scaffoldMessengerKey: this.scaffoldMessengerKey,
+            key: this.key,
+            actions: this.actions,
+            navigatorKey: KareeRouter.navigatorKey,
+            navigatorObservers: this.navigatorObservers,
+            title: this.title,
+            routes: const <String, WidgetBuilder>{},
+            onGenerateTitle: this.onGenerateTitle,
+            color: this.color,
+            theme: this.theme,
+            darkTheme: this.darkTheme,
+            themeMode: this.themeMode,
+            locale: this.locale,
+            localizationsDelegates: this.localizationsDelegates,
+            localeListResolutionCallback: this.localeListResolutionCallback,
+            localeResolutionCallback: this.localeResolutionCallback,
+            supportedLocales: this.supportedLocales,
+            debugShowMaterialGrid: this.debugShowMaterialGrid,
+            showPerformanceOverlay: this.showPerformanceOverlay,
+            checkerboardRasterCacheImages: this.checkerboardRasterCacheImages,
+            checkerboardOffscreenLayers: this.checkerboardOffscreenLayers,
+            showSemanticsDebugger: this.showSemanticsDebugger,
+            debugShowCheckedModeBanner: this.debugShowCheckedModeBanner,
+            shortcuts: this.shortcuts,
+            onGenerateRoute: KareeRouter.router(context),
+          );
+        });
   }
 }

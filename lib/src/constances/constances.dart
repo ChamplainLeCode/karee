@@ -1,13 +1,17 @@
-/// This library for all constances used by Karee
-library karee_core.constances;
-
-export './enumeration.dart';
+import './enumeration.dart';
 
 class KareeConstants {
+  /// Karee error Screen
+  ///
+  /// @see [KareeInstanceProfile]
+  static const String kareeErrorScreenName = '__karee_internal_error_widget__';
 
-  static const String KAREE_ERROR_SCREEN_NAME = '__karee_internal_error_widget__';
+  /// Karee github repository
+  static const String kareeGithub = 'https://github.com/ChamplainLeCode/karee';
 
-  static const String KAREE_GITHUB = 'https://github.com/ChamplainLeCode/karee';
-  
-  static const String KAREE_ERROR_PATH = '__karee_internal__error__';
+  /// Name of the path when an error occurs
+  static const String kareeErrorPath = '__karee_internal__error__';
+
+  /// This the location of application config file
+  static const String kApplicationRessourceFile = 'resources/config/application.yaml';
 }
