@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart' as cupertino;
 import 'package:flutter/material.dart';
+import 'package:karee_inject/karee_inject.dart' show ControllerReflectable;
 import '../errors/exceptions/widget_error.dart';
 import '../widgets/library.dart' show StatefulScreen, StatelessScreen;
 import '../constances/constances.dart' show KareeConstants;
@@ -10,7 +11,6 @@ import '../routes/internal_route.dart';
 import '../widgets/karee_router_error_widget.dart';
 import '../widgets/router_widget.dart';
 import '../screens/screens.dart' show screen, screens;
-import '../controllers/controller.dart';
 
 ///
 /// cash of RouterWidget mounted
@@ -34,6 +34,8 @@ enum RouteMode { REPLACE, PUSH, EMPTY, NONE }
 ///
 enum RouteDirection { LEFT_TO_RIGHT, RIGHT_TO_LEFT, UP_TO_DOWN, DOWN_TO_UP }
 
+typedef RouteActivation = bool Function();
+
 ///
 /// Route: class designed to subscribe events (route) in application.
 ///
@@ -41,11 +43,35 @@ enum RouteDirection { LEFT_TO_RIGHT, RIGHT_TO_LEFT, UP_TO_DOWN, DOWN_TO_UP }
 ///
 ///
 class Route {
-  static Map<String, dynamic> routeMap = {};
+  static Map<String, dynamic> _routeMap = {};
+  static Map<String, List<dynamic>> _routeWithParams = <String, List<dynamic>>{};
+  static Map<RouteActivation, List<String>> _routeActivationMap = {};
 
-  static void on(String s, dynamic action) {
-    assert(action != null);
-    routeMap[s] = action;
+  static const String pathVariableGroup = '([0-9a-zA-Z\-_]+)';
+  static final RegExp pathVariableRegExp = RegExp(r'{[a-zA-Z0-9\-_]+}');
+
+  static bool defaultRouteActivation() => true;
+
+  static void on(String route, dynamic action, {RouteActivation canActivated = defaultRouteActivation}) {
+    assert(action != null && action.toString().isNotEmpty);
+    assert(route.isNotEmpty);
+
+    if (route.contains(pathVariableRegExp)) {
+      var meta = <dynamic>[action];
+      var newPath = route.replaceAllMapped(pathVariableRegExp, (m) {
+        meta.add(route.substring(m.start + 1, m.end - 1));
+        return pathVariableGroup;
+      });
+      _routeWithParams[newPath] = meta;
+    } else {
+      _routeMap[route] = action;
+    }
+    // routeMap[route] = action;
+    if (canActivated != defaultRouteActivation) {
+      var routes = _routeActivationMap[canActivated] ?? <String>[];
+      routes.add(route);
+      _routeActivationMap[canActivated] = routes;
+    }
   }
 }
 
@@ -184,14 +210,32 @@ dynamic doRouting(String control, String method, dynamic params) {
 ///
 ///
 class KareeRouter {
-  static final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
+  static final GlobalKey<NavigatorState> _navigatorKey = GlobalKey<NavigatorState>();
   static BuildContext? currentContext;
-  static String? currentRoute;
+  static String? _currentRoute;
+  static Map<String, String>? _pathVariables;
+  static dynamic _lastArguments;
 
-  static dynamic lastArguments;
+  static GlobalKey<NavigatorState> get navigatorKey => _navigatorKey;
+  static String? get currentRoute => _currentRoute;
+  static Map<String, String>? get pathVariables => _pathVariables;
+
   static dynamic goto(String routeName, {dynamic parameter}) {
-    currentRoute = routeName;
-    dynamic action = Route.routeMap[routeName];
+    assert(routeName.isNotEmpty);
+
+    var canActivatedEntry = Route._routeActivationMap.entries.firstWhere((entry) => entry.value.contains(routeName),
+        orElse: () => MapEntry(Route.defaultRouteActivation, []));
+    if (!canActivatedEntry.key()) {
+      /// Route Guard refused access to this routes
+      return false;
+    }
+
+    KareeRouter._currentRoute = routeName;
+
+    /// We reset path variable for this call Session
+    _pathVariables = null;
+
+    dynamic action = findActionFor(routeName);
     try {
       if (action != null) {
         if (action is Function) {
@@ -233,6 +277,32 @@ class KareeRouter {
     }
   }
 
+  /// Function used to get specific action from a path route.
+  ///
+  /// This function also setup **KareeRouter.pathVariables** value when the path
+  /// represented by this route contains url parameters
+  static dynamic findActionFor(String ro) {
+    MapEntry<String, dynamic> action =
+        Route._routeMap.entries.firstWhere((entry) => entry.key == ro, orElse: () => MapEntry('', null));
+    if (action.value == null) {
+      var arg = Route._routeWithParams.entries
+          .firstWhere((entryParam) => RegExp(entryParam.key).hasMatch(ro), orElse: () => MapEntry('', <String>[]));
+      if (arg.value.isNotEmpty) {
+        var actionAndPathVar = RegExp(arg.key)
+            .allMatches(ro)
+            .map((e) => e.groups(List<int>.generate(e.groupCount + 1, (ind) => ind)))
+            .firstWhere((element) => true, orElse: () => <String>[]);
+        KareeRouter._pathVariables = {};
+        for (int i = 1; i < actionAndPathVar.length; i++) {
+          KareeRouter._pathVariables!.addEntries([MapEntry(Route._routeWithParams[arg.key]![i], actionAndPathVar[i]!)]);
+        }
+        return arg.value.first;
+      }
+      return null;
+    }
+    return action.value;
+  }
+
   ///
   /// General router for application. Overload by Karee to override default navigator
   ///
@@ -254,18 +324,18 @@ class KareeRouter {
         throw NotManagableWidgetException(widget);
       }
       if (settings.arguments != null) {
-        KareeRouter.lastArguments = settings.arguments;
+        KareeRouter._lastArguments = settings.arguments;
       }
       return cupertino.PageRouteBuilder(
-          settings:
-              RouteSettings(name: KareeRouter.currentRoute, arguments: settings.arguments ?? KareeRouter.lastArguments),
+          settings: RouteSettings(
+              name: KareeRouter.currentRoute, arguments: settings.arguments ?? KareeRouter._lastArguments),
           transitionDuration: Duration(milliseconds: 0),
           pageBuilder: (_, a1, a2) {
             // KareeRouter.currentContext = _;
             return widget;
           });
     } on NoRouteFoundError catch (e, st) {
-      KareeRouter.lastArguments = [
+      KareeRouter._lastArguments = [
         settings.name!,
         KareeRouter.currentRoute!,
         if (settings.arguments != null) settings.arguments.toString()
@@ -273,9 +343,9 @@ class KareeRouter {
       return cupertino.PageRouteBuilder(
           transitionDuration: Duration(milliseconds: 0),
           pageBuilder: (_, a1, a2) => KareeRouterErrorWidget('No screen found with name ${settings.name}', st,
-              KareeErrorCode.SCREEN_NOT_FOUND, KareeRouter.lastArguments));
+              KareeErrorCode.SCREEN_NOT_FOUND, KareeRouter._lastArguments));
     } on NotManagableWidgetException catch (ex, st) {
-      KareeRouter.lastArguments = [
+      KareeRouter._lastArguments = [
         ex.screen.toString(),
         settings.name!,
         KareeRouter.currentRoute!,
@@ -284,7 +354,7 @@ class KareeRouter {
       return cupertino.PageRouteBuilder(
           transitionDuration: Duration(milliseconds: 0),
           pageBuilder: (_, a1, a2) =>
-              KareeRouterErrorWidget(ex.message, st, KareeErrorCode.NOT_KAREE_SCREEN, KareeRouter.lastArguments));
+              KareeRouterErrorWidget(ex.message, st, KareeErrorCode.NOT_KAREE_SCREEN, KareeRouter._lastArguments));
     }
   }
 
@@ -318,9 +388,7 @@ class KareeRouter {
   ///
   /// Implementation of navigator to goback to previous context
   ///
-  static goBack(
-      [@Deprecated("The context is not necessary for this version, and will completely removed in 2.0.1")
-          cupertino.BuildContext? context]) {
+  static goBack() {
     if (KareeRouter.navigatorKey.currentState!.canPop()) KareeRouter.navigatorKey.currentState!.pop();
   }
 
@@ -328,7 +396,6 @@ class KareeRouter {
   /// Default Karee Router
   ///
   static router(cupertino.BuildContext context) {
-    KareeRouter.currentContext = context;
     launchInternalRoute();
     return appRoute;
   }

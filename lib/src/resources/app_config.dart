@@ -1,5 +1,5 @@
 import 'package:flutter/services.dart';
-import 'package:karee_core/karee_core.dart';
+import 'package:karee_core/core.dart';
 import 'package:yaml/yaml.dart';
 
 late final YamlMap _appConfig;

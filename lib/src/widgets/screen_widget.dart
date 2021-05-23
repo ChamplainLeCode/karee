@@ -58,7 +58,7 @@ abstract class StatefulComponent extends StatefulWidget {
 abstract class ComponentState<T extends StatefulComponent> extends State<T> {
   dynamic? arguments;
 
-  // BuildContext context;
+  MediaQueryData get mediaQuery => MediaQuery.of(context);
 
   @protected
   Size get screenSize => MediaQuery.of(context).size;
@@ -90,7 +90,7 @@ abstract class StatefulScreen extends StatefulWidget {
 abstract class ScreenState<T extends StatefulScreen> extends State<T> {
   dynamic? arguments;
 
-  // BuildContext context;
+  MediaQueryData get mediaQuery => MediaQuery.of(context);
 
   @protected
   Size get screenSize => MediaQuery.of(context).size;

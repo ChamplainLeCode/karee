@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart' as cupertino;
 import 'package:flutter/widgets.dart';
-import 'package:karee_core/karee_core.dart';
-import 'package:karee_core/src/constances/constances.dart' show KareeConstants;
-import 'package:karee_core/src/errors/errors_solutions.dart';
-import 'package:karee_core/src/errors/exceptions/widget_error.dart';
-import 'package:karee_core/src/widgets/karee_router_error_widget.dart';
+import '../widgets/screen_widget.dart';
+import '../widgets/router_widget.dart';
+import '../constances/constances.dart' show KareeConstants;
+import '../errors/errors_solutions.dart';
+import '../errors/exceptions/widget_error.dart';
+import '../widgets/karee_router_error_widget.dart';
 import '../routes/Router.dart';
 
 /// screens represents the collections of all screens in the

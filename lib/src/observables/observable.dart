@@ -32,12 +32,19 @@ abstract class Observable<T> {
 /// item the Observable emits.
 class Of<T> implements Observable<T> {
   T _value;
+  dynamic tag;
 
   /// Build an observable from a value
-  Of(this._value);
+  Of(this._value) : tag = #base;
 
   /// build an Observalbe from a type
   factory Of.type() => PersistentContext.of<T>();
+
+  factory Of.tag(T value, dynamic tag) => PersistentContext.valueWithTag(value, tag);
+
+  static withTag(dynamic tag) => PersistentContext.withTag(tag);
+
+  static free<E>(Of<E> obs) => PersistentContext.remove<E>(obs);
 
   /// Permanent listeners on this observable
   Set<ObservableListener<T>> _listener = {};
@@ -68,8 +75,6 @@ class Of<T> implements Observable<T> {
   }
 
   String toString() => _value.toString();
-
-  final operator = (T value) => Of<T>(value);
 
   /// Add an ephemeral listener to is observer.
   /// this listener will be unsubscribe after the next change

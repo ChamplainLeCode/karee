@@ -24,4 +24,4 @@
 
 library karee_core;
 
-export './src/karee_core.dart';
+export 'src/karee_core.dart';

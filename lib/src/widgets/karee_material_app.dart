@@ -128,7 +128,6 @@ class KareeMaterialApp extends StatelessWidget {
     return Observer.withProviders(
         providers: observables,
         child: (ctx) {
-          print('\n################### PROVIDERS CHANGED $observables');
           return MaterialApp(
             highContrastDarkTheme: this.highContrastDarkTheme,
             highContrastTheme: highContrastTheme,
