@@ -29,8 +29,8 @@ class Observer<T> extends _ObservableElement<T> {
   /// ```
   ///
   /// see also [Observer.withProviders]
-  static _OfWidgetBuilder<E> on<E>({required _OfBuilderWithState<E> builder}) {
-    return _OfWidgetBuilder<E>(of: PersistentContext.of<E>(), child: builder);
+  static _OfWidgetBuilder<E> on<E>({dynamic? tag = #base, required _OfBuilderWithState<E> builder}) {
+    return _OfWidgetBuilder<E>(of: PersistentContext.getObsWithTag(E, tag), child: builder);
   }
 
   /// ### Definition

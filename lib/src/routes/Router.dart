@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart' as cupertino;
 import 'package:flutter/material.dart';
+import 'package:karee_inject/karee_inject.dart' show ControllerReflectable;
 import '../errors/exceptions/widget_error.dart';
 import '../widgets/library.dart' show StatefulScreen, StatelessScreen;
 import '../constances/constances.dart' show KareeConstants;
@@ -10,7 +11,6 @@ import '../routes/internal_route.dart';
 import '../widgets/karee_router_error_widget.dart';
 import '../widgets/router_widget.dart';
 import '../screens/screens.dart' show screen, screens;
-import '../controllers/controller.dart';
 
 ///
 /// cash of RouterWidget mounted
@@ -296,7 +296,7 @@ class KareeRouter {
         for (int i = 1; i < actionAndPathVar.length; i++) {
           KareeRouter._pathVariables!.addEntries([MapEntry(Route._routeWithParams[arg.key]![i], actionAndPathVar[i]!)]);
         }
-        return actionAndPathVar.first;
+        return arg.value.first;
       }
       return null;
     }
@@ -388,10 +388,8 @@ class KareeRouter {
   ///
   /// Implementation of navigator to goback to previous context
   ///
-  static goBack(
-      [@Deprecated("The context is not necessary for this version, and will completely removed in 2.0.1")
-          cupertino.BuildContext? context]) {
-    if (KareeRouter.navigatorKey.currentState!.canPop()) KareeRouter.navigatorKey.currentState!.pop(true);
+  static goBack() {
+    if (KareeRouter.navigatorKey.currentState!.canPop()) KareeRouter.navigatorKey.currentState!.pop();
   }
 
   ///

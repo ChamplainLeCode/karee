@@ -3,4 +3,4 @@
 ///
 library karee_core.controllers;
 
-export 'package:karee_inject/karee_inject.dart' show Controller, ControllerReflectable, subscribeController;
+export 'package:karee_inject/karee_inject.dart' show subscribeController;
