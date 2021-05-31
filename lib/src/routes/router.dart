@@ -7,7 +7,7 @@ import '../constances/constances.dart' show KareeConstants;
 import '../errors/errors_solutions.dart' show KareeErrorCode;
 import '../errors/exceptions/no_action_found_error.dart';
 import '../errors/exceptions/no_route_found_error.dart';
-import '../routes/internal_route.dart';
+import 'internal_route.dart';
 import '../widgets/karee_router_error_widget.dart';
 import '../widgets/router_widget.dart';
 import '../screens/screens.dart' show screen, screens;

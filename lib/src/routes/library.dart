@@ -1,3 +1,3 @@
-export 'Router.dart';
+export 'router.dart';
 
 export 'internal_route.dart';

@@ -22,9 +22,12 @@ import 'package:flutter/material.dart'
         ThemeMode,
         Widget,
         WidgetBuilder;
+import '../constances/constances.dart';
+import '../errors/translation/translation_file_not_exists.dart';
+import '../utils/app_localization.dart';
 import '../errors/library.dart';
 import '../widgets/library.dart';
-import '../routes/Router.dart' show KareeRouter;
+import '../routes/router.dart' show KareeRouter;
 import '../constances/library.dart' show KareeInstanceProfile;
 import '../observables/library.dart' show Of, Observer;
 
@@ -94,11 +97,11 @@ class KareeMaterialApp extends StatelessWidget {
       this.theme,
       this.darkTheme,
       this.themeMode = ThemeMode.system,
-      this.locale,
+      this.locale = const Locale('en'),
       this.localizationsDelegates,
       this.localeListResolutionCallback,
       this.localeResolutionCallback,
-      this.supportedLocales = const <Locale>[Locale('en', 'US')],
+      this.supportedLocales = const <Locale>[Locale('en')],
       this.debugShowMaterialGrid = false,
       this.showPerformanceOverlay = false,
       this.checkerboardRasterCacheImages = false,
@@ -117,6 +120,18 @@ class KareeMaterialApp extends StatelessWidget {
 
     KareeMaterialApp.globalProfile = profile;
     KareeMaterialApp.globalErrorContactAddress = errorContactAddress;
+    KareeInternationalization.init(this.locale, this.supportedLocales.toList()).catchError((onError, st) {
+      var ex = onError as TranslationFileNotExists;
+
+      KareeRouter.goto(KareeConstants.kareeErrorPath, parameter: {
+        #title: ex.message,
+        #stack: st,
+        #env: [
+          '${ex.locale.languageCode}${ex.locale.countryCode == null ? '' : '_${ex.locale.countryCode!.toLowerCase()}'}.json',
+        ],
+        #errorCode: KareeErrorCode.NO_TRANSLATION_FILE
+      });
+    }, test: (exception) => exception is TranslationFileNotExists);
   }
 
   @override
@@ -126,38 +141,41 @@ class KareeMaterialApp extends StatelessWidget {
           detail.context!.getChildren().map((e) => e.name ?? '').toList());
     };
     return Observer.withProviders(
-        providers: observables,
+        providers: observables..add(KareeInternationalization.appLocalization),
         child: (ctx) {
-          return MaterialApp(
-            highContrastDarkTheme: this.highContrastDarkTheme,
-            highContrastTheme: highContrastTheme,
-            restorationScopeId: this.restorationScopeId,
-            scaffoldMessengerKey: this.scaffoldMessengerKey,
-            key: this.key,
-            actions: this.actions,
-            navigatorKey: KareeRouter.navigatorKey,
-            navigatorObservers: this.navigatorObservers,
-            title: this.title,
-            routes: const <String, WidgetBuilder>{},
-            onGenerateTitle: this.onGenerateTitle,
-            color: this.color,
-            theme: this.theme,
-            darkTheme: this.darkTheme,
-            themeMode: this.themeMode,
-            locale: this.locale,
-            localizationsDelegates: this.localizationsDelegates,
-            localeListResolutionCallback: this.localeListResolutionCallback,
-            localeResolutionCallback: this.localeResolutionCallback,
-            supportedLocales: this.supportedLocales,
-            debugShowMaterialGrid: this.debugShowMaterialGrid,
-            showPerformanceOverlay: this.showPerformanceOverlay,
-            checkerboardRasterCacheImages: this.checkerboardRasterCacheImages,
-            checkerboardOffscreenLayers: this.checkerboardOffscreenLayers,
-            showSemanticsDebugger: this.showSemanticsDebugger,
-            debugShowCheckedModeBanner: this.debugShowCheckedModeBanner,
-            shortcuts: this.shortcuts,
-            onGenerateRoute: KareeRouter.router(context),
-          );
+          return Observer.on<AppLocalization>(
+              tag: KareeConstants.kApplicationLocalizationTag,
+              builder: (_, lang) {
+                return MaterialApp(
+                    highContrastDarkTheme: this.highContrastDarkTheme,
+                    highContrastTheme: highContrastTheme,
+                    restorationScopeId: this.restorationScopeId,
+                    scaffoldMessengerKey: this.scaffoldMessengerKey,
+                    key: this.key,
+                    actions: this.actions,
+                    navigatorKey: KareeRouter.navigatorKey,
+                    navigatorObservers: this.navigatorObservers,
+                    title: this.title,
+                    routes: const <String, WidgetBuilder>{},
+                    onGenerateTitle: this.onGenerateTitle,
+                    color: this.color,
+                    theme: this.theme,
+                    darkTheme: this.darkTheme,
+                    themeMode: this.themeMode,
+                    // locale: this.locale,
+                    // localizationsDelegates: this.localizationsDelegates,
+                    localeListResolutionCallback: this.localeListResolutionCallback,
+                    localeResolutionCallback: this.localeResolutionCallback,
+                    // supportedLocales: this.supportedLocales,
+                    debugShowMaterialGrid: this.debugShowMaterialGrid,
+                    showPerformanceOverlay: this.showPerformanceOverlay,
+                    checkerboardRasterCacheImages: this.checkerboardRasterCacheImages,
+                    checkerboardOffscreenLayers: this.checkerboardOffscreenLayers,
+                    showSemanticsDebugger: this.showSemanticsDebugger,
+                    debugShowCheckedModeBanner: this.debugShowCheckedModeBanner,
+                    shortcuts: this.shortcuts,
+                    onGenerateRoute: KareeRouter.router(context));
+              });
         });
   }
 }

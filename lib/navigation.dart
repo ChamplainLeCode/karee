@@ -7,7 +7,7 @@
 /// - Route
 /// - RouteMode
 /// - screen
-library karee_core.navigation;
+library karee.core.navigation;
 
 export 'src/routes/library.dart' show KareeRouter, Route, RouteMode;
 

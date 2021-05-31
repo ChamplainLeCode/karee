@@ -1,4 +1,4 @@
-import 'package:karee_core/src/observables/observable.dart';
+import '../observables/observable.dart';
 
 /// Cache implementation for observable state.
 class PersistentContext {
@@ -46,7 +46,9 @@ class PersistentContext {
     throw Exception('No Observable with tag $tag');
   }
 
-  static Of<T> getObsWithTag<T>(Type t, [dynamic tag = #base]) => _context[T]?[tag];
+  static Of<T> getObsWithTag<T>(Type t, [dynamic tag = #base]) {
+    return _context[T]?[tag];
+  }
 
   static void remove<E>(Of<E> obs) {
     assert(obs.value != null);
