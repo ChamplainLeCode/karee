@@ -4,7 +4,7 @@ import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import '../constances/library.dart' show KareeConstants, KareeInstanceProfile;
 import '../errors/errors_solutions.dart';
-import '../routes/Router.dart';
+import '../routes/router.dart';
 import '../screens/screens.dart';
 import '../widgets/karee_material_app.dart';
 import '../widgets/karee_router_default_error_widget.dart';

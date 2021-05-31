@@ -1,5 +1,5 @@
 import '../../widgets/router_widget.dart';
-import '../../routes/Router.dart' show RouteMode;
+import '../../routes/router.dart' show RouteMode;
 
 /// NotRoutableWidgetException: Exception thrown when trying to inject a non-routable
 /// widget during internal routing.

@@ -16,7 +16,7 @@ import 'package:flutter/material.dart'
         TextStyle,
         Widget;
 import '../constances/constances.dart';
-import '../routes/Router.dart' show RouteMode;
+import '../routes/router.dart' show RouteMode;
 
 enum KareeErrorCode {
   NO_INITIAL_SCREEN,

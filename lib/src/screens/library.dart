@@ -5,6 +5,6 @@
 /// This library offers two functions
 ///   - To subscribe screens in Karee framework buy thier names
 ///   - To send and control screen during the navigation
-library karee_core.screens;
+library karee.core.annotations.screens;
 
 export 'screens.dart';

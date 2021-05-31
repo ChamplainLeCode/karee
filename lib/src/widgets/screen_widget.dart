@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:karee_core/core.dart';
-import 'package:karee_core/src/utils/app_localization.dart';
-
-import '../routes/Router.dart' show KareeRouter;
+import '../constances/library.dart' show KareeConstants;
+import '../observables/library.dart' show Observer;
+import '../utils/app_localization.dart';
+import '../routes/router.dart' show KareeRouter;
 
 @immutable
 abstract class StatelessScreen extends StatelessWidget {

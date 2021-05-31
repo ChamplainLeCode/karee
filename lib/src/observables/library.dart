@@ -16,7 +16,7 @@
 /// - Observer: Widget that read changes of Observable
 ///   * **Observer.on<T>**: Widget that watches changes on observable of type T
 ///   * **Observer()**: Widget that whatches changes on specifed observable
-library karee_core.state_manager;
+library karee.core.state_manager;
 
 export 'observable.dart';
 export 'persistent_context.dart';

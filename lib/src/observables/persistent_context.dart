@@ -1,4 +1,4 @@
-import 'package:karee_core/src/observables/observable.dart';
+import '../observables/observable.dart';
 
 /// Cache implementation for observable state.
 class PersistentContext {

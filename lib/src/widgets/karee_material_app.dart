@@ -22,12 +22,12 @@ import 'package:flutter/material.dart'
         ThemeMode,
         Widget,
         WidgetBuilder;
-import 'package:karee_core/core.dart';
+import '../constances/constances.dart';
 import '../errors/translation/translation_file_not_exists.dart';
 import '../utils/app_localization.dart';
 import '../errors/library.dart';
 import '../widgets/library.dart';
-import '../routes/Router.dart' show KareeRouter;
+import '../routes/router.dart' show KareeRouter;
 import '../constances/library.dart' show KareeInstanceProfile;
 import '../observables/library.dart' show Of, Observer;
 
@@ -76,10 +76,6 @@ class KareeMaterialApp extends StatelessWidget {
   /// see [ErrorContactAddress]
   static ErrorContactAddress? globalErrorContactAddress;
 
-  /// Global Application Localization instance
-  /// see [AppLocalization]
-  static late Of<AppLocalization> appLocalization;
-
   final Map<Type, Action<Intent>>? actions;
 
   final ThemeData? highContrastDarkTheme;
@@ -124,11 +120,7 @@ class KareeMaterialApp extends StatelessWidget {
 
     KareeMaterialApp.globalProfile = profile;
     KareeMaterialApp.globalErrorContactAddress = errorContactAddress;
-    KareeMaterialApp.appLocalization = Of.tag(AppLocalization(), KareeConstants.kApplicationLocalizationTag);
-    AppLocalization.init(this.locale, this.supportedLocales.toList()).then((appLocalization) {
-      KareeMaterialApp.appLocalization.value = appLocalization;
-      return appLocalization;
-    }).catchError((onError, st) {
+    KareeInternationalization.init(this.locale, this.supportedLocales.toList()).catchError((onError, st) {
       var ex = onError as TranslationFileNotExists;
 
       KareeRouter.goto(KareeConstants.kareeErrorPath, parameter: {
@@ -149,7 +141,7 @@ class KareeMaterialApp extends StatelessWidget {
           detail.context!.getChildren().map((e) => e.name ?? '').toList());
     };
     return Observer.withProviders(
-        providers: observables..add(KareeMaterialApp.appLocalization),
+        providers: observables..add(KareeInternationalization.appLocalization),
         child: (ctx) {
           return Observer.on<AppLocalization>(
               tag: KareeConstants.kApplicationLocalizationTag,

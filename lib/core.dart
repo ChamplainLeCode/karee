@@ -22,6 +22,6 @@
 ///
 ///
 
-library karee_core;
+library karee.core;
 
 export 'src/karee_core.dart';

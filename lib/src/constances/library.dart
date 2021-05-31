@@ -1,7 +1,7 @@
 /// ## Karee Constants
 ///
 /// This library for all constances used by Karee
-library karee_core.constances;
+library karee.core.constances;
 
 export './constances.dart';
 

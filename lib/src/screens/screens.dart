@@ -6,7 +6,7 @@ import '../constances/constances.dart' show KareeConstants;
 import '../errors/errors_solutions.dart';
 import '../errors/exceptions/widget_error.dart';
 import '../widgets/karee_router_error_widget.dart';
-import '../routes/Router.dart';
+import '../routes/router.dart';
 
 /// screens represents the collections of all screens in the
 /// karee application.

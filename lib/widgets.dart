@@ -11,7 +11,7 @@
 /// - StatefullComponent
 /// - StatefulScreen
 
-library widgets;
+library karee.widgets;
 
 export 'src/widgets/library.dart'
     show

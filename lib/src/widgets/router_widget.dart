@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import './../routes/Router.dart';
+import '../routes/router.dart';
 
 class RouterWidget extends StatefulWidget {
   final Symbol name;
