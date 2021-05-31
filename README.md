@@ -1,4 +1,4 @@
-# karee_core
+# karee
 
 Karee core files
 
