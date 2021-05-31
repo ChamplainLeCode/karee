@@ -1,6 +1,6 @@
 name: karee
-description: Karee core files, Karee core represents a set of amazing libraries, that work together to offer very powerful MVC experience in Flutter App Development
-version: 2.0.0
+description: Another way to build Flutter applications for mobile, web and desktop using the powerful of MVC Design Pattern.
+version: 2.1.0
 homepage: https://github.com/ChamplainLeCode/karee
 environment:
   sdk: '>=2.12.0 <3.0.0'
