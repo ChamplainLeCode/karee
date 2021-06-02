@@ -43,8 +43,8 @@ class KareeInternationalization {
     KareeInternationalization._appLocalization = Of.tag(AppLocalization(), KareeConstants.kApplicationLocalizationTag);
     var appL = KareeInternationalization._appLocalization.value;
 
-    appL._currentLanguage =
-        Of.tag(AppLanguage.fromLocale(locale ?? Locale('')), KareeConstants.kApplicationLocalizationTag);
+    appL._currentLanguage = Of.tag(locale == null ? AppLanguage.internal() : AppLanguage(locale.languageCode),
+        KareeConstants.kApplicationLocalizationTag);
     if (locale != null) {
       if (!supportedLocale.contains(locale)) {
         supportedLocale.add(locale);

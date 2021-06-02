@@ -60,7 +60,7 @@ class KareeMaterialApp extends StatelessWidget {
   final KareeInstanceProfile profile;
   final ErrorContactAddress? errorContactAddress;
 
-  /// Set of observables that can be what in all the application.
+  /// Set of observables that can be watched in all the application.
   ///
   /// see [Of]
   ///
@@ -97,11 +97,11 @@ class KareeMaterialApp extends StatelessWidget {
       this.theme,
       this.darkTheme,
       this.themeMode = ThemeMode.system,
-      this.locale = const Locale('en'),
+      this.locale,
       this.localizationsDelegates,
       this.localeListResolutionCallback,
       this.localeResolutionCallback,
-      this.supportedLocales = const <Locale>[Locale('en')],
+      this.supportedLocales = const <Locale>[],
       this.debugShowMaterialGrid = false,
       this.showPerformanceOverlay = false,
       this.checkerboardRasterCacheImages = false,
@@ -113,11 +113,10 @@ class KareeMaterialApp extends StatelessWidget {
       this.actions,
       this.highContrastDarkTheme,
       this.highContrastTheme,
-      this.observables = const <Of>[],
+      required this.observables,
       this.errorContactAddress}) {
     assert(profile == KareeInstanceProfile.development ||
-        profile == KareeInstanceProfile.production && errorContactAddress != null);
-
+        (profile == KareeInstanceProfile.production && errorContactAddress != null));
     KareeMaterialApp.globalProfile = profile;
     KareeMaterialApp.globalErrorContactAddress = errorContactAddress;
     KareeInternationalization.init(this.locale, this.supportedLocales.toList()).catchError((onError, st) {
@@ -132,14 +131,18 @@ class KareeMaterialApp extends StatelessWidget {
         #errorCode: KareeErrorCode.NO_TRANSLATION_FILE
       });
     }, test: (exception) => exception is TranslationFileNotExists);
+
+    // ErrorWidget.builder = (FlutterErrorDetails detail) {
+    //   print(detail.exception);
+    //   print(detail.summary.name);
+    //   print(detail.stack);
+    //   return KareeRouterErrorWidget(detail.summary.name, detail.stack, KareeErrorCode.NO_ROUTE_FOUND,
+    //       detail.context!.getChildren().map((e) => e.name ?? '').toList());
+    // };
   }
 
   @override
   Widget build(BuildContext context) {
-    ErrorWidget.builder = (FlutterErrorDetails detail) {
-      return KareeRouterErrorWidget(detail.summary.name, detail.stack, KareeErrorCode.NO_ROUTE_FOUND,
-          detail.context!.getChildren().map((e) => e.name ?? '').toList());
-    };
     return Observer.withProviders(
         providers: observables..add(KareeInternationalization.appLocalization),
         child: (ctx) {

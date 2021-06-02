@@ -72,7 +72,7 @@ class _KareeRouterErrorWidgetState extends ScreenState<KareeRouterErrorWidget> w
     _stack = _stack ?? params[#stack];
     env = env ?? (params[#env] as List).map((e) => e.toString()).toList();
     errorCode = errorCode ?? params[#errorCode];
-
+    print(_title);
     return Scaffold(
         appBar: PreferredSize(
             child: Container(

@@ -29,12 +29,15 @@ void screen(dynamic screen, RouteMode mode,
     RouteDirection direction = RouteDirection.LEFT_TO_RIGHT,
     cupertino.BuildContext? context}) {
   try {
-    if (!(screen is String) &&
-        !(screen is StatelessScreen) &&
-        !(screen is StatefulScreen) &&
-        !(screen is RoutableWidget)) {
-      throw NotManagableWidgetException(screen);
+    var isString = screen is String,
+        isStls = screen is StatelessScreen,
+        isStfs = screen is StatefulScreen,
+        isRoutable = screen is RoutableWidget;
+    if (!(isString || isStls || isStfs || isRoutable)) {
+      throw NotManageableWidgetException(screen);
     }
+    print(
+        'ty Is manageableWidget = ${!(screen is String || screen is StatelessScreen || screen is StatefulScreen || screen is RoutableWidget)}');
     if (routerName != null && mode != RouteMode.NONE) {
       throw BadUseOfRouterWidgetException(routerName, mode);
     }
@@ -49,9 +52,7 @@ void screen(dynamic screen, RouteMode mode,
         if (screen is String) {
           KareeRouter.navigatorKey.currentState?.pushReplacementNamed(screen, arguments: argument);
         } else {
-          var settings = RouteSettings(
-            arguments: argument,
-          );
+          var settings = RouteSettings(arguments: argument, name: KareeRouter.currentRoute);
           KareeRouter.navigatorKey.currentState
               ?.pushReplacement(cupertino.MaterialPageRoute(builder: (_) => screen, settings: settings));
         }
@@ -60,9 +61,7 @@ void screen(dynamic screen, RouteMode mode,
         if (screen is String) {
           KareeRouter.navigatorKey.currentState?.pushNamed(screen, arguments: argument);
         } else {
-          var settings = RouteSettings(
-            arguments: argument,
-          );
+          var settings = RouteSettings(arguments: argument, name: KareeRouter.currentRoute);
           KareeRouter.navigatorKey.currentState
               ?.push(cupertino.MaterialPageRoute(builder: (_) => screen, settings: settings));
         }
@@ -72,6 +71,7 @@ void screen(dynamic screen, RouteMode mode,
           KareeRouter.navigatorKey.currentState?.pushNamedAndRemoveUntil(screen, (_) => false, arguments: argument);
         } else {
           var settings = RouteSettings(
+            name: KareeRouter.currentRoute,
             arguments: argument,
           );
           KareeRouter.navigatorKey.currentState?.pushAndRemoveUntil(
@@ -81,7 +81,7 @@ void screen(dynamic screen, RouteMode mode,
       default:
         KareeRouter.navigatorKey.currentState?.pop(false);
     }
-  } on NotManagableWidgetException catch (ex, st) {
+  } on NotManageableWidgetException catch (ex, st) {
     KareeRouter.goto(KareeConstants.kareeErrorPath, parameter: {
       #title: ex.message,
       #stack: st,

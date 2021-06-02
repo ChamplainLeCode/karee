@@ -16,7 +16,8 @@ class _KareeRouterDefaultProdErrorWidgetState extends State<KareeRouterDefaultPr
         leading: BackButton(color: Colors.black87),
         elevation: 0,
       ),
-      body: Column(
+      body: SingleChildScrollView(
+          child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisAlignment: MainAxisAlignment.center,
         mainAxisSize: MainAxisSize.max,
@@ -69,7 +70,7 @@ class _KareeRouterDefaultProdErrorWidgetState extends State<KareeRouterDefaultPr
             ),
           )
         ],
-      ),
+      )),
     );
   }
 }

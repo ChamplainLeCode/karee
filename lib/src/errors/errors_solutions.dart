@@ -267,7 +267,7 @@ var errorSolution = <KareeErrorCode, Widget Function(BuildContext ct, List env)>
                         text: " ${environment?.first}",
                         style: TextStyle(color: Colors.teal, fontWeight: FontWeight.normal)),
                     TextSpan(
-                      text: ",   extends  ",
+                      text: "   extends  ",
                       style: TextStyle(color: Colors.blue, fontWeight: FontWeight.w300, fontSize: 12),
                     ),
                     TextSpan(

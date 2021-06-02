@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/cupertino.dart' as cupertino;
 import 'package:flutter/material.dart';
 import 'package:karee_inject/karee_inject.dart' show ControllerReflectable;
@@ -274,6 +276,7 @@ class KareeRouter {
           #errorCode: KareeErrorCode.NO_ROUTE_FOUND
         });
       }
+      if (Platform.environment.containsKey('FLUTTER_TEST')) rethrow;
     }
   }
 
@@ -321,7 +324,7 @@ class KareeRouter {
       }
 
       if (!(widget is StatelessScreen) && !(widget is StatefulScreen) && !(widget is RoutableWidget)) {
-        throw NotManagableWidgetException(widget);
+        throw NotManageableWidgetException(widget);
       }
       if (settings.arguments != null) {
         KareeRouter._lastArguments = settings.arguments;
@@ -337,18 +340,18 @@ class KareeRouter {
     } on NoRouteFoundError catch (e, st) {
       KareeRouter._lastArguments = [
         settings.name!,
-        KareeRouter.currentRoute!,
+        if (KareeRouter.currentRoute != null) KareeRouter.currentRoute!,
         if (settings.arguments != null) settings.arguments.toString()
       ];
       return cupertino.PageRouteBuilder(
           transitionDuration: Duration(milliseconds: 0),
           pageBuilder: (_, a1, a2) => KareeRouterErrorWidget('No screen found with name ${settings.name}', st,
               KareeErrorCode.SCREEN_NOT_FOUND, KareeRouter._lastArguments));
-    } on NotManagableWidgetException catch (ex, st) {
+    } on NotManageableWidgetException catch (ex, st) {
       KareeRouter._lastArguments = [
         ex.screen.toString(),
         settings.name!,
-        KareeRouter.currentRoute!,
+        if (KareeRouter.currentRoute != null) KareeRouter.currentRoute!,
         if (settings.arguments != null) settings.arguments.toString()
       ];
       return cupertino.PageRouteBuilder(

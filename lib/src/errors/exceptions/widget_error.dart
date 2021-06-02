@@ -61,15 +61,15 @@ class BadUseOfRouterWidgetException implements Exception {
 ///
 /// see [StatelessScreen]
 ///
-class NotManagableWidgetException implements Exception {
+class NotManageableWidgetException implements Exception {
   /// message of this error
   late final String message;
 
   /// route (path) that thrown this error
   final dynamic screen;
 
-  NotManagableWidgetException(this.screen) {
-    this.message = '$screen is not a managable screen';
+  NotManageableWidgetException(this.screen) {
+    this.message = '$screen is not a manageable screen';
   }
   String toString() {
     return 'Exception: NotManagableWidgetException( $message )';

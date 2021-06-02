@@ -37,14 +37,18 @@ class Of<T> implements Observable<T> {
   /// Build an observable from a value
   Of(this._value) : tag = #base;
 
-  /// build an Observalbe from a type
+  /// build an Observable from a type
   factory Of.type() => PersistentContext.of<T>();
 
-  factory Of.tag(T value, dynamic tag) => PersistentContext.valueWithTag(value, tag);
+  /// Create an observable from value and tag. then persis to cache
+  ///
+  factory Of.tag(T value, [dynamic tag = #base]) => PersistentContext.valueWithTag(value, tag);
 
-  static withTag(dynamic tag) => PersistentContext.withTag(tag);
+  /// Get persisted observable by tag
+  static withTag<T>(dynamic tag) => PersistentContext.withTag<T>(tag);
 
-  static free<E>(Of<E> obs) => PersistentContext.remove<E>(obs);
+  /// Free observable from cache
+  static void free<E>(Of<E> obs) => PersistentContext.remove<E>(obs);
 
   /// Permanent listeners on this observable
   Set<ObservableListener<T>> _listener = {};
@@ -54,6 +58,8 @@ class Of<T> implements Observable<T> {
   /// its value, this set is clean.
   Set<ObservableListener<T>> _alert = {};
 
+  /// Method used to set new value of an observable. this will call all listener
+  /// that listen to this.
   set value(T value) {
     _value = value;
     _listener.forEach((listener) => listener.call(value));
@@ -80,6 +86,7 @@ class Of<T> implements Observable<T> {
   /// this listener will be unsubscribe after the next change
   void alert(ObservableListener<T> alerter) => _alert.add(alerter);
 
+  /// Manuel refresh of observable
   @override
   void refresh() {
     _listener.forEach((listener) => listener.call(value));

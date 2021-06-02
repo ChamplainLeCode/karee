@@ -1,3 +1,5 @@
+import 'package:karee/src/errors/exceptions/observable_error.dart';
+
 import '../observables/observable.dart';
 
 /// Cache implementation for observable state.
@@ -7,7 +9,7 @@ class PersistentContext {
   Map get cache => _context;
 
   static Of<T> of<T>() => PersistentContext.getObsWithTag(T, #base);
-  static Of withTag(dynamic tag) => PersistentContext.getObsByTag(tag);
+  static Of<T> withTag<T>(dynamic tag) => PersistentContext.getObsByTag<T>(tag);
 
   // static Of<T> tag<T>(dynamic tag) {
   //   assert(tag != null);
@@ -33,17 +35,17 @@ class PersistentContext {
     return obs;
   }
 
-  static Of getObsByTag(dynamic tag) {
+  static Of<T> getObsByTag<T>(dynamic tag) {
     var entries = _context.entries;
     for (var obsTagEntry in entries) {
       var key = (obsTagEntry.value as Map).entries;
       for (var taggedObs in key) {
-        if (taggedObs.key == tag) {
-          return taggedObs.value;
+        if (taggedObs.key == tag && taggedObs.value is Of && taggedObs.value.value is T) {
+          return taggedObs.value as Of<T>;
         }
       }
     }
-    throw Exception('No Observable with tag $tag');
+    throw NoObservableFoundWithTagError(tag);
   }
 
   static Of<T> getObsWithTag<T>(Type t, [dynamic tag = #base]) {
