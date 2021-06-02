@@ -132,13 +132,13 @@ class KareeMaterialApp extends StatelessWidget {
       });
     }, test: (exception) => exception is TranslationFileNotExists);
 
-    // ErrorWidget.builder = (FlutterErrorDetails detail) {
-    //   print(detail.exception);
-    //   print(detail.summary.name);
-    //   print(detail.stack);
-    //   return KareeRouterErrorWidget(detail.summary.name, detail.stack, KareeErrorCode.NO_ROUTE_FOUND,
-    //       detail.context!.getChildren().map((e) => e.name ?? '').toList());
-    // };
+    ErrorWidget.builder = (FlutterErrorDetails detail) {
+      print(detail.exception);
+      print(detail.summary.name);
+      print(detail.stack);
+      return KareeRouterErrorWidget(detail.summary.name, detail.stack, KareeErrorCode.NO_ROUTE_FOUND,
+          detail.context!.getChildren().map((e) => e.name ?? '').toList());
+    };
   }
 
   @override

@@ -50,6 +50,7 @@ void screen(dynamic screen, RouteMode mode,
     switch (mode) {
       case RouteMode.REPLACE:
         if (screen is String) {
+          KareeRouter.screenName = screen;
           KareeRouter.navigatorKey.currentState?.pushReplacementNamed(screen, arguments: argument);
         } else {
           var settings = RouteSettings(arguments: argument, name: KareeRouter.currentRoute);
@@ -59,6 +60,7 @@ void screen(dynamic screen, RouteMode mode,
         break;
       case RouteMode.PUSH:
         if (screen is String) {
+          KareeRouter.screenName = screen;
           KareeRouter.navigatorKey.currentState?.pushNamed(screen, arguments: argument);
         } else {
           var settings = RouteSettings(arguments: argument, name: KareeRouter.currentRoute);
@@ -68,6 +70,7 @@ void screen(dynamic screen, RouteMode mode,
         break;
       case RouteMode.EMPTY:
         if (screen is String) {
+          KareeRouter.screenName = screen;
           KareeRouter.navigatorKey.currentState?.pushNamedAndRemoveUntil(screen, (_) => false, arguments: argument);
         } else {
           var settings = RouteSettings(

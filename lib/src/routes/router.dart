@@ -217,7 +217,7 @@ class KareeRouter {
   static String? _currentRoute;
   static Map<String, String>? _pathVariables;
   static dynamic _lastArguments;
-
+  static String? screenName;
   static GlobalKey<NavigatorState> get navigatorKey => _navigatorKey;
   static String? get currentRoute => _currentRoute;
   static Map<String, String>? get pathVariables => _pathVariables;

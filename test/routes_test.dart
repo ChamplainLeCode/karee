@@ -1,10 +1,7 @@
-import 'package:flutter/material.dart' as m;
 import 'package:flutter_test/flutter_test.dart';
 import 'package:karee/annotations.dart';
 import 'package:karee/core.dart';
 import 'package:karee/navigation.dart';
-import 'package:karee/src/widgets/karee_router_error_widget.dart';
-import 'package:karee/widgets.dart';
 import 'package:karee_inject/karee_inject.dart';
 
 import 'routes_test.reflectable.dart';
