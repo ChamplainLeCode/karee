@@ -43,12 +43,12 @@ Karee is a framework that embbed a Command Line Interface and Libraries used to 
   - Organize your application routes with various structure
   - Generate additional source
 
-### With Karee you should not care because.
+### With Karee, you don't have to worry because:
 
-- Karee Simple and Easy to start and fast
+- Karee is Simple, Easy to start and fast
 - Karee works without `Class Inheritance` on your controllers or Services
 - Karee takes advantage of the power of `MVC Design Pattern` and `Annotations` simplicity
-- Karee provides a lot of useful Widgets
+- Karee provides a lot of useful items
 
 ### With Karee your code become 
 - Easy to read

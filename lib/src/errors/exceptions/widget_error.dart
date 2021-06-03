@@ -46,7 +46,8 @@ class BadUseOfRouterWidgetException implements Exception {
   RouteMode mode;
 
   BadUseOfRouterWidgetException(this.routerName, this.mode) {
-    this.message = 'Cannot use $mode with #${routerName.toString().substring(8, routerName.toString().length - 2)}';
+    this.message =
+        'Cannot use $mode with #${routerName.toString().substring(8, routerName.toString().length - 2)}';
   }
 
   String toString() {
@@ -61,15 +62,15 @@ class BadUseOfRouterWidgetException implements Exception {
 ///
 /// see [StatelessScreen]
 ///
-class NotManagableWidgetException implements Exception {
+class NotManageableWidgetException implements Exception {
   /// message of this error
   late final String message;
 
   /// route (path) that thrown this error
   final dynamic screen;
 
-  NotManagableWidgetException(this.screen) {
-    this.message = '$screen is not a managable screen';
+  NotManageableWidgetException(this.screen) {
+    this.message = '$screen is not a manageable screen';
   }
   String toString() {
     return 'Exception: NotManagableWidgetException( $message )';

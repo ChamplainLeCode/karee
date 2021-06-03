@@ -4,6 +4,7 @@ import '../screens/library.dart' show screen;
 
 void launchInternalRoute() {
   Route.on(KareeConstants.kareeErrorPath, (param) {
-    screen(KareeConstants.kareeErrorScreenName, RouteMode.PUSH, argument: param);
+    screen(KareeConstants.kareeErrorScreenName, RouteMode.PUSH,
+        argument: param);
   });
 }

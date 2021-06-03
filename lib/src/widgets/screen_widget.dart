@@ -6,7 +6,8 @@ import '../routes/router.dart' show KareeRouter;
 
 @immutable
 abstract class StatelessScreen extends StatelessWidget {
-  dynamic get arguments => ModalRoute.of(KareeRouter.currentContext!)?.settings.arguments;
+  dynamic get arguments =>
+      ModalRoute.of(KareeRouter.currentContext!)?.settings.arguments;
 
   @protected
   Size get screenSize => MediaQuery.of(KareeRouter.currentContext!).size;
@@ -22,13 +23,15 @@ abstract class StatelessScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     KareeRouter.currentContext = context;
     return Observer.on<AppLocalization>(
-        tag: KareeConstants.kApplicationLocalizationTag, builder: (_, l) => builder(context));
+        tag: KareeConstants.kApplicationLocalizationTag,
+        builder: (_, l) => builder(context));
   }
 }
 
 @immutable
 abstract class StatelessComponent extends StatelessWidget {
-  dynamic get arguments => ModalRoute.of(KareeRouter.currentContext!)?.settings.arguments;
+  dynamic get arguments =>
+      ModalRoute.of(KareeRouter.currentContext!)?.settings.arguments;
 
   @protected
   Size get screenSize => MediaQuery.of(KareeRouter.currentContext!).size;
@@ -106,6 +109,7 @@ abstract class ScreenState<T extends StatefulScreen> extends State<T> {
     KareeRouter.currentContext = context;
     arguments = ModalRoute.of(context)?.settings.arguments;
     return Observer.on<AppLocalization>(
-        tag: KareeConstants.kApplicationLocalizationTag, builder: (_, l) => builder(context));
+        tag: KareeConstants.kApplicationLocalizationTag,
+        builder: (_, l) => builder(context));
   }
 }

@@ -7,6 +7,7 @@
    * Support for Internationalization
    * New Widgets
    * Navigation with params in url
+   * Internal Routing
 ## [v2.0.0] - Nteuh: 28 march 2021.
 
  * Nteuh: Karee Core compatible with Dart 2.12.0
