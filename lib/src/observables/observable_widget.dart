@@ -29,8 +29,10 @@ class Observer<T> extends _ObservableElement<T> {
   /// ```
   ///
   /// see also [Observer.withProviders]
-  static _OfWidgetBuilder<E> on<E>({dynamic? tag, required _OfBuilderWithState<E> builder}) {
-    return _OfWidgetBuilder<E>(of: PersistentContext.getObsWithTag(E, tag), child: builder);
+  static _OfWidgetBuilder<E> on<E>(
+      {dynamic? tag, required _OfBuilderWithState<E> builder}) {
+    return _OfWidgetBuilder<E>(
+        of: PersistentContext.getObsWithTag(E, tag), child: builder);
   }
 
   /// ### Definition
@@ -54,7 +56,8 @@ class Observer<T> extends _ObservableElement<T> {
   /// ```
   ///
   /// see also [Observer.withProviders]
-  static Widget withProviders({required List<Of> providers, required _OfBuilder child}) {
+  static Widget withProviders(
+      {required List<Of> providers, required _OfBuilder child}) {
     return _OfWidgetProvider(obs: providers, child: child);
   }
 
@@ -80,7 +83,8 @@ class Observer<T> extends _ObservableElement<T> {
   /// see [Observer.withProviders]
   ///
   /// see also [Observer.on]
-  Observer({required Of<T> of, required _OfBuilder<T> child}) : super(of, child);
+  Observer({required Of<T> of, required _OfBuilder<T> child})
+      : super(of, child);
 
   _OfWidgetManager<T> createState() => _OfWidgetManager<T>();
 }
@@ -94,10 +98,12 @@ class _OfWidgetManager<T> extends _ObservableState<T> {
 }
 
 class _OfWidgetBuilder<E> extends _ObservableElementWithState<E> {
-  _OfWidgetBuilder({required _OfBuilderWithState<E> child, required Of<E> of}) : super(of, child);
+  _OfWidgetBuilder({required _OfBuilderWithState<E> child, required Of<E> of})
+      : super(of, child);
 
   @override
-  _OfWidgetBuilderStateManager<E> createState() => _OfWidgetBuilderStateManager<E>();
+  _OfWidgetBuilderStateManager<E> createState() =>
+      _OfWidgetBuilderStateManager<E>();
 }
 
 class _OfWidgetBuilderStateManager<E> extends _ObservableStateWithObs<E> {
@@ -130,7 +136,8 @@ abstract class _ObservableElement<E> extends StatefulComponent {
   _ObservableElement(this.of, this.child);
 }
 
-abstract class _ObservableState<E> extends ComponentState<_ObservableElement<E>> {
+abstract class _ObservableState<E>
+    extends ComponentState<_ObservableElement<E>> {
   initState() {
     widget.of.listen(_notifyUpdate);
     super.initState();
@@ -169,7 +176,8 @@ abstract class _ObservableElementWithState<E> extends StatefulComponent {
   _ObservableElementWithState(this.of, this.child);
 }
 
-abstract class _ObservableStateWithObs<E> extends ComponentState<_ObservableElementWithState<E>> {
+abstract class _ObservableStateWithObs<E>
+    extends ComponentState<_ObservableElementWithState<E>> {
   initState() {
     widget.of.listen(_notifyUpdate);
     super.initState();

@@ -31,7 +31,9 @@ void _loadYamlMap(String parentKey, YamlMap m) {
 }
 
 dynamic readConfig(String variable) {
-  assert(variable.startsWith('@{') && variable.endsWith('}') && variable.length > 3);
+  assert(variable.startsWith('@{') &&
+      variable.endsWith('}') &&
+      variable.length > 3);
   var varKey = variable.substring(2, variable.length - 1);
   var value = appConfig[varKey];
 

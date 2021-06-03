@@ -42,7 +42,8 @@ class Of<T> implements Observable<T> {
 
   /// Create an observable from value and tag. then persis to cache
   ///
-  factory Of.tag(T value, [dynamic tag = #base]) => PersistentContext.valueWithTag(value, tag);
+  factory Of.tag(T value, [dynamic tag = #base]) =>
+      PersistentContext.valueWithTag(value, tag);
 
   /// Get persisted observable by tag
   static withTag<T>(dynamic tag) => PersistentContext.withTag<T>(tag);

@@ -18,11 +18,12 @@ class KareeRouterErrorWidget extends StatefulScreen {
 
   KareeRouterErrorWidget([this._title, this._stack, this.errorCode, this.env]);
   @override
-  _KareeRouterErrorWidgetState createState() =>
-      _KareeRouterErrorWidgetState(this._title, this._stack, this.env, this.errorCode);
+  _KareeRouterErrorWidgetState createState() => _KareeRouterErrorWidgetState(
+      this._title, this._stack, this.env, this.errorCode);
 }
 
-class _KareeRouterErrorWidgetState extends ScreenState<KareeRouterErrorWidget> with SingleTickerProviderStateMixin {
+class _KareeRouterErrorWidgetState extends ScreenState<KareeRouterErrorWidget>
+    with SingleTickerProviderStateMixin {
   TabController? tabController;
 
   String? _title;
@@ -30,7 +31,8 @@ class _KareeRouterErrorWidgetState extends ScreenState<KareeRouterErrorWidget> w
   List<String>? env;
   KareeErrorCode? errorCode;
 
-  _KareeRouterErrorWidgetState([this._title, this._stack, this.env, this.errorCode]);
+  _KareeRouterErrorWidgetState(
+      [this._title, this._stack, this.env, this.errorCode]);
 
   @override
   void initState() {
@@ -53,21 +55,25 @@ class _KareeRouterErrorWidgetState extends ScreenState<KareeRouterErrorWidget> w
 
   @override
   Widget builder(BuildContext context) {
-    if (KareeMaterialApp.globalProfile == KareeInstanceProfile.development) return devErrorScreen();
+    if (KareeMaterialApp.globalProfile == KareeInstanceProfile.development)
+      return devErrorScreen();
     return prodErrorScreen();
   }
 
   Widget prodErrorScreen() {
-    var prodErrorWidgetBuilder = screens.lastWhere((entry) => entry[#name] == KareeConstants.kareeErrorScreenName,
+    var prodErrorWidgetBuilder = screens.lastWhere(
+        (entry) => entry[#name] == KareeConstants.kareeErrorScreenName,
         orElse: () => {#screen: null})[#screen];
-    if (prodErrorWidgetBuilder == null || prodErrorWidgetBuilder!().runtimeType == widget.runtimeType)
+    if (prodErrorWidgetBuilder == null ||
+        prodErrorWidgetBuilder!().runtimeType == widget.runtimeType)
       return KareeRouterDefaultProdErrorWidget();
 
     return prodErrorWidgetBuilder();
   }
 
   Widget devErrorScreen() {
-    var params = Map<Symbol, dynamic>.from((ModalRoute.of(context)?.settings.arguments ?? {}) as Map);
+    var params = Map<Symbol, dynamic>.from(
+        (ModalRoute.of(context)?.settings.arguments ?? {}) as Map);
     _title = _title ?? params[#title];
     _stack = _stack ?? params[#stack];
     env = env ?? (params[#env] as List).map((e) => e.toString()).toList();
@@ -98,7 +104,9 @@ class _KareeRouterErrorWidgetState extends ScreenState<KareeRouterErrorWidget> w
                           Container(
                             child: Text(
                               "Exception",
-                              style: TextStyle(color: Color(0xFFD04C46), fontWeight: FontWeight.w400),
+                              style: TextStyle(
+                                  color: Color(0xFFD04C46),
+                                  fontWeight: FontWeight.w400),
                             ),
                             padding: EdgeInsets.only(top: 15),
                           )
@@ -106,7 +114,9 @@ class _KareeRouterErrorWidgetState extends ScreenState<KareeRouterErrorWidget> w
                     SizedBox(height: 10),
                     Text(
                       _title ?? '',
-                      style: TextStyle(color: Color(0xFFA2AFA3), fontWeight: FontWeight.w400),
+                      style: TextStyle(
+                          color: Color(0xFFA2AFA3),
+                          fontWeight: FontWeight.w400),
                     ),
                     SizedBox(height: 10),
                   ],
@@ -138,7 +148,10 @@ class _KareeRouterErrorWidgetState extends ScreenState<KareeRouterErrorWidget> w
                       Container(
                         margin: EdgeInsets.only(top: 20, left: 20),
                         child: Text("Environment",
-                            style: TextStyle(color: Colors.white38, fontWeight: FontWeight.bold, fontSize: 12)),
+                            style: TextStyle(
+                                color: Colors.white38,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 12)),
                       ),
                       Card(
                         elevation: 5,
@@ -153,12 +166,15 @@ class _KareeRouterErrorWidgetState extends ScreenState<KareeRouterErrorWidget> w
                             children: env
                                     ?.map((e) => RichText(
                                             text: TextSpan(
-                                                style: TextStyle(color: Colors.white38),
-                                                text: '${(env ?? []).indexOf(e) + 1}. ',
+                                                style: TextStyle(
+                                                    color: Colors.white38),
+                                                text:
+                                                    '${(env ?? []).indexOf(e) + 1}. ',
                                                 children: [
                                               TextSpan(
                                                 text: "\" $e \"",
-                                                style: TextStyle(color: Colors.white),
+                                                style: TextStyle(
+                                                    color: Colors.white),
                                               )
                                             ])))
                                     .toList() ??
@@ -170,9 +186,13 @@ class _KareeRouterErrorWidgetState extends ScreenState<KareeRouterErrorWidget> w
                       Container(
                         margin: EdgeInsets.only(top: 20, left: 20),
                         child: Text("Proposal",
-                            style: TextStyle(color: Colors.white38, fontWeight: FontWeight.bold, fontSize: 12)),
+                            style: TextStyle(
+                                color: Colors.white38,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 12)),
                       ),
-                      errorSolution[errorCode]?.call(context, env as List) ?? Container()
+                      errorSolution[errorCode]?.call(context, env as List) ??
+                          Container()
                     ],
                   ))),
               SizedBox(
@@ -195,25 +215,35 @@ class _KareeRouterErrorWidgetState extends ScreenState<KareeRouterErrorWidget> w
                       return ListView.builder(
                           itemCount: snapshot.data?.length ?? 0,
                           itemBuilder: (ctx, index) {
-                            StackErrorEntry? item = snapshot.data?.elementAt(index);
+                            StackErrorEntry? item =
+                                snapshot.data?.elementAt(index);
                             return Container(
                                 height: 60,
-                                color: (item?.index ?? 0) % 2 == 0 ? Colors.transparent : Colors.black12,
+                                color: (item?.index ?? 0) % 2 == 0
+                                    ? Colors.transparent
+                                    : Colors.black12,
                                 child: ListTile(
                                   title: Row(children: [
                                     Container(
                                         padding: EdgeInsets.all(3),
                                         margin: EdgeInsets.only(right: 5),
                                         decoration: BoxDecoration(
-                                            color: Color(0xFF2A2A2A), borderRadius: BorderRadius.circular(5)),
+                                            color: Color(0xFF2A2A2A),
+                                            borderRadius:
+                                                BorderRadius.circular(5)),
                                         child: Text('${item?.index}',
-                                            style: TextStyle(color: Colors.white, fontSize: 10))),
+                                            style: TextStyle(
+                                                color: Colors.white,
+                                                fontSize: 10))),
                                     Expanded(
                                         child: Container(
                                             child: Text(item?.title ?? '',
-                                                style: TextStyle(color: Colors.black87, fontSize: 12))))
+                                                style: TextStyle(
+                                                    color: Colors.black87,
+                                                    fontSize: 12))))
                                   ]),
-                                  subtitle: Text(item?.path ?? '', style: TextStyle(fontSize: 10)),
+                                  subtitle: Text(item?.path ?? '',
+                                      style: TextStyle(fontSize: 10)),
                                 )
                                 // child: Text('kdkd $index'),
                                 );
@@ -240,7 +270,8 @@ class StackErrorEntry {
           : e.substring(0, indexEndTitle > 0 ? indexEndTitle : e.length);
       this.path = kIsWeb
           ? e.substring(0, lastIndex).trim()
-          : e.substring(indexEndTitle + 1, indexBeginTile > 0 ? indexBeginTile : e.length);
+          : e.substring(indexEndTitle + 1,
+              indexBeginTile > 0 ? indexBeginTile : e.length);
     }
   }
 

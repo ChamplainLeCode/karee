@@ -40,10 +40,14 @@ class KareeInternationalization {
   /// instance in Karee framework
   static Future<void> init(Locale? locale, List<Locale> supportedLocale) async {
     if (_init) return;
-    KareeInternationalization._appLocalization = Of.tag(AppLocalization(), KareeConstants.kApplicationLocalizationTag);
+    KareeInternationalization._appLocalization =
+        Of.tag(AppLocalization(), KareeConstants.kApplicationLocalizationTag);
     var appL = KareeInternationalization._appLocalization.value;
 
-    appL._currentLanguage = Of.tag(locale == null ? AppLanguage.internal() : AppLanguage(locale.languageCode),
+    appL._currentLanguage = Of.tag(
+        locale == null
+            ? AppLanguage.internal()
+            : AppLanguage(locale.languageCode),
         KareeConstants.kApplicationLocalizationTag);
     if (locale != null) {
       if (!supportedLocale.contains(locale)) {
@@ -73,7 +77,8 @@ class AppLocalization {
   /// Only for internal call. `AppLocalization._setCurrentLanguage` is the function that
   /// internally, update the current language locale, and propagate the update in
   /// all the application
-  static void _changeLanguage(Of<AppLocalization> appLObs, Locale locale) async {
+  static void _changeLanguage(
+      Of<AppLocalization> appLObs, Locale locale) async {
     if (appLObs.value._currentLanguage?.value != null) {
       appLObs.value._currentLanguage?.value = AppLanguage.fromLocale(locale);
 
@@ -83,7 +88,8 @@ class AppLocalization {
   }
 
   Future<void> _readTranslationFile(Locale locale) async {
-    String translationString = await loadConfig('${KareeConstants.kApplicationLocalizationRessourcDir}'
+    String translationString = await loadConfig(
+        '${KareeConstants.kApplicationLocalizationRessourcDir}'
         '/${locale.languageCode.toLowerCase()}'
         "${locale.countryCode != null ? '_${locale.countryCode!.toLowerCase()}' : ''}.json");
     try {

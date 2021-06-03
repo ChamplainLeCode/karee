@@ -12,7 +12,10 @@ import '../routes/router.dart';
 /// karee application.
 ///
 List<Map<Symbol, dynamic>> screens = [
-  {#name: KareeConstants.kareeErrorScreenName, #screen: () => KareeRouterErrorWidget()}
+  {
+    #name: KareeConstants.kareeErrorScreenName,
+    #screen: () => KareeRouterErrorWidget()
+  }
 ];
 
 /// subscribeScreen Function: Function use by application to subscribes their
@@ -36,8 +39,6 @@ void screen(dynamic screen, RouteMode mode,
     if (!(isString || isStls || isStfs || isRoutable)) {
       throw NotManageableWidgetException(screen);
     }
-    print(
-        'ty Is manageableWidget = ${!(screen is String || screen is StatelessScreen || screen is StatefulScreen || screen is RoutableWidget)}');
     if (routerName != null && mode != RouteMode.NONE) {
       throw BadUseOfRouterWidgetException(routerName, mode);
     }
@@ -51,34 +52,44 @@ void screen(dynamic screen, RouteMode mode,
       case RouteMode.REPLACE:
         if (screen is String) {
           KareeRouter.screenName = screen;
-          KareeRouter.navigatorKey.currentState?.pushReplacementNamed(screen, arguments: argument);
-        } else {
-          var settings = RouteSettings(arguments: argument, name: KareeRouter.currentRoute);
           KareeRouter.navigatorKey.currentState
-              ?.pushReplacement(cupertino.MaterialPageRoute(builder: (_) => screen, settings: settings));
+              ?.pushReplacementNamed(screen, arguments: argument);
+        } else {
+          var settings = RouteSettings(
+              arguments: argument, name: KareeRouter.currentRoute);
+          KareeRouter.navigatorKey.currentState?.pushReplacement(
+              cupertino.MaterialPageRoute(
+                  builder: (_) => screen, settings: settings));
         }
         break;
       case RouteMode.PUSH:
         if (screen is String) {
           KareeRouter.screenName = screen;
-          KareeRouter.navigatorKey.currentState?.pushNamed(screen, arguments: argument);
-        } else {
-          var settings = RouteSettings(arguments: argument, name: KareeRouter.currentRoute);
           KareeRouter.navigatorKey.currentState
-              ?.push(cupertino.MaterialPageRoute(builder: (_) => screen, settings: settings));
+              ?.pushNamed(screen, arguments: argument);
+        } else {
+          var settings = RouteSettings(
+              arguments: argument, name: KareeRouter.currentRoute);
+          KareeRouter.navigatorKey.currentState?.push(
+              cupertino.MaterialPageRoute(
+                  builder: (_) => screen, settings: settings));
         }
         break;
       case RouteMode.EMPTY:
         if (screen is String) {
           KareeRouter.screenName = screen;
-          KareeRouter.navigatorKey.currentState?.pushNamedAndRemoveUntil(screen, (_) => false, arguments: argument);
+          KareeRouter.navigatorKey.currentState?.pushNamedAndRemoveUntil(
+              screen, (_) => false,
+              arguments: argument);
         } else {
           var settings = RouteSettings(
             name: KareeRouter.currentRoute,
             arguments: argument,
           );
           KareeRouter.navigatorKey.currentState?.pushAndRemoveUntil(
-              cupertino.MaterialPageRoute(builder: (_) => screen, settings: settings), (route) => false);
+              cupertino.MaterialPageRoute(
+                  builder: (_) => screen, settings: settings),
+              (route) => false);
         }
         break;
       default:

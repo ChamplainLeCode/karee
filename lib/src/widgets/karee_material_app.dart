@@ -116,10 +116,12 @@ class KareeMaterialApp extends StatelessWidget {
       required this.observables,
       this.errorContactAddress}) {
     assert(profile == KareeInstanceProfile.development ||
-        (profile == KareeInstanceProfile.production && errorContactAddress != null));
+        (profile == KareeInstanceProfile.production &&
+            errorContactAddress != null));
     KareeMaterialApp.globalProfile = profile;
     KareeMaterialApp.globalErrorContactAddress = errorContactAddress;
-    KareeInternationalization.init(this.locale, this.supportedLocales.toList()).catchError((onError, st) {
+    KareeInternationalization.init(this.locale, this.supportedLocales.toList())
+        .catchError((onError, st) {
       var ex = onError as TranslationFileNotExists;
 
       KareeRouter.goto(KareeConstants.kareeErrorPath, parameter: {
@@ -136,7 +138,10 @@ class KareeMaterialApp extends StatelessWidget {
       print(detail.exception);
       print(detail.summary.name);
       print(detail.stack);
-      return KareeRouterErrorWidget(detail.summary.name, detail.stack, KareeErrorCode.NO_ROUTE_FOUND,
+      return KareeRouterErrorWidget(
+          detail.summary.name,
+          detail.stack,
+          KareeErrorCode.NO_ROUTE_FOUND,
           detail.context!.getChildren().map((e) => e.name ?? '').toList());
     };
   }
@@ -167,13 +172,16 @@ class KareeMaterialApp extends StatelessWidget {
                     themeMode: this.themeMode,
                     // locale: this.locale,
                     // localizationsDelegates: this.localizationsDelegates,
-                    localeListResolutionCallback: this.localeListResolutionCallback,
+                    localeListResolutionCallback:
+                        this.localeListResolutionCallback,
                     localeResolutionCallback: this.localeResolutionCallback,
                     // supportedLocales: this.supportedLocales,
                     debugShowMaterialGrid: this.debugShowMaterialGrid,
                     showPerformanceOverlay: this.showPerformanceOverlay,
-                    checkerboardRasterCacheImages: this.checkerboardRasterCacheImages,
-                    checkerboardOffscreenLayers: this.checkerboardOffscreenLayers,
+                    checkerboardRasterCacheImages:
+                        this.checkerboardRasterCacheImages,
+                    checkerboardOffscreenLayers:
+                        this.checkerboardOffscreenLayers,
                     showSemanticsDebugger: this.showSemanticsDebugger,
                     debugShowCheckedModeBanner: this.debugShowCheckedModeBanner,
                     shortcuts: this.shortcuts,

@@ -248,7 +248,7 @@ packages:
       name: karee_inject
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.0.1"
+    version: "1.0.2"
   logging:
     dependency: transitive
     description:
@@ -327,7 +327,7 @@ packages:
     source: hosted
     version: "2.1.5"
   reflectable:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: reflectable
       url: "https://pub.dartlang.org"

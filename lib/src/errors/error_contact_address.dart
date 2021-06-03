@@ -19,5 +19,8 @@ class ErrorContactAddress {
   /// The support address that you can provide to your end users
   final String appSupportEmail;
 
-  const ErrorContactAddress({required this.appName, required this.appSupportEmail, required this.appVersion});
+  const ErrorContactAddress(
+      {required this.appName,
+      required this.appSupportEmail,
+      required this.appVersion});
 }

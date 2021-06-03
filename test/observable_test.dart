@@ -69,7 +69,8 @@ void main() {
       Of.free(ofName);
 
       /// We are trying to get removed observable by Tag
-      expect(() => Of.withTag(tag), throwsA(isInstanceOf<NoObservableFoundWithTagError>()));
+      expect(() => Of.withTag(tag),
+          throwsA(isInstanceOf<NoObservableFoundWithTagError>()));
     });
   });
 }

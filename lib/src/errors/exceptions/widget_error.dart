@@ -46,7 +46,8 @@ class BadUseOfRouterWidgetException implements Exception {
   RouteMode mode;
 
   BadUseOfRouterWidgetException(this.routerName, this.mode) {
-    this.message = 'Cannot use $mode with #${routerName.toString().substring(8, routerName.toString().length - 2)}';
+    this.message =
+        'Cannot use $mode with #${routerName.toString().substring(8, routerName.toString().length - 2)}';
   }
 
   String toString() {

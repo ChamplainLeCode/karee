@@ -40,7 +40,9 @@ class PersistentContext {
     for (var obsTagEntry in entries) {
       var key = (obsTagEntry.value as Map).entries;
       for (var taggedObs in key) {
-        if (taggedObs.key == tag && taggedObs.value is Of && taggedObs.value.value is T) {
+        if (taggedObs.key == tag &&
+            taggedObs.value is Of &&
+            taggedObs.value.value is T) {
           return taggedObs.value as Of<T>;
         }
       }
