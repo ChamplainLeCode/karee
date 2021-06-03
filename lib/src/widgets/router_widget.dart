@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
-import './../routes/Router.dart';
+import '../constances/constances.dart';
+import '../../internationalization.dart';
+import '../routes/router.dart';
+import '../observables/observable_widget.dart';
 
 class RouterWidget extends StatefulWidget {
   final Symbol name;
@@ -37,7 +40,6 @@ class _RouterWidgetState extends RouterWidgetState {
   @override
   Widget build(BuildContext context) {
     return Container(
-      // color: Colors.red,
       constraints: BoxConstraints(),
       child: child ?? widget.initial,
     );
@@ -54,8 +56,8 @@ abstract class RoutableWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return StatefulBuilder(builder: (ctx, st) {
-      return builder(context, _parameter);
-    });
+    return Observer.on<AppLocalization>(
+        tag: KareeConstants.kApplicationLocalizationTag,
+        builder: (_, l) => builder(context, _parameter));
   }
 }

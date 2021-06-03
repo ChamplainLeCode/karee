@@ -7,6 +7,7 @@
 /// - Service
 /// - Value
 
-library annotations;
+library karee.annotations;
 
-export 'package:karee_inject/karee_inject.dart' show Controller, Screen, Value, Autowired, Service /**Persistable*/;
+export 'package:karee_inject/karee_inject.dart'
+    show Controller, Screen, Value, Autowired, Service /**Persistable*/;

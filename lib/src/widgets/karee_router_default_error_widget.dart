@@ -4,10 +4,12 @@ import './karee_material_app.dart';
 
 class KareeRouterDefaultProdErrorWidget extends StatefulWidget {
   @override
-  _KareeRouterDefaultProdErrorWidgetState createState() => _KareeRouterDefaultProdErrorWidgetState();
+  _KareeRouterDefaultProdErrorWidgetState createState() =>
+      _KareeRouterDefaultProdErrorWidgetState();
 }
 
-class _KareeRouterDefaultProdErrorWidgetState extends State<KareeRouterDefaultProdErrorWidget> {
+class _KareeRouterDefaultProdErrorWidgetState
+    extends State<KareeRouterDefaultProdErrorWidget> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -16,7 +18,8 @@ class _KareeRouterDefaultProdErrorWidgetState extends State<KareeRouterDefaultPr
         leading: BackButton(color: Colors.black87),
         elevation: 0,
       ),
-      body: Column(
+      body: SingleChildScrollView(
+          child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisAlignment: MainAxisAlignment.center,
         mainAxisSize: MainAxisSize.max,
@@ -30,7 +33,8 @@ class _KareeRouterDefaultProdErrorWidgetState extends State<KareeRouterDefaultPr
                   alignment: Alignment.center,
                   child: Text(
                     'OOPS!',
-                    style: TextStyle(fontSize: 100, fontWeight: FontWeight.w200),
+                    style:
+                        TextStyle(fontSize: 100, fontWeight: FontWeight.w200),
                   ),
                 ),
                 Column(children: [
@@ -38,11 +42,13 @@ class _KareeRouterDefaultProdErrorWidgetState extends State<KareeRouterDefaultPr
                   Container(
                       alignment: Alignment.center,
                       child: Container(
-                          padding: EdgeInsets.only(left: 20, right: 20, top: 5, bottom: 5),
+                          padding: EdgeInsets.only(
+                              left: 20, right: 20, top: 5, bottom: 5),
                           color: Colors.white,
                           child: Text(
                             'Something went wrong',
-                            style: TextStyle(fontSize: 15, fontWeight: FontWeight.w400),
+                            style: TextStyle(
+                                fontSize: 15, fontWeight: FontWeight.w400),
                           )))
                 ])
               ],
@@ -51,25 +57,34 @@ class _KareeRouterDefaultProdErrorWidgetState extends State<KareeRouterDefaultPr
           Container(
             child: Text(
               '${KareeMaterialApp.globalErrorContactAddress?.appName ?? 'Karee App'}',
-              style: TextStyle(fontSize: 15, color: Colors.primaries.first, fontWeight: FontWeight.bold),
+              style: TextStyle(
+                  fontSize: 15,
+                  color: Colors.primaries.first,
+                  fontWeight: FontWeight.bold),
             ),
             margin: EdgeInsets.only(top: 20),
           ),
           Container(
             child: Text(
               '[ ${KareeMaterialApp.globalErrorContactAddress?.appVersion ?? 'v2.0.0'} ]',
-              style: TextStyle(color: Colors.primaries.first, fontSize: 12, fontWeight: FontWeight.w300),
+              style: TextStyle(
+                  color: Colors.primaries.first,
+                  fontSize: 12,
+                  fontWeight: FontWeight.w300),
             ),
           ),
           Container(
             margin: EdgeInsets.only(top: 10),
             child: Text(
               '${KareeMaterialApp.globalErrorContactAddress?.appSupportEmail ?? ''}',
-              style: TextStyle(color: Colors.primaries.first, fontSize: 12, fontWeight: FontWeight.w300),
+              style: TextStyle(
+                  color: Colors.primaries.first,
+                  fontSize: 12,
+                  fontWeight: FontWeight.w300),
             ),
           )
         ],
-      ),
+      )),
     );
   }
 }

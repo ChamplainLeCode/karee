@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/cupertino.dart' as cupertino;
 import 'package:flutter/material.dart';
 import 'package:karee_inject/karee_inject.dart' show ControllerReflectable;
@@ -7,7 +9,7 @@ import '../constances/constances.dart' show KareeConstants;
 import '../errors/errors_solutions.dart' show KareeErrorCode;
 import '../errors/exceptions/no_action_found_error.dart';
 import '../errors/exceptions/no_route_found_error.dart';
-import '../routes/internal_route.dart';
+import 'internal_route.dart';
 import '../widgets/karee_router_error_widget.dart';
 import '../widgets/router_widget.dart';
 import '../screens/screens.dart' show screen, screens;
@@ -44,7 +46,8 @@ typedef RouteActivation = bool Function();
 ///
 class Route {
   static Map<String, dynamic> _routeMap = {};
-  static Map<String, List<dynamic>> _routeWithParams = <String, List<dynamic>>{};
+  static Map<String, List<dynamic>> _routeWithParams =
+      <String, List<dynamic>>{};
   static Map<RouteActivation, List<String>> _routeActivationMap = {};
 
   static const String pathVariableGroup = '([0-9a-zA-Z\-_]+)';
@@ -52,7 +55,8 @@ class Route {
 
   static bool defaultRouteActivation() => true;
 
-  static void on(String route, dynamic action, {RouteActivation canActivated = defaultRouteActivation}) {
+  static void on(String route, dynamic action,
+      {RouteActivation canActivated = defaultRouteActivation}) {
     assert(action != null && action.toString().isNotEmpty);
     assert(route.isNotEmpty);
 
@@ -77,7 +81,8 @@ class Route {
 
 /// When a new Router Widget is added in Flutter tree, it is automatically registered
 /// available internal router cache
-void subscribeRouterWidget(Symbol name, RouterWidgetState state) => _internalRouter[name] = state;
+void subscribeRouterWidget(Symbol name, RouterWidgetState state) =>
+    _internalRouter[name] = state;
 
 /// When a new Router Widget is removed from Flutter tree, it is automatically unregistered
 /// available internal router cache
@@ -105,21 +110,25 @@ void doInternalRouting(Symbol routerName, dynamic screenName, dynamic param) {
     var router = findRouterByName(routerName);
 
     if (router == null) {
-      throw Exception('Unable to find router with name ${routerName.toString()}');
+      throw Exception(
+          'Unable to find router with name ${routerName.toString()}');
     }
     if (screenName is String || screenName is cupertino.Widget) {
       var widget;
       if (screenName is Widget) {
         widget = screenName;
       } else {
-        widget = screens.firstWhere((routeItem) => routeItem[#name] == screenName)[#screen]?.call();
+        widget = screens
+            .firstWhere((routeItem) => routeItem[#name] == screenName)[#screen]
+            ?.call();
       }
       if (widget is RoutableWidget) {
         router.load(widget..onParam(param));
         return;
       }
 
-      throw NotRoutableWidgetException(routerName.toString(), widget.runtimeType);
+      throw NotRoutableWidgetException(
+          routerName.toString(), widget.runtimeType);
     } else {}
   } on NotRoutableWidgetException catch (e, stack) {
     KareeRouter.goto(KareeConstants.kareeErrorPath, parameter: {
@@ -159,7 +168,13 @@ void doInternalRouting(Symbol routerName, dynamic screenName, dynamic param) {
               ? param
               : [])
         ..reversed.toList()
-        ..addAll([screenName, '#' + routerName.toString().substring(8, routerName.toString().length - 3)]),
+        ..addAll([
+          screenName,
+          '#' +
+              routerName
+                  .toString()
+                  .substring(8, routerName.toString().length - 3)
+        ]),
       #errorCode: KareeErrorCode.NO_ROUTE_FOUND
     });
   }
@@ -210,12 +225,13 @@ dynamic doRouting(String control, String method, dynamic params) {
 ///
 ///
 class KareeRouter {
-  static final GlobalKey<NavigatorState> _navigatorKey = GlobalKey<NavigatorState>();
+  static final GlobalKey<NavigatorState> _navigatorKey =
+      GlobalKey<NavigatorState>();
   static BuildContext? currentContext;
   static String? _currentRoute;
   static Map<String, String>? _pathVariables;
   static dynamic _lastArguments;
-
+  static String? screenName;
   static GlobalKey<NavigatorState> get navigatorKey => _navigatorKey;
   static String? get currentRoute => _currentRoute;
   static Map<String, String>? get pathVariables => _pathVariables;
@@ -223,7 +239,8 @@ class KareeRouter {
   static dynamic goto(String routeName, {dynamic parameter}) {
     assert(routeName.isNotEmpty);
 
-    var canActivatedEntry = Route._routeActivationMap.entries.firstWhere((entry) => entry.value.contains(routeName),
+    var canActivatedEntry = Route._routeActivationMap.entries.firstWhere(
+        (entry) => entry.value.contains(routeName),
         orElse: () => MapEntry(Route.defaultRouteActivation, []));
     if (!canActivatedEntry.key()) {
       /// Route Guard refused access to this routes
@@ -274,6 +291,7 @@ class KareeRouter {
           #errorCode: KareeErrorCode.NO_ROUTE_FOUND
         });
       }
+      if (Platform.environment.containsKey('FLUTTER_TEST')) rethrow;
     }
   }
 
@@ -282,19 +300,24 @@ class KareeRouter {
   /// This function also setup **KareeRouter.pathVariables** value when the path
   /// represented by this route contains url parameters
   static dynamic findActionFor(String ro) {
-    MapEntry<String, dynamic> action =
-        Route._routeMap.entries.firstWhere((entry) => entry.key == ro, orElse: () => MapEntry('', null));
+    MapEntry<String, dynamic> action = Route._routeMap.entries.firstWhere(
+        (entry) => entry.key == ro,
+        orElse: () => MapEntry('', null));
     if (action.value == null) {
-      var arg = Route._routeWithParams.entries
-          .firstWhere((entryParam) => RegExp(entryParam.key).hasMatch(ro), orElse: () => MapEntry('', <String>[]));
+      var arg = Route._routeWithParams.entries.firstWhere(
+          (entryParam) => RegExp(entryParam.key).hasMatch(ro),
+          orElse: () => MapEntry('', <String>[]));
       if (arg.value.isNotEmpty) {
         var actionAndPathVar = RegExp(arg.key)
             .allMatches(ro)
-            .map((e) => e.groups(List<int>.generate(e.groupCount + 1, (ind) => ind)))
+            .map((e) =>
+                e.groups(List<int>.generate(e.groupCount + 1, (ind) => ind)))
             .firstWhere((element) => true, orElse: () => <String>[]);
         KareeRouter._pathVariables = {};
         for (int i = 1; i < actionAndPathVar.length; i++) {
-          KareeRouter._pathVariables!.addEntries([MapEntry(Route._routeWithParams[arg.key]![i], actionAndPathVar[i]!)]);
+          KareeRouter._pathVariables!.addEntries([
+            MapEntry(Route._routeWithParams[arg.key]![i], actionAndPathVar[i]!)
+          ]);
         }
         return arg.value.first;
       }
@@ -313,22 +336,26 @@ class KareeRouter {
     try {
       var widget = settings.name == null || settings.name == '/'
           ? initialScreen()
-          : screens.firstWhere((routeItem) => routeItem[#name] == settings.name, orElse: () {
+          : screens.firstWhere((routeItem) => routeItem[#name] == settings.name,
+              orElse: () {
               return {#screen: () => null};
             })[#screen]?.call();
       if (widget == null) {
         throw NoRouteFoundError(settings.name, settings.arguments);
       }
 
-      if (!(widget is StatelessScreen) && !(widget is StatefulScreen) && !(widget is RoutableWidget)) {
-        throw NotManagableWidgetException(widget);
+      if (!(widget is StatelessScreen) &&
+          !(widget is StatefulScreen) &&
+          !(widget is RoutableWidget)) {
+        throw NotManageableWidgetException(widget);
       }
       if (settings.arguments != null) {
         KareeRouter._lastArguments = settings.arguments;
       }
       return cupertino.PageRouteBuilder(
           settings: RouteSettings(
-              name: KareeRouter.currentRoute, arguments: settings.arguments ?? KareeRouter._lastArguments),
+              name: KareeRouter.currentRoute,
+              arguments: settings.arguments ?? KareeRouter._lastArguments),
           transitionDuration: Duration(milliseconds: 0),
           pageBuilder: (_, a1, a2) {
             // KareeRouter.currentContext = _;
@@ -337,24 +364,27 @@ class KareeRouter {
     } on NoRouteFoundError catch (e, st) {
       KareeRouter._lastArguments = [
         settings.name!,
-        KareeRouter.currentRoute!,
+        if (KareeRouter.currentRoute != null) KareeRouter.currentRoute!,
         if (settings.arguments != null) settings.arguments.toString()
       ];
       return cupertino.PageRouteBuilder(
           transitionDuration: Duration(milliseconds: 0),
-          pageBuilder: (_, a1, a2) => KareeRouterErrorWidget('No screen found with name ${settings.name}', st,
-              KareeErrorCode.SCREEN_NOT_FOUND, KareeRouter._lastArguments));
-    } on NotManagableWidgetException catch (ex, st) {
+          pageBuilder: (_, a1, a2) => KareeRouterErrorWidget(
+              'No screen found with name ${settings.name}',
+              st,
+              KareeErrorCode.SCREEN_NOT_FOUND,
+              KareeRouter._lastArguments));
+    } on NotManageableWidgetException catch (ex, st) {
       KareeRouter._lastArguments = [
         ex.screen.toString(),
         settings.name!,
-        KareeRouter.currentRoute!,
+        if (KareeRouter.currentRoute != null) KareeRouter.currentRoute!,
         if (settings.arguments != null) settings.arguments.toString()
       ];
       return cupertino.PageRouteBuilder(
           transitionDuration: Duration(milliseconds: 0),
-          pageBuilder: (_, a1, a2) =>
-              KareeRouterErrorWidget(ex.message, st, KareeErrorCode.NOT_KAREE_SCREEN, KareeRouter._lastArguments));
+          pageBuilder: (_, a1, a2) => KareeRouterErrorWidget(ex.message, st,
+              KareeErrorCode.NOT_KAREE_SCREEN, KareeRouter._lastArguments));
     }
   }
 
@@ -364,9 +394,12 @@ class KareeRouter {
   ///
   static cupertino.Widget initialScreen() {
     try {
-      return screens.firstWhere((routeItem) => routeItem[#initial] ?? false)[#screen]?.call();
+      return screens
+          .firstWhere((routeItem) => routeItem[#initial] ?? false)[#screen]
+          ?.call();
     } catch (e, st) {
-      return KareeRouterErrorWidget('No Initial Screen found', st, KareeErrorCode.NO_INITIAL_SCREEN, [""]);
+      return KareeRouterErrorWidget('No Initial Screen found', st,
+          KareeErrorCode.NO_INITIAL_SCREEN, [""]);
     }
   }
 
@@ -376,12 +409,14 @@ class KareeRouter {
   static cupertino.Widget componentForRouteName(String s) {
     try {
       final scr = screens.firstWhere((routeItem) {
-        print("\n### Screen name = ${routeItem[#name]}, Widget = $routeItem match ? = $s");
+        print(
+            "\n### Screen name = ${routeItem[#name]}, Widget = $routeItem match ? = $s");
         return routeItem[#name] == s;
       }, orElse: () => {#screen: null})['screen' as Symbol];
       return scr;
     } catch (e, st) {
-      return KareeRouterErrorWidget('No Screen found with name `$s`', st, KareeErrorCode.SCREEN_NOT_FOUND, [s]);
+      return KareeRouterErrorWidget('No Screen found with name `$s`', st,
+          KareeErrorCode.SCREEN_NOT_FOUND, [s]);
     }
   }
 
@@ -389,7 +424,8 @@ class KareeRouter {
   /// Implementation of navigator to goback to previous context
   ///
   static goBack() {
-    if (KareeRouter.navigatorKey.currentState!.canPop()) KareeRouter.navigatorKey.currentState!.pop();
+    if (KareeRouter.navigatorKey.currentState!.canPop())
+      KareeRouter.navigatorKey.currentState!.pop();
   }
 
   ///
@@ -405,12 +441,17 @@ class KareeRouter {
 /// Default Karee Transition
 ///
 class RouteTransition<T> extends cupertino.CupertinoPageRoute<T> {
-  RouteTransition({required cupertino.WidgetBuilder builder, required cupertino.RouteSettings settings})
+  RouteTransition(
+      {required cupertino.WidgetBuilder builder,
+      required cupertino.RouteSettings settings})
       : super(builder: builder, settings: settings, maintainState: true);
 
   @override
-  cupertino.Widget buildTransitions(cupertino.BuildContext context, cupertino.Animation<double> animation,
-      cupertino.Animation<double> secondaryAnimation, cupertino.Widget child) {
+  cupertino.Widget buildTransitions(
+      cupertino.BuildContext context,
+      cupertino.Animation<double> animation,
+      cupertino.Animation<double> secondaryAnimation,
+      cupertino.Widget child) {
     return new cupertino.CupertinoPageTransition(
         child: child,
         linearTransition: true,

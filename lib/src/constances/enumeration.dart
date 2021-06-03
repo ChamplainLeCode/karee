@@ -4,7 +4,7 @@ import '../widgets/karee_material_app.dart';
 
 /// KareeInstanceProfile enumeration used to set the profile of the application
 ///
-/// Application profile is used by Karee to know wheter the application is running
+/// Application profile is used by Karee to know whether the application is running
 /// in dev mode or in prod.
 /// ### Development Mode
 /// When the dev mode is enabled, developers can get all errors thrown in the application

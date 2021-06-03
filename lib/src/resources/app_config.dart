@@ -1,12 +1,12 @@
-import 'package:flutter/services.dart';
-import 'package:karee_core/core.dart';
+import 'io.dart';
 import 'package:yaml/yaml.dart';
+import '../constances/constances.dart';
 
 late final YamlMap _appConfig;
 final Map<String, dynamic> appConfig = {};
 
 Future<void> loadAppConfig() async {
-  var stringConfig = await PlatformAssetBundle().loadString(KareeConstants.kApplicationRessourceFile);
+  var stringConfig = await loadConfig(KareeConstants.kApplicationRessourceFile);
   _appConfig = loadYaml(stringConfig);
   _appConfig.forEach((key, value) {
     _loadYamlMap(key, value);
@@ -31,7 +31,9 @@ void _loadYamlMap(String parentKey, YamlMap m) {
 }
 
 dynamic readConfig(String variable) {
-  assert(variable.startsWith('@{') && variable.endsWith('}') && variable.length > 3);
+  assert(variable.startsWith('@{') &&
+      variable.endsWith('}') &&
+      variable.length > 3);
   var varKey = variable.substring(2, variable.length - 1);
   var value = appConfig[varKey];
 

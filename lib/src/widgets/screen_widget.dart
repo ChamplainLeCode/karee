@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
-
-import '../routes/Router.dart' show KareeRouter;
+import '../constances/library.dart' show KareeConstants;
+import '../observables/library.dart' show Observer;
+import '../utils/app_localization.dart';
+import '../routes/router.dart' show KareeRouter;
 
 @immutable
 abstract class StatelessScreen extends StatelessWidget {
-  dynamic get arguments => ModalRoute.of(KareeRouter.currentContext!)?.settings.arguments;
+  dynamic get arguments =>
+      ModalRoute.of(KareeRouter.currentContext!)?.settings.arguments;
 
   @protected
   Size get screenSize => MediaQuery.of(KareeRouter.currentContext!).size;
@@ -19,13 +22,16 @@ abstract class StatelessScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     KareeRouter.currentContext = context;
-    return builder(context);
+    return Observer.on<AppLocalization>(
+        tag: KareeConstants.kApplicationLocalizationTag,
+        builder: (_, l) => builder(context));
   }
 }
 
 @immutable
 abstract class StatelessComponent extends StatelessWidget {
-  dynamic get arguments => ModalRoute.of(KareeRouter.currentContext!)?.settings.arguments;
+  dynamic get arguments =>
+      ModalRoute.of(KareeRouter.currentContext!)?.settings.arguments;
 
   @protected
   Size get screenSize => MediaQuery.of(KareeRouter.currentContext!).size;
@@ -39,7 +45,7 @@ abstract class StatelessComponent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    KareeRouter.currentContext = context;
+    // KareeRouter.currentContext = context;
     return builder(context);
   }
 }
@@ -68,7 +74,7 @@ abstract class ComponentState<T extends StatefulComponent> extends State<T> {
 
   @override
   Widget build(BuildContext context) {
-    KareeRouter.currentContext = context;
+    // KareeRouter.currentContext = context;
     arguments = ModalRoute.of(context)?.settings.arguments;
     return builder(context);
   }
@@ -102,6 +108,8 @@ abstract class ScreenState<T extends StatefulScreen> extends State<T> {
   Widget build(BuildContext context) {
     KareeRouter.currentContext = context;
     arguments = ModalRoute.of(context)?.settings.arguments;
-    return builder(context);
+    return Observer.on<AppLocalization>(
+        tag: KareeConstants.kApplicationLocalizationTag,
+        builder: (_, l) => builder(context));
   }
 }
