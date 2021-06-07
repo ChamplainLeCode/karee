@@ -10,7 +10,9 @@ import 'package:flutter/material.dart'
         EdgeInsets,
         FontWeight,
         MediaQuery,
+        Padding,
         RichText,
+        Text,
         TextAlign,
         TextSpan,
         TextStyle,
@@ -45,7 +47,7 @@ var errorSolution =
                       textAlign: TextAlign.justify,
                       text: TextSpan(
                           style: TextStyle(
-                            fontSize: 12,
+                            fontSize: 13,
                             fontWeight: FontWeight.w300,
                           ),
                           children: [
@@ -71,7 +73,7 @@ var errorSolution =
                           style: TextStyle(
                               color: Colors.blue,
                               fontWeight: FontWeight.w300,
-                              fontSize: 12),
+                              fontSize: 13),
                           text: '@Screen',
                           children: [
                         TextSpan(
@@ -99,7 +101,7 @@ var errorSolution =
                       textAlign: TextAlign.justify,
                       text: TextSpan(
                           style: TextStyle(
-                            fontSize: 12,
+                            fontSize: 13,
                             fontWeight: FontWeight.w300,
                           ),
                           children: [
@@ -136,7 +138,7 @@ var errorSolution =
                       textAlign: TextAlign.justify,
                       text: TextSpan(
                           style: TextStyle(
-                            fontSize: 12,
+                            fontSize: 13,
                             fontWeight: FontWeight.w300,
                           ),
                           children: [
@@ -200,7 +202,7 @@ var errorSolution =
                       textAlign: TextAlign.justify,
                       text: TextSpan(
                           style: TextStyle(
-                            fontSize: 12,
+                            fontSize: 13,
                             fontWeight: FontWeight.w300,
                           ),
                           children: [
@@ -223,7 +225,7 @@ var errorSolution =
                           style: TextStyle(
                               color: Colors.blue,
                               fontWeight: FontWeight.w300,
-                              fontSize: 12),
+                              fontSize: 13),
                           text: 'class',
                           children: [
                         TextSpan(
@@ -236,7 +238,7 @@ var errorSolution =
                           style: TextStyle(
                               color: Colors.blue,
                               fontWeight: FontWeight.w300,
-                              fontSize: 12),
+                              fontSize: 13),
                         ),
                         TextSpan(
                             text: "   RoutableWidget  ",
@@ -264,7 +266,7 @@ var errorSolution =
                       textAlign: TextAlign.justify,
                       text: TextSpan(
                           style: TextStyle(
-                            fontSize: 12,
+                            fontSize: 13,
                             fontWeight: FontWeight.w300,
                           ),
                           children: [
@@ -295,7 +297,7 @@ var errorSolution =
                           style: TextStyle(
                               color: Colors.blue,
                               fontWeight: FontWeight.w300,
-                              fontSize: 12),
+                              fontSize: 13),
                           text: 'class',
                           children: [
                         TextSpan(
@@ -308,7 +310,7 @@ var errorSolution =
                           style: TextStyle(
                               color: Colors.blue,
                               fontWeight: FontWeight.w300,
-                              fontSize: 12),
+                              fontSize: 13),
                         ),
                         TextSpan(
                             text: "   StatelessScreen  \n",
@@ -325,7 +327,7 @@ var errorSolution =
                           style: TextStyle(
                               color: Colors.blue,
                               fontWeight: FontWeight.w300,
-                              fontSize: 12),
+                              fontSize: 13),
                           text: 'class',
                           children: [
                         TextSpan(
@@ -338,7 +340,7 @@ var errorSolution =
                           style: TextStyle(
                               color: Colors.blue,
                               fontWeight: FontWeight.w300,
-                              fontSize: 12),
+                              fontSize: 13),
                         ),
                         TextSpan(
                             text: "   StatefulScreen  ",
@@ -366,7 +368,7 @@ var errorSolution =
                       textAlign: TextAlign.justify,
                       text: TextSpan(
                           style: TextStyle(
-                            fontSize: 12,
+                            fontSize: 13,
                             fontWeight: FontWeight.w300,
                           ),
                           children: [
@@ -393,8 +395,131 @@ var errorSolution =
             ),
             color: Colors.white10,
           ),
-  KareeErrorCode.NO_ROUTE_FOUND: (ctx, List<dynamic>? environment) => Card(),
-  KareeErrorCode.GENERAL_ERROR: (ctx, List<dynamic>? environment) => Card(),
+  KareeErrorCode.NO_ROUTE_FOUND: (ctx, List<dynamic>? environment) => Card(
+        elevation: 5,
+        margin: EdgeInsets.only(left: 20, right: 20, top: 10),
+        child: Container(
+          padding: EdgeInsets.symmetric(horizontal: 10),
+          alignment: Alignment.centerLeft,
+          width: MediaQuery.of(ctx).size.width,
+          margin: EdgeInsets.only(top: 5, bottom: 5),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              RichText(
+                  textAlign: TextAlign.justify,
+                  text: TextSpan(
+                      style: TextStyle(
+                        fontSize: 13,
+                        fontWeight: FontWeight.w300,
+                      ),
+                      children: [
+                        TextSpan(
+                          text:
+                              "Try to verify that the name you enter as route. It seems not correct\n",
+                          style: TextStyle(color: Colors.white),
+                        ),
+                      ])),
+              RichText(
+                  text: TextSpan(
+                      style: TextStyle(
+                          color: Colors.blue,
+                          fontWeight: FontWeight.w400,
+                          fontSize: 13),
+                      text: 'Route',
+                      children: [
+                    TextSpan(
+                      text: ".",
+                      style: TextStyle(color: Colors.white),
+                    ),
+                    TextSpan(
+                        text: "on",
+                        style: TextStyle(
+                            color: Colors.teal, fontWeight: FontWeight.w400)),
+                    TextSpan(text: "(", style: TextStyle(color: Colors.white)),
+                    TextSpan(
+                        text: ' "${environment!.first}" ',
+                        style: TextStyle(
+                            color: Colors.deepOrange,
+                            fontWeight: FontWeight.w400)),
+                    TextSpan(
+                      text: ", ",
+                      style: TextStyle(color: Colors.white),
+                    ),
+                    TextSpan(
+                        text: ' "....." ',
+                        style: TextStyle(
+                            color: Colors.deepOrange,
+                            fontWeight: FontWeight.w400)),
+                    TextSpan(
+                      text: ")",
+                      style: TextStyle(color: Colors.white),
+                    )
+                  ])),
+              Padding(
+                  padding: EdgeInsets.symmetric(vertical: 10),
+                  child: Text(
+                    '_________________ Or _________________\n',
+                    style: TextStyle(color: Colors.white),
+                  )),
+              RichText(
+                  text: TextSpan(
+                      style: TextStyle(
+                          color: Colors.blue,
+                          fontWeight: FontWeight.w400,
+                          fontSize: 13),
+                      text: 'KareeRouter',
+                      children: [
+                    TextSpan(
+                      text: ".",
+                      style: TextStyle(color: Colors.white),
+                    ),
+                    TextSpan(
+                        text: "goto",
+                        style: TextStyle(
+                            color: Colors.teal, fontWeight: FontWeight.w400)),
+                    TextSpan(text: "(", style: TextStyle(color: Colors.white)),
+                    TextSpan(
+                        text: ' "${environment.first}" ',
+                        style: TextStyle(
+                            color: Colors.deepOrange,
+                            fontWeight: FontWeight.w400)),
+                    TextSpan(
+                      text: ")",
+                      style: TextStyle(color: Colors.white),
+                    )
+                  ]))
+            ],
+          ),
+        ),
+        color: Colors.white10,
+      ),
+  KareeErrorCode.GENERAL_ERROR: (ctx, List<dynamic>? environment) => Card(
+      elevation: 5,
+      color: Colors.white10,
+      margin: EdgeInsets.only(left: 20, right: 20, top: 10),
+      child: Container(
+          padding: EdgeInsets.symmetric(horizontal: 10),
+          alignment: Alignment.centerLeft,
+          width: MediaQuery.of(ctx).size.width,
+          margin: EdgeInsets.only(top: 5, bottom: 5),
+          child:
+              Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+            RichText(
+                textAlign: TextAlign.justify,
+                text: TextSpan(
+                    style: TextStyle(
+                      fontSize: 13,
+                      fontWeight: FontWeight.w300,
+                    ),
+                    children: [
+                      TextSpan(
+                        text:
+                            "General Error: Take a look at the Stacktrace in All Frame tab\n",
+                        style: TextStyle(color: Colors.white),
+                      ),
+                    ]))
+          ]))),
   KareeErrorCode.SCREEN_NOT_FOUND:
       (BuildContext context, List<dynamic>? environment) => Card(
             elevation: 5,
@@ -411,7 +536,7 @@ var errorSolution =
                       textAlign: TextAlign.justify,
                       text: TextSpan(
                           style: TextStyle(
-                            fontSize: 12,
+                            fontSize: 13,
                             fontWeight: FontWeight.w300,
                           ),
                           children: [
@@ -426,7 +551,7 @@ var errorSolution =
                           style: TextStyle(
                               color: Colors.blue,
                               fontWeight: FontWeight.w300,
-                              fontSize: 12),
+                              fontSize: 13),
                           text: '@Screen',
                           children: [
                         TextSpan(

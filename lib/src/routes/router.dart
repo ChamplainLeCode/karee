@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:flutter/cupertino.dart' as cupertino;
 import 'package:flutter/material.dart';
 import 'package:karee_inject/karee_inject.dart' show ControllerReflectable;
@@ -275,23 +273,21 @@ class KareeRouter {
         // print('No action for this route');
       }
     } catch (e, st) {
-      // rethrow;
-      if (e is NoActionFoundError) {
-        screen(KareeConstants.kareeErrorPath, RouteMode.PUSH, argument: {
-          #title: e.message,
-          #stack: st,
-          #env: [routeName, parameter],
-          #errorCode: KareeErrorCode.NO_ROUTE_FOUND
-        });
-      } else if (e is NoRouteFoundError) {
-        screen(KareeConstants.kareeErrorPath, RouteMode.PUSH, argument: {
-          #title: e.message,
+      if (e is NoActionFoundError || e is NoRouteFoundError) {
+        screen(KareeConstants.kareeErrorScreenName, RouteMode.PUSH, argument: {
+          #title: (e as dynamic).message,
           #stack: st,
           #env: [routeName, if (parameter != null) parameter],
           #errorCode: KareeErrorCode.NO_ROUTE_FOUND
         });
+        return;
       }
-      if (Platform.environment.containsKey('FLUTTER_TEST')) rethrow;
+      screen(KareeConstants.kareeErrorScreenName, RouteMode.PUSH, argument: {
+        #title: (e as dynamic).message,
+        #stack: st,
+        #env: [routeName, if (parameter != null) parameter],
+        #errorCode: KareeErrorCode.GENERAL_ERROR
+      });
     }
   }
 
