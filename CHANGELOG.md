@@ -1,6 +1,10 @@
+## [v2.1.0] - Plane: 7 june 2021.
+  * Plane: Karee framework fix.
+    * Error screen for NoRouteFoundError
+    * Error Screen for GeneralError
 ## [v2.1.0] - Plane: 31 may 2021.
 
- * Nteuh: Karee framework new features
+ * Plane: Karee framework new features
    * State Manager
    * Dependency Injection
    * Support for AppConfig
