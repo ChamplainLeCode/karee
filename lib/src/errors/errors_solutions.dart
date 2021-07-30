@@ -156,7 +156,8 @@ var errorSolution =
                               style: TextStyle(color: Colors.white),
                             ),
                             TextSpan(
-                              text: "  ${environment.first}",
+                              text:
+                                  "  ${environment.firstWhere((element) => true, orElse: () => '')}",
                               style: TextStyle(
                                   color: Colors.teal,
                                   fontWeight: FontWeight.w500),
@@ -301,7 +302,8 @@ var errorSolution =
                           text: 'class',
                           children: [
                         TextSpan(
-                            text: " ${environment?.first}",
+                            text:
+                                " ${environment?.firstWhere((element) => true, orElse: () => '')}",
                             style: TextStyle(
                                 color: Colors.teal,
                                 fontWeight: FontWeight.normal)),
@@ -331,7 +333,8 @@ var errorSolution =
                           text: 'class',
                           children: [
                         TextSpan(
-                            text: " ${environment?.first}",
+                            text:
+                                " ${environment?.firstWhere((element) => true, orElse: () => '')}",
                             style: TextStyle(
                                 color: Colors.teal,
                                 fontWeight: FontWeight.normal)),
@@ -377,7 +380,8 @@ var errorSolution =
                               style: TextStyle(color: Colors.white),
                             ),
                             TextSpan(
-                              text: "${environment?.first} ",
+                              text:
+                                  "${environment?.firstWhere((element) => true, orElse: () => '')} ",
                               style: TextStyle(color: Colors.deepOrange),
                             ),
                             TextSpan(
@@ -438,7 +442,8 @@ var errorSolution =
                             color: Colors.teal, fontWeight: FontWeight.w400)),
                     TextSpan(text: "(", style: TextStyle(color: Colors.white)),
                     TextSpan(
-                        text: ' "${environment!.first}" ',
+                        text:
+                            ' "${environment?.firstWhere((element) => true, orElse: () => '')}" ',
                         style: TextStyle(
                             color: Colors.deepOrange,
                             fontWeight: FontWeight.w400)),
@@ -480,7 +485,8 @@ var errorSolution =
                             color: Colors.teal, fontWeight: FontWeight.w400)),
                     TextSpan(text: "(", style: TextStyle(color: Colors.white)),
                     TextSpan(
-                        text: ' "${environment.first}" ',
+                        text:
+                            ' "${environment?.firstWhere((element) => true, orElse: () => '')}" ',
                         style: TextStyle(
                             color: Colors.deepOrange,
                             fontWeight: FontWeight.w400)),

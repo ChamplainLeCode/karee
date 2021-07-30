@@ -1,4 +1,8 @@
-## [v2.1.0] - Plane: 7 june 2021.
+## [v2.1.2] - Plane: 30 july 2021.
+  * Plane: Karee framework fix.
+    * Error screen for checking environment content
+    * Error Screen change type of parameter for RoutableWidget 
+## [v2.1.1] - Plane: 7 june 2021.
   * Plane: Karee framework fix.
     * Error screen for NoRouteFoundError
     * Error Screen for GeneralError

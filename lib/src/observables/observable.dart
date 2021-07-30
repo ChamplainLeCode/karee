@@ -69,25 +69,37 @@ class Of<T> implements Observable<T> {
       ..clear();
   }
 
+  ///
+  /// Get the current value of this observable.
+  ///
   T get value => _value;
 
+  ///
+  /// Add a listener to this observable.
+  ///
   @override
   listen(ObservableListener<T> listener) {
     _listener.add(listener);
   }
 
+  ///
+  /// Remove added listener to this observable.
+  ///
   @override
   unListen(ObservableListener<T> listener) {
     _listener.remove(listener);
   }
 
+  @override
   String toString() => _value.toString();
 
-  /// Add an ephemeral listener to is observer.
+  /// Add an ephemeral listener to this observable.
   /// this listener will be unsubscribe after the next change
   void alert(ObservableListener<T> alerter) => _alert.add(alerter);
 
-  /// Manuel refresh of observable
+  ///
+  /// Manuel refresh of observable.
+  ///
   @override
   void refresh() {
     _listener.forEach((listener) => listener.call(value));

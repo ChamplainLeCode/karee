@@ -47,17 +47,23 @@ class _RouterWidgetState extends RouterWidgetState {
 }
 
 abstract class RoutableWidget extends StatelessWidget {
-  late final dynamic? _parameter;
+  final _RoutableWidgetParameter _parameter = _RoutableWidgetParameter();
   void onParam(Object? parameters) {
-    _parameter = parameters;
+    _parameter.value = parameters;
   }
 
-  Widget builder(BuildContext context, dynamic parameter);
+  Widget builder(BuildContext context, Object? parameter);
 
   @override
   Widget build(BuildContext context) {
     return Observer.on<AppLocalization>(
         tag: KareeConstants.kApplicationLocalizationTag,
-        builder: (_, l) => builder(context, _parameter));
+        builder: (_, l) => builder(context, _parameter.value));
   }
+}
+
+class _RoutableWidgetParameter {
+  dynamic? value;
+
+  _RoutableWidgetParameter([this.value]);
 }

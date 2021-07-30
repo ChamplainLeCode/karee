@@ -1,9 +1,9 @@
-/// ## Karee State Manager
+/// ## Karee Lite State Manager
 ///
 /// Lite State manager integrate in Karee. it helps you to mange your UI
-/// by providing you a Widget that can be refresh on change on its observable.
+/// by providing you a Widget that can be refresh when change happens on its observable.
 ///
-/// Karee Lit State Manager offers you
+/// Karee Lite State Manager offers you
 ///
 /// ### Observable
 ///
