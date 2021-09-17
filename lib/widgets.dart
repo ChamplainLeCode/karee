@@ -23,4 +23,8 @@ export 'src/widgets/library.dart'
         StatefulComponent,
         StatefulScreen,
         StatelessComponent,
-        StatelessScreen;
+        StatelessScreen,
+        Bucket,
+        BucketActionButton,
+        BucketState,
+        BucketActionButtonState;

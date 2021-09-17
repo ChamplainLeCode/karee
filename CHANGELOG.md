@@ -1,3 +1,7 @@
+## [v2.1.3] - Plane: 17 September 2021.
+  * Plane: Karee framework fix.
+    * Adding Bucket Widget
+    * Update Observer Widget, add param slaves
 ## [v2.1.2] - Plane: 30 july 2021.
   * Plane: Karee framework fix.
     * Error screen for checking environment content

@@ -13,21 +13,24 @@ Future<void> loadAppConfig() async {
   });
 }
 
-void _loadYamlMap(String parentKey, YamlMap m) {
-  m.forEach((key, value) {
-    if (value is num || value is String || value == null) {
-      appConfig['$parentKey.$key'] = value;
-      return;
-    }
-    if (value is YamlMap) {
-      _loadYamlMap('$parentKey.$key', value);
-      return;
-    }
-    if (value is YamlList) {
-      appConfig['$parentKey.$key'] = value.value.toList();
-      return;
-    }
-  });
+void _loadYamlMap(String parentKey, Object m) {
+  if (m is String)
+    appConfig[parentKey] = m;
+  else if (m is YamlMap)
+    m.forEach((key, value) {
+      if (value is num || value is String || value == null) {
+        appConfig['$parentKey.$key'] = value;
+        return;
+      }
+      if (value is YamlMap) {
+        _loadYamlMap('$parentKey.$key', value);
+        return;
+      }
+      if (value is YamlList) {
+        appConfig['$parentKey.$key'] = value.value.toList();
+        return;
+      }
+    });
 }
 
 dynamic readConfig(String variable) {

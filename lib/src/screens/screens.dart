@@ -45,7 +45,7 @@ void screen(dynamic screen, RouteMode mode,
 
     /// Internal Routing using RouterWidget
     if (routerName != null) {
-      doInternalRouting(routerName, screen, argument);
+      Future.microtask(() => doInternalRouting(routerName, screen, argument));
       return;
     }
     switch (mode) {
