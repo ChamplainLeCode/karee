@@ -23,7 +23,7 @@ import '../routes/router.dart' show RouteMode;
 
 var errorSolution =
     <KareeErrorCode, Widget Function(BuildContext ct, List env)>{
-  KareeErrorCode.NO_INITIAL_SCREEN:
+  KareeErrorCode.noInitialScreen:
       (BuildContext context, List<dynamic>? environment) => Card(
             elevation: 1,
             margin: EdgeInsets.only(left: 20, right: 20, top: 10),
@@ -114,7 +114,7 @@ var errorSolution =
             ),
             color: Colors.white10,
           ),
-  KareeErrorCode.BAD_USE_OF_ROUTABLE_WIDGET:
+  KareeErrorCode.badUseOfRoutableWidget:
       (BuildContext context, List<dynamic>? environment) => Card(
             elevation: 1,
             margin: EdgeInsets.only(left: 20, right: 20, top: 10),
@@ -179,7 +179,7 @@ var errorSolution =
             ),
             color: Colors.white10,
           ),
-  KareeErrorCode.NOT_ROUTABLE_WIDGET:
+  KareeErrorCode.notRoutableWidget:
       (BuildContext context, List<dynamic>? environment) => Card(
             elevation: 1,
             margin: EdgeInsets.only(left: 20, right: 20, top: 10),
@@ -243,7 +243,7 @@ var errorSolution =
             ),
             color: Colors.white10,
           ),
-  KareeErrorCode.NOT_KAREE_SCREEN:
+  KareeErrorCode.notKareeScreen:
       (BuildContext context, List<dynamic>? environment) => Card(
             elevation: 1,
             margin: EdgeInsets.only(left: 20, right: 20, top: 10),
@@ -347,7 +347,7 @@ var errorSolution =
             ),
             color: Colors.white10,
           ),
-  KareeErrorCode.NO_TRANSLATION_FILE:
+  KareeErrorCode.noTranslationFile:
       (BuildContext context, List<dynamic>? environment) => Card(
             elevation: 1,
             margin: EdgeInsets.only(left: 20, right: 20, top: 10),
@@ -380,8 +380,8 @@ var errorSolution =
                               style: TextStyle(color: Colors.white),
                             ),
                             TextSpan(
-                              text:
-                                  "${KareeConstants.kApplicationLocalizationRessourcDir}",
+                              text: KareeConstants
+                                  .kApplicationLocalizationRessourcDir,
                               style: TextStyle(color: Colors.deepOrange),
                             ),
                           ])),
@@ -390,7 +390,7 @@ var errorSolution =
             ),
             color: Colors.white10,
           ),
-  KareeErrorCode.NO_ROUTE_FOUND: (ctx, List<dynamic>? environment) => Card(
+  KareeErrorCode.noRouteFound: (ctx, List<dynamic>? environment) => Card(
         elevation: 5,
         margin: EdgeInsets.only(left: 20, right: 20, top: 10),
         child: Container(
@@ -491,7 +491,7 @@ var errorSolution =
         ),
         color: Colors.white10,
       ),
-  KareeErrorCode.GENERAL_ERROR: (ctx, List<dynamic>? environment) => Card(
+  KareeErrorCode.generalError: (ctx, List<dynamic>? environment) => Card(
       elevation: 5,
       color: Colors.white10,
       margin: EdgeInsets.only(left: 20, right: 20, top: 10),
@@ -517,7 +517,7 @@ var errorSolution =
                       ),
                     ]))
           ]))),
-  KareeErrorCode.SCREEN_NOT_FOUND:
+  KareeErrorCode.screenNotFound:
       (BuildContext context, List<dynamic>? environment) => Card(
             elevation: 5,
             margin: EdgeInsets.only(left: 20, right: 20, top: 10),

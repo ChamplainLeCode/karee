@@ -62,12 +62,12 @@ enum ApplicationKind { cupertino, material }
 /// See [KareeInstanceProfile]('')
 ///
 enum KareeErrorCode {
-  NO_INITIAL_SCREEN,
-  SCREEN_NOT_FOUND,
-  NO_ROUTE_FOUND,
-  GENERAL_ERROR,
-  NOT_ROUTABLE_WIDGET,
-  NOT_KAREE_SCREEN,
-  BAD_USE_OF_ROUTABLE_WIDGET,
-  NO_TRANSLATION_FILE
+  noInitialScreen,
+  screenNotFound,
+  noRouteFound,
+  generalError,
+  notRoutableWidget,
+  notKareeScreen,
+  badUseOfRoutableWidget,
+  noTranslationFile
 }

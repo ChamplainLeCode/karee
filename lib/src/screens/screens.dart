@@ -29,7 +29,7 @@ void subscribeScreen(Map<Symbol, dynamic> screen) => screens.add(screen);
 void screen(dynamic screen, RouteMode mode,
     {dynamic argument,
     Symbol? routerName,
-    RouteDirection direction = RouteDirection.LEFT_TO_RIGHT,
+    // RouteDirection direction = RouteDirection.LEFT_TO_RIGHT,
     cupertino.BuildContext? context}) {
   try {
     var isString = screen is String,
@@ -100,7 +100,7 @@ void screen(dynamic screen, RouteMode mode,
       #title: ex.message,
       #stack: st,
       #env: [screen, KareeRouter.currentRoute!, mode, argument],
-      #errorCode: KareeErrorCode.NOT_KAREE_SCREEN
+      #errorCode: KareeErrorCode.notKareeScreen
     });
   } on BadUseOfRouterWidgetException catch (ex, st) {
     KareeRouter.goto(KareeConstants.kareeErrorPath, parameter: {
@@ -112,7 +112,7 @@ void screen(dynamic screen, RouteMode mode,
         KareeRouter.currentRoute!,
         argument
       ],
-      #errorCode: KareeErrorCode.BAD_USE_OF_ROUTABLE_WIDGET
+      #errorCode: KareeErrorCode.badUseOfRoutableWidget
     });
   }
 }

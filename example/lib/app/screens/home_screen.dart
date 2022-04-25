@@ -54,9 +54,10 @@ class _HomeScreenState extends ScreenState<HomeScreen> {
                       SizedBox(height: 20),
                       ElevatedButton(
                         onPressed: () async {
-                          if (await launcher
-                              .canLaunch(KareeConstants.kareeGithub)) {
-                            await launcher.launch(KareeConstants.kareeGithub);
+                          if (await launcher.canLaunchUrl(
+                              Uri.parse(KareeConstants.kareeGithub))) {
+                            await launcher.launchUrl(
+                                Uri.parse(KareeConstants.kareeGithub));
                           }
                         },
                         style: ElevatedButton.styleFrom(

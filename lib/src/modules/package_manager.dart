@@ -11,6 +11,7 @@ class PackageManager {
   ///
   /// Cache used to map Module name by type
   ///
+  // ignore: prefer_final_fields
   static Map<Type, String?> _packageManager = {};
 
   ///

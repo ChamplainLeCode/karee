@@ -60,18 +60,22 @@ class Of<T> implements Observable<T> {
   static void free<E>(Of<E> obs) => PersistentContext.remove<E>(obs);
 
   /// Permanent listeners on this observable
+  // ignore: prefer_final_fields
   Set<ObservableListener<T>> _listener = {};
 
   /// Ephemeral listeners on this observable.
   /// Means that, every time that this observable change
   /// its value, this set is clean.
+  // ignore: prefer_final_fields
   Set<ObservableListener<T>> _alert = {};
 
   /// Method used to set new value of an observable. this will call all listener
   /// that listen to this.
   set value(T value) {
     _value = value;
-    _listener.forEach((listener) => listener.call(value));
+    for (var listener in _listener) {
+      listener.call(value);
+    }
     _alert
       ..forEach((alerter) => alerter.call(value))
       ..clear();
@@ -103,7 +107,9 @@ class Of<T> implements Observable<T> {
 
   @override
   void refresh() {
-    _listener.forEach((listener) => listener.call(value));
+    for (var listener in _listener) {
+      listener.call(value);
+    }
     _alert
       ..forEach((alerter) => alerter.call(value))
       ..clear();

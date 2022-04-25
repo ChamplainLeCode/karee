@@ -52,7 +52,7 @@ class DashboardAppBarTool extends StatelessComponent {
             Align(
                 alignment: Alignment.center,
                 child: TextButton(
-                    onPressed: () => null,
+                    onPressed: () {},
                     child: Container(
                         height: 30,
                         width: 30,

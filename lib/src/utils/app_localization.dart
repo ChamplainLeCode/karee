@@ -112,6 +112,7 @@ class AppLocalization {
 
     try {
       translation = jsonDecode(translationString);
+      // ignore: empty_catches
     } catch (e) {}
   }
 }
@@ -124,10 +125,12 @@ extension AppLocalizationExtension on AppLocalization {
         '''${locale.countryCode != null ? '_${locale.countryCode!.toLowerCase()}' : ''}.json''';
     String translationString = await loadConfig(path);
     try {
-      if (translation == null)
+      if (translation == null) {
         translation = jsonDecode(translationString);
-      else
+      } else {
         translation!.addAll(jsonDecode(translationString));
+      }
+      // ignore: empty_catches
     } catch (e) {}
   }
 }

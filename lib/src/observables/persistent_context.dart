@@ -72,8 +72,8 @@ class PersistentContext {
   static void remove<E>(Of<E> obs) {
     assert(obs.value != null);
     assert(obs.tag != null);
-    var ld;
-    if ((ld = _context[E]) == null) {
+    var ld = _context[E];
+    if (ld == null) {
       return;
     }
     (ld as Map).remove(obs.tag);

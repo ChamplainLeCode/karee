@@ -78,10 +78,8 @@ abstract class StatelessComponent extends StatelessWidget {
 ///
 @immutable
 abstract class StatefulComponent extends StatefulWidget {
-  final Key? key;
-
   @mustCallSuper
-  StatefulComponent({this.key}) : super(key: key);
+  StatefulComponent({Key? key}) : super(key: key);
 
   @override
   ComponentState<StatefulComponent> createState();
@@ -114,10 +112,8 @@ abstract class ComponentState<T extends StatefulComponent> extends State<T> {
 ///
 @immutable
 abstract class StatefulScreen extends StatefulWidget {
-  final Key? key;
-
   @mustCallSuper
-  StatefulScreen({this.key}) : super(key: key);
+  StatefulScreen({Key? key}) : super(key: key);
 
   @override
   ScreenState<StatefulScreen> createState();

@@ -67,21 +67,25 @@ class BucketState extends ComponentState<Bucket> {
 
   late final math.Point<double> _bucketLockStartPoint = math.Point(0, 0);
 
+  @override
   initState() {
     _child = widget.child;
     _childPosition = Of(math.Point(0.0, 0.0));
     super.initState();
   }
 
+  @override
   void dispose() {
     try {
       context.findAncestorStateOfType<BucketActionButtonState>()?.dispose();
+      // ignore: empty_catches
     } catch (e) {
     } finally {
       super.dispose();
     }
   }
 
+  @override
   Widget builder(BuildContext context) {
     _bucketChildSize ??= Of(Size.copy(screenSize));
 
@@ -138,20 +142,23 @@ class BucketState extends ComponentState<Bucket> {
     double dx = 0;
 
     if (_bucketActionLock) {
-      if (dragInfo.globalPosition.dx < _dragStartPoint!.x.toDouble())
+      if (dragInfo.globalPosition.dx < _dragStartPoint!.x.toDouble()) {
         dx = _bucketLockStartPoint.x;
-      else
+      } else {
         dx = _dragStartPoint!.distanceTo(
             math.Point(dragInfo.globalPosition.dx, _dragStartPoint!.y));
+      }
       _childPosition.value = math.Point(dx, dx / 2);
     } else {
       if (dragInfo.globalPosition.dy > _bucketLockEndPoint.y ||
+          // ignore: curly_braces_in_flow_control_structures
           dragInfo.globalPosition.dy > _dragStartPoint!.y) if (dragInfo
               .globalPosition.dx >
           _dragStartPoint!.x) {
         dx = 0;
-      } else
+      } else {
         dx = _dragStartPoint!.x - dragInfo.globalPosition.dx;
+      }
 
       var absDx = _bucketLockEndPoint.x - dx;
       _childPosition.value =
@@ -168,8 +175,9 @@ class BucketState extends ComponentState<Bucket> {
   void open() {
     _bucketActionLock = false;
     _childPosition.value = _bucketLockEndPoint;
-    if (widget.onBucketChange != null)
+    if (widget.onBucketChange != null) {
       Future.microtask(() => widget.onBucketChange!(true));
+    }
     _bucketChildSize?.value =
         Size(screenSize.width * .80, screenSize.height * .8);
   }
@@ -179,8 +187,9 @@ class BucketState extends ComponentState<Bucket> {
   void close() {
     _bucketActionLock = true;
     _bucketChildSize?.value = screenSize;
-    if (widget.onBucketChange != null)
+    if (widget.onBucketChange != null) {
       Future.microtask(() => widget.onBucketChange!(false));
+    }
     _childPosition.value = _bucketLockStartPoint;
   }
 }
@@ -199,6 +208,7 @@ class BucketActionButton extends StatefulComponent {
   ///
   BucketActionButton({required this.icon, Key? key}) : super(key: key);
 
+  @override
   BucketActionButtonState createState() => BucketActionButtonState();
 }
 
@@ -221,6 +231,7 @@ class BucketActionButtonState extends ComponentState<BucketActionButton>
     super.dispose();
   }
 
+  @override
   Widget builder(BuildContext context) {
     return IconButton(
         icon:

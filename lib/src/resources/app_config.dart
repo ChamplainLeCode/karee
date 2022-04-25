@@ -35,9 +35,9 @@ Future<void> loadAppConfig([String package = '']) async {
 /// Function that reads value of Yaml node.
 ///
 void _loadYamlMap(String parentKey, Object m) {
-  if (m is String)
+  if (m is String) {
     appConfig[parentKey] = m;
-  else if (m is YamlMap)
+  } else if (m is YamlMap) {
     m.forEach((key, value) {
       if (value is num || value is String || value == null) {
         appConfig['$parentKey.$key'] = value;
@@ -52,6 +52,7 @@ void _loadYamlMap(String parentKey, Object m) {
         return;
       }
     });
+  }
 }
 
 ///

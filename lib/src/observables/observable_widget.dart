@@ -97,6 +97,7 @@ class Observer<T> extends _ObservableElement<T> {
       List<Of> slaves = const []})
       : super(of, child, slaves);
 
+  @override
   _OfWidgetManager<T> createState() => _OfWidgetManager<T>();
 }
 
@@ -129,9 +130,9 @@ class _OfWidgetProvider<T> extends StatelessComponent {
   final List<Of<T>> obs;
   final _OfBuilder<T> child;
   _OfWidgetProvider({required this.obs, required this.child}) {
-    obs.forEach((obs) {
+    for (var obs in obs) {
       PersistentContext.value(obs);
-    });
+    }
   }
 
   @override
@@ -149,9 +150,12 @@ abstract class _ObservableElement<E> extends StatefulComponent {
 
 abstract class _ObservableState<E>
     extends ComponentState<_ObservableElement<E>> {
+  @override
   initState() {
     widget.of.listen(_notifyUpdate);
-    widget.slaveObservables.forEach((ob) => ob.listen(_notifyUpdateSlave));
+    for (var ob in widget.slaveObservables) {
+      ob.listen(_notifyUpdateSlave);
+    }
     super.initState();
   }
 
@@ -195,6 +199,7 @@ abstract class _ObservableElementWithState<E> extends StatefulComponent {
 
 abstract class _ObservableStateWithObs<E>
     extends ComponentState<_ObservableElementWithState<E>> {
+  @override
   initState() {
     widget.of.listen(_notifyUpdate);
     super.initState();

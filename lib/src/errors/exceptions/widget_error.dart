@@ -18,9 +18,10 @@ class NotRoutableWidgetException implements Exception {
   Type widgetType;
 
   NotRoutableWidgetException(this.routerName, this.widgetType) {
-    this.message = "${widgetType.toString()} is not subType of RoutableWidget";
+    message = "${widgetType.toString()} is not subType of RoutableWidget";
   }
 
+  @override
   String toString() {
     return 'Exception: NotRoutableWidgetException( $message )';
   }
@@ -45,10 +46,11 @@ class BadUseOfRouterWidgetException implements Exception {
   RouteMode mode;
 
   BadUseOfRouterWidgetException(this.routerName, this.mode) {
-    this.message =
+    message =
         'Cannot use $mode with #${routerName.toString().substring(8, routerName.toString().length - 2)}';
   }
 
+  @override
   String toString() {
     return 'Exception: BadUseOfRouterWidgetException( $message )';
   }
@@ -69,8 +71,9 @@ class NotManageableWidgetException implements Exception {
   final dynamic screen;
 
   NotManageableWidgetException(this.screen) {
-    this.message = '$screen is not a manageable screen';
+    message = '$screen is not a manageable screen';
   }
+  @override
   String toString() {
     return 'Exception: NotManagableWidgetException( $message )';
   }

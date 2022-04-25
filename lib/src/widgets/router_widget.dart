@@ -51,6 +51,7 @@ class _RouterWidgetState extends RouterWidgetState {
   }
 
   Widget? child;
+  @override
   void load(RoutableWidget child) {
     this.child = child;
     setState(() {});

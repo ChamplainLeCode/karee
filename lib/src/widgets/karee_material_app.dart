@@ -137,7 +137,7 @@ class KareeMaterialApp extends StatelessWidget {
             errorContactAddress != null));
     KareeMaterialApp.globalProfile = profile;
     KareeMaterialApp.globalErrorContactAddress = errorContactAddress;
-    KareeInternationalization.init(this.locale, this.supportedLocales.toList())
+    KareeInternationalization.init(locale, supportedLocales.toList())
         .catchError((onError, st) {
       var ex = onError as TranslationFileNotExists;
 
@@ -147,7 +147,7 @@ class KareeMaterialApp extends StatelessWidget {
         #env: [
           '${ex.locale.languageCode}${ex.locale.countryCode == null ? '' : '_${ex.locale.countryCode!.toLowerCase()}'}.json',
         ],
-        #errorCode: KareeErrorCode.NO_TRANSLATION_FILE
+        #errorCode: KareeErrorCode.noTranslationFile
       });
     }, test: (exception) => exception is TranslationFileNotExists);
 
@@ -155,7 +155,7 @@ class KareeMaterialApp extends StatelessWidget {
       return KareeRouterErrorWidget(
           detail.summary.name,
           detail.stack,
-          KareeErrorCode.GENERAL_ERROR,
+          KareeErrorCode.generalError,
           detail.context!.getChildren().map((e) => e.name ?? '').toList());
     };
   }
@@ -168,60 +168,56 @@ class KareeMaterialApp extends StatelessWidget {
           return Observer.on<AppLocalization>(
               tag: KareeConstants.kApplicationLocalizationTag,
               builder: (_, lang) {
-                if (this.kind == ApplicationKind.cupertino) {
+                if (kind == ApplicationKind.cupertino) {
                   return CupertinoApp(
-                    actions: this.actions,
-                    restorationScopeId: this.restorationScopeId,
-                    key: this.key,
+                    actions: actions,
+                    restorationScopeId: restorationScopeId,
+                    key: key,
                     navigatorKey: KareeRouter.navigatorKey,
-                    navigatorObservers: this.navigatorObservers,
-                    title: this.title,
+                    navigatorObservers: navigatorObservers,
+                    title: title,
                     routes: const <String, WidgetBuilder>{},
-                    onGenerateTitle: this.onGenerateTitle,
-                    color: this.color,
-                    theme: this.cupertinoTheme,
-                    localeListResolutionCallback:
-                        this.localeListResolutionCallback,
-                    localeResolutionCallback: this.localeResolutionCallback,
-                    debugShowCheckedModeBanner: this.debugShowCheckedModeBanner,
-                    showPerformanceOverlay: this.showPerformanceOverlay,
+                    onGenerateTitle: onGenerateTitle,
+                    color: color,
+                    theme: cupertinoTheme,
+                    localeListResolutionCallback: localeListResolutionCallback,
+                    localeResolutionCallback: localeResolutionCallback,
+                    debugShowCheckedModeBanner: debugShowCheckedModeBanner,
+                    showPerformanceOverlay: showPerformanceOverlay,
                     checkerboardRasterCacheImages:
-                        this.checkerboardRasterCacheImages,
-                    checkerboardOffscreenLayers:
-                        this.checkerboardOffscreenLayers,
-                    showSemanticsDebugger: this.showSemanticsDebugger,
-                    shortcuts: this.shortcuts,
+                        checkerboardRasterCacheImages,
+                    checkerboardOffscreenLayers: checkerboardOffscreenLayers,
+                    showSemanticsDebugger: showSemanticsDebugger,
+                    shortcuts: shortcuts,
                     onGenerateRoute: KareeRouter.router(context),
                   );
                 }
                 return MaterialApp(
-                    highContrastDarkTheme: this.highContrastDarkTheme,
+                    highContrastDarkTheme: highContrastDarkTheme,
                     highContrastTheme: highContrastTheme,
-                    restorationScopeId: this.restorationScopeId,
-                    scaffoldMessengerKey: this.scaffoldMessengerKey,
-                    key: this.key,
-                    actions: this.actions,
+                    restorationScopeId: restorationScopeId,
+                    scaffoldMessengerKey: scaffoldMessengerKey,
+                    key: key,
+                    actions: actions,
                     navigatorKey: KareeRouter.navigatorKey,
-                    navigatorObservers: this.navigatorObservers,
-                    title: this.title,
+                    navigatorObservers: navigatorObservers,
+                    title: title,
                     routes: const <String, WidgetBuilder>{},
-                    onGenerateTitle: this.onGenerateTitle,
-                    color: this.color,
-                    theme: this.theme,
-                    darkTheme: this.darkTheme,
-                    themeMode: this.themeMode,
-                    localeListResolutionCallback:
-                        this.localeListResolutionCallback,
-                    localeResolutionCallback: this.localeResolutionCallback,
-                    debugShowMaterialGrid: this.debugShowMaterialGrid,
-                    showPerformanceOverlay: this.showPerformanceOverlay,
+                    onGenerateTitle: onGenerateTitle,
+                    color: color,
+                    theme: theme,
+                    darkTheme: darkTheme,
+                    themeMode: themeMode,
+                    localeListResolutionCallback: localeListResolutionCallback,
+                    localeResolutionCallback: localeResolutionCallback,
+                    debugShowMaterialGrid: debugShowMaterialGrid,
+                    showPerformanceOverlay: showPerformanceOverlay,
                     checkerboardRasterCacheImages:
-                        this.checkerboardRasterCacheImages,
-                    checkerboardOffscreenLayers:
-                        this.checkerboardOffscreenLayers,
-                    showSemanticsDebugger: this.showSemanticsDebugger,
-                    debugShowCheckedModeBanner: this.debugShowCheckedModeBanner,
-                    shortcuts: this.shortcuts,
+                        checkerboardRasterCacheImages,
+                    checkerboardOffscreenLayers: checkerboardOffscreenLayers,
+                    showSemanticsDebugger: showSemanticsDebugger,
+                    debugShowCheckedModeBanner: debugShowCheckedModeBanner,
+                    shortcuts: shortcuts,
                     onGenerateRoute: KareeRouter.router(context));
               });
         });

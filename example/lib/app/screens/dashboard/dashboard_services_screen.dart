@@ -8,7 +8,7 @@ import 'package:karee/internationalization.dart';
 /// `DashboardServicesScreen` is set as Screen with name `dashboard_service`
 class DashboardServicesScreen extends RoutableWidget {
   @override
-  Widget builder(BuildContext context, _) {
+  Widget builder(BuildContext context, parameter) {
     return Scaffold(
       body: SingleChildScrollView(
           padding: EdgeInsets.all(10),

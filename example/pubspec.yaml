@@ -35,6 +35,7 @@ dev_dependencies:
    flutter_test:
        sdk: flutter
    karee_injectable_gen: ^1.0.0
+   lints: ^1.0.1
     
 #
 # Karee additional dependencies

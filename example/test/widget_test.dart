@@ -1,5 +1,5 @@
+import 'package:example/main.dart';
 import 'package:flutter_test/flutter_test.dart';
-import '../lib/main.dart' show MyKareeApp;
 
 /*
  * @Author Champlain Marius Bakop
