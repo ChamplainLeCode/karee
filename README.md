@@ -1,14 +1,14 @@
 # Karee
 
-Another way to build Flutter applications for mobile, web and desktop using the powerful of MVC Design Pattern.
+Another way to build Flutter applications for mobile, web and desktop using Karee Architecture.
 <table style="border: 0px">
     <tr style="border: 0px">
-          <td style="border: 0px; width: 30%;"><img src="https://user-images.githubusercontent.com/26502711/110235889-004c6b80-7f33-11eb-86bd-5e6558dcf4b3.png" style="width:250px">
+          <!-- <td style="border: 0px; width: 30%;"><img src="https://user-images.githubusercontent.com/26502711/110235889-004c6b80-7f33-11eb-86bd-5e6558dcf4b3.png" style="width:250px">
           </td>
           <td><span style="font-size: 50px; font-weight: 900"> +</span></td>
           <td style="border: 0px; width: 30%;"><img src="https://user-images.githubusercontent.com/26502711/106351081-1e8ece00-62da-11eb-84d5-96e2c876f8af.png" style="width:250px">
-          </td>
-          <td><span style="font-size: 50px; font-weight: 900"> = </span></td>
+          </td> -->
+          <!-- <td><span style="font-size: 50px; font-weight: 900"> = </span></td> -->
 		  <td style="border: 0px; width: 40%;"><img src = "https://user-images.githubusercontent.com/26502711/106351055-f8692e00-62d9-11eb-8da2-8b0e536b2a4b.png"></td>
   </tr>
 </table>
@@ -20,6 +20,8 @@ Karee is a framework that embbed a Command Line Interface and Libraries used to 
 - Karee-CLI a command line interface that helps you to manage Karee with
   - Code Generation
   - Project generation
+  - Module generation
+  - Dictionary generation
   - File management
   - Project execution
 
@@ -30,6 +32,7 @@ Karee is a framework that embbed a Command Line Interface and Libraries used to 
 
   - Handle Errors
   - Manage Navigation
+  - Manage multimodule Application
   - Inject Dependencies
   - Provide Service Layer
   - Manage Application State
