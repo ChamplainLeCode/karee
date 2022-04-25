@@ -1,4 +1,4 @@
-import '../../../utils/Style.dart';
+import '../../../utils/style.dart';
 import 'package:flutter/material.dart';
 
 class BadgeCard extends StatelessWidget {
