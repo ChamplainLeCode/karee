@@ -3,7 +3,7 @@ import 'package:flutter/widgets.dart';
 import '../widgets/screen_widget.dart';
 import '../widgets/router_widget.dart';
 import '../constances/constances.dart' show KareeConstants;
-import '../errors/errors_solutions.dart';
+import '../constances/enumeration.dart' show KareeErrorCode;
 import '../errors/exceptions/widget_error.dart';
 import '../widgets/karee_router_error_widget.dart';
 import '../routes/router.dart';
@@ -39,7 +39,7 @@ void screen(dynamic screen, RouteMode mode,
     if (!(isString || isStls || isStfs || isRoutable)) {
       throw NotManageableWidgetException(screen);
     }
-    if (routerName != null && mode != RouteMode.NONE) {
+    if (routerName != null && mode != RouteMode.INTERNAL) {
       throw BadUseOfRouterWidgetException(routerName, mode);
     }
 

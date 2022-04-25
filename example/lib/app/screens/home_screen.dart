@@ -1,7 +1,7 @@
+import 'package:karee/core.dart';
 import 'package:karee/widgets.dart';
 import 'package:karee/annotations.dart';
 import 'package:karee/navigation.dart';
-import 'package:karee/core.dart';
 import '../utils/Style.dart';
 import 'package:flutter/material.dart' hide Page;
 import 'package:url_launcher/url_launcher.dart' as launcher;

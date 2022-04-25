@@ -7,6 +7,9 @@ export 'controllers/controller.dart';
 
 export 'errors/library.dart';
 
+export 'modules/library.dart'
+    show KareeModuleLoader, KareeRoutableModule, PackageManager;
+
 export 'observables/library.dart' show Of, Observer;
 
 export 'resources/library.dart' show loadAppConfig, readConfig;

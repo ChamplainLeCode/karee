@@ -1,9 +1,20 @@
+import 'dart:io' show Platform;
+
+import 'package:flutter/foundation.dart';
+import 'package:karee/widgets.dart' show StatefulScreen, StatelessScreen;
+
 import './enumeration.dart';
 
+///
+/// Class that defines all managed constants used in karee.
+///
 class KareeConstants {
-  /// Karee error Screen
+  /// Karee error Screen's name.
   ///
-  /// @see [KareeInstanceProfile]
+  /// To overwrite default kareeScreen in production mode, you may create a
+  /// screen [StatelessScreen] or [StatefulScreen] with this constants as name.
+  ///
+  /// See also [KareeInstanceProfile]
   static const String kareeErrorScreenName = '__karee_internal_error_widget__';
 
   /// Karee github repository
@@ -12,11 +23,14 @@ class KareeConstants {
   /// Name of the path when an error occurs
   static const String kareeErrorPath = '__karee_internal__error__';
 
-  /// This the location of application config file
-  static const String kApplicationRessourceFile =
-      'resources/config/application.yaml';
-  static const String kApplicationLocalizationRessourcDir = 'resources/i18n';
+  /// This is the location of application config file
+  static final String kApplicationRessourceFile =
+      'resources${kIsWeb ? '/' : Platform.pathSeparator}config${kIsWeb ? '/' : Platform.pathSeparator}application.yaml';
+
+  /// This is the location of i18n directory
+  static final String kApplicationLocalizationRessourcDir =
+      'resources${kIsWeb ? '/' : Platform.pathSeparator}i18n';
+
+  /// Default tag used to maintains instance of current localization in karee.
   static const Symbol kApplicationLocalizationTag = #base;
-  // static const S
-  // static const Of defaultObs =
 }

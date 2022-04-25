@@ -2,7 +2,6 @@
 import 'package:flutter/widgets.dart';
 import 'app.module.dart';
 import '../app/routes/routes.dart';
-import 'core.reflectable.dart';
 import 'package:karee/core.dart';
 import 'extensions/extensions_controllers.dart';
 
@@ -28,7 +27,6 @@ Future<void> initCore() async {
   print('Initialisation started');
   WidgetsFlutterBinding.ensureInitialized();
   await loadAppConfig();
-  initializeReflectable();
   registeredRoute();
   initControllerReflectable();
   print('Initialisation ended');

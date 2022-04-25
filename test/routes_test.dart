@@ -1,10 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:karee/annotations.dart';
-import 'package:karee/core.dart';
 import 'package:karee/navigation.dart';
 import 'package:karee_inject/karee_inject.dart';
-
-import 'routes_test.reflectable.dart';
 
 @Service
 class MyService {}
@@ -24,15 +20,13 @@ void main() {
   });
 
   group('Router test -> ', () {
-    setUp(() {
-      initializeReflectable();
-    });
+    setUp(() {});
     test('Controller Souscription in Framework', () {
-      var initialLength = ControllerReflectable.reflectors.length;
+      var noController = KareeInjector.instance<MyController>();
       subscribeController(MyController());
-      var afterLength = ControllerReflectable.reflectors.length;
-      expect(initialLength, 0);
-      expect(afterLength, 1);
+      var myController = KareeInjector.instance<MyController>();
+      expect(noController, null);
+      expect(myController, isNot(null));
     });
 
     test('Route souscription/consumption through Controller', () async {

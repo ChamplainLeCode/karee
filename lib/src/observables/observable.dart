@@ -3,11 +3,19 @@ import 'persistent_context.dart';
 typedef ObservableListener<T> = void Function(T value);
 
 abstract class Observable<T> {
+  ///
+  /// Entry point to add a subscriber to an observable
+  ///
   void listen(ObservableListener<T> listener);
+
+  ///
+  /// Entry point to remove a subscriber to an observable
+  ///
   void unListen(ObservableListener<T> listener);
 
-  /// Manually refresh this observale. Useful in case of
-  /// unmanagable object. if you have an Object like
+  /// Manually refresh this observale.
+  ///
+  /// Useful in case of unmanagable object. if you have an Object like
   /// ```dart
   ///     class User {
   ///       String name;
@@ -16,7 +24,7 @@ abstract class Observable<T> {
   ///     }
   /// ```
   /// and you want to use instance of this class as observable. you can
-  /// do something like this to notify all observer of change.
+  /// do something like this to notify all observers that some change happened.
   /// ```
   /// final userObs = Of(User('Patrick', 23));
   ///
@@ -74,17 +82,11 @@ class Of<T> implements Observable<T> {
   ///
   T get value => _value;
 
-  ///
-  /// Add a listener to this observable.
-  ///
   @override
   listen(ObservableListener<T> listener) {
     _listener.add(listener);
   }
 
-  ///
-  /// Remove added listener to this observable.
-  ///
   @override
   unListen(ObservableListener<T> listener) {
     _listener.remove(listener);
@@ -93,13 +95,12 @@ class Of<T> implements Observable<T> {
   @override
   String toString() => _value.toString();
 
+  ///
   /// Add an ephemeral listener to this observable.
-  /// this listener will be unsubscribe after the next change
+  /// this listener will be unsubscribe after the next change.
+  ///
   void alert(ObservableListener<T> alerter) => _alert.add(alerter);
 
-  ///
-  /// Manuel refresh of observable.
-  ///
   @override
   void refresh() {
     _listener.forEach((listener) => listener.call(value));

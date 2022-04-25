@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:karee/widgets.dart';
 
@@ -50,7 +49,9 @@ class IconBadge extends StatelessComponent {
                 right: 0,
                 top: 0,
                 child: Container(
-                  decoration: BoxDecoration(borderRadius: BorderRadius.all(Radius.circular(3)), color: badgeColor),
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.all(Radius.circular(3)),
+                      color: badgeColor),
                   height: 12,
                   width: 15,
                   alignment: Alignment.center,

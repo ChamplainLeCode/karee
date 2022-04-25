@@ -1,3 +1,6 @@
+///
+/// Exception class thrown when looking for cached observable by tag
+///
 class NoObservableFoundWithTagError implements Exception {
   dynamic tag;
   String message;

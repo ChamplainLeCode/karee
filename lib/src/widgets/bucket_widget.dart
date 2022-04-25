@@ -5,9 +5,11 @@ import '../observables/observable.dart';
 import 'screen_widget.dart';
 import '../observables/observable_widget.dart';
 
+///
 /// Bucket Widget, a new Material widget that provides you a simple and pretty
 /// way to send your main menu behind of screen. To take full advantages of this
 /// we recommend you to set a RouterWidget as his child.
+///
 class Bucket extends StatefulComponent {
   /// **child** of the bucket, this widget is displayed at the top layer
   final Widget child;
@@ -72,8 +74,12 @@ class BucketState extends ComponentState<Bucket> {
   }
 
   void dispose() {
-    context.findAncestorStateOfType<BucketActionButtonState>()?.dispose();
-    super.dispose();
+    try {
+      context.findAncestorStateOfType<BucketActionButtonState>()?.dispose();
+    } catch (e) {
+    } finally {
+      super.dispose();
+    }
   }
 
   Widget builder(BuildContext context) {

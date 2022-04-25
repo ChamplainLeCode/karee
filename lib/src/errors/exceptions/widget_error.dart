@@ -1,12 +1,11 @@
-import '../../widgets/router_widget.dart';
 import '../../routes/router.dart' show RouteMode;
 
 /// NotRoutableWidgetException: Exception thrown when trying to inject a non-routable
 /// widget during internal routing.
 ///
-/// see [RoutableWidget]
+/// see [RoutableWidget]('')
 ///
-/// see [RouterWidget]
+/// see [RouterWidget]('')
 ///
 class NotRoutableWidgetException implements Exception {
   /// message of this error
@@ -29,11 +28,11 @@ class NotRoutableWidgetException implements Exception {
 
 /// BadUseOfRouterWidgetException: Exception thrown when a inappropriate RouteMode is used with Internal Routing.
 ///
-/// see [RoutableWidget]
+/// see [RoutableWidget]('')
 ///
-/// see [RouterWidget]
+/// see [RouterWidget]('')
 ///
-/// see [RouteMode]
+/// see [RouteMode]('')
 ///
 class BadUseOfRouterWidgetException implements Exception {
   /// message of this error
@@ -58,9 +57,9 @@ class BadUseOfRouterWidgetException implements Exception {
 /// NotManagableWidgetException: Exception thrown when the application tries to send in navigation an
 /// unmanagable Screen to in KareeRouter.
 ///
-/// see [StatefulScreen]
+/// see [StatefulScreen]('')
 ///
-/// see [StatelessScreen]
+/// see [StatelessScreen]('./../widgets/StatelessScreen')
 ///
 class NotManageableWidgetException implements Exception {
   /// message of this error

@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart'
     show
         Action,
@@ -12,7 +13,7 @@ import 'package:flutter/material.dart'
         Locale,
         LocaleListResolutionCallback,
         LocaleResolutionCallback,
-        LocalizationsDelegate,
+        // LocalizationsDelegate,
         LogicalKeySet,
         MaterialApp,
         NavigatorObserver,
@@ -22,14 +23,20 @@ import 'package:flutter/material.dart'
         ThemeMode,
         Widget,
         WidgetBuilder;
+import 'package:karee/src/constances/enumeration.dart';
 import '../constances/constances.dart';
 import '../errors/translation/translation_file_not_exists.dart';
 import '../utils/app_localization.dart';
 import '../errors/library.dart';
-import '../widgets/library.dart';
 import '../routes/router.dart' show KareeRouter;
-import '../constances/library.dart' show KareeInstanceProfile;
+import '../constances/enumeration.dart'
+    show
+        KareeInstanceProfile,
+        KareeApplicationType,
+        KareeErrorCode,
+        ApplicationKind;
 import '../observables/library.dart' show Of, Observer;
+import 'karee_router_error_widget.dart';
 
 ///
 /// ### KareeMaterialApp
@@ -42,11 +49,11 @@ class KareeMaterialApp extends StatelessWidget {
   final String title;
   final GenerateAppTitle? onGenerateTitle;
   final ThemeData? theme;
+  final CupertinoThemeData? cupertinoTheme;
   final ThemeData? darkTheme;
   final ThemeMode themeMode;
   final Color? color;
   final Locale? locale;
-  final Iterable<LocalizationsDelegate<dynamic>>? localizationsDelegates;
   final LocaleListResolutionCallback? localeListResolutionCallback;
   final LocaleResolutionCallback? localeResolutionCallback;
   final Iterable<Locale> supportedLocales;
@@ -72,10 +79,19 @@ class KareeMaterialApp extends StatelessWidget {
   /// see [KareeInstanceProfile]
   static KareeInstanceProfile? globalProfile;
 
+  ///
+  /// Global Application type
+  ///
+  static KareeApplicationType type = KareeApplicationType.application;
+
   /// Global Application Contact address
   /// see [ErrorContactAddress]
   static ErrorContactAddress? globalErrorContactAddress;
 
+  ///
+  /// Kind of applicatoin
+  ///
+  final ApplicationKind kind;
   final Map<Type, Action<Intent>>? actions;
 
   final ThemeData? highContrastDarkTheme;
@@ -88,17 +104,18 @@ class KareeMaterialApp extends StatelessWidget {
 
   KareeMaterialApp(
       {Key? key,
+      required this.kind,
       this.restorationScopeId,
       this.scaffoldMessengerKey,
       this.navigatorObservers = const <NavigatorObserver>[],
       this.title = '',
       this.onGenerateTitle,
       this.color,
+      this.cupertinoTheme,
       this.theme,
       this.darkTheme,
       this.themeMode = ThemeMode.system,
       this.locale,
-      this.localizationsDelegates,
       this.localeListResolutionCallback,
       this.localeResolutionCallback,
       this.supportedLocales = const <Locale>[],
@@ -138,7 +155,7 @@ class KareeMaterialApp extends StatelessWidget {
       return KareeRouterErrorWidget(
           detail.summary.name,
           detail.stack,
-          KareeErrorCode.NO_ROUTE_FOUND,
+          KareeErrorCode.GENERAL_ERROR,
           detail.context!.getChildren().map((e) => e.name ?? '').toList());
     };
   }
@@ -151,6 +168,32 @@ class KareeMaterialApp extends StatelessWidget {
           return Observer.on<AppLocalization>(
               tag: KareeConstants.kApplicationLocalizationTag,
               builder: (_, lang) {
+                if (this.kind == ApplicationKind.cupertino) {
+                  return CupertinoApp(
+                    actions: this.actions,
+                    restorationScopeId: this.restorationScopeId,
+                    key: this.key,
+                    navigatorKey: KareeRouter.navigatorKey,
+                    navigatorObservers: this.navigatorObservers,
+                    title: this.title,
+                    routes: const <String, WidgetBuilder>{},
+                    onGenerateTitle: this.onGenerateTitle,
+                    color: this.color,
+                    theme: this.cupertinoTheme,
+                    localeListResolutionCallback:
+                        this.localeListResolutionCallback,
+                    localeResolutionCallback: this.localeResolutionCallback,
+                    debugShowCheckedModeBanner: this.debugShowCheckedModeBanner,
+                    showPerformanceOverlay: this.showPerformanceOverlay,
+                    checkerboardRasterCacheImages:
+                        this.checkerboardRasterCacheImages,
+                    checkerboardOffscreenLayers:
+                        this.checkerboardOffscreenLayers,
+                    showSemanticsDebugger: this.showSemanticsDebugger,
+                    shortcuts: this.shortcuts,
+                    onGenerateRoute: KareeRouter.router(context),
+                  );
+                }
                 return MaterialApp(
                     highContrastDarkTheme: this.highContrastDarkTheme,
                     highContrastTheme: highContrastTheme,
@@ -167,12 +210,9 @@ class KareeMaterialApp extends StatelessWidget {
                     theme: this.theme,
                     darkTheme: this.darkTheme,
                     themeMode: this.themeMode,
-                    // locale: this.locale,
-                    // localizationsDelegates: this.localizationsDelegates,
                     localeListResolutionCallback:
                         this.localeListResolutionCallback,
                     localeResolutionCallback: this.localeResolutionCallback,
-                    // supportedLocales: this.supportedLocales,
                     debugShowMaterialGrid: this.debugShowMaterialGrid,
                     showPerformanceOverlay: this.showPerformanceOverlay,
                     checkerboardRasterCacheImages:

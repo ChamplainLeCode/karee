@@ -2,7 +2,8 @@ import 'dart:async';
 
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
-import '../constances/library.dart' show KareeConstants, KareeInstanceProfile;
+import '../constances/library.dart'
+    show KareeConstants, KareeInstanceProfile, KareeErrorCode;
 import '../errors/errors_solutions.dart';
 import '../routes/router.dart';
 import '../screens/screens.dart';

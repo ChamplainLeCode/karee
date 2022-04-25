@@ -8,7 +8,7 @@ class NoActionFoundError implements Exception {
   String? routeName;
 
   /// Environment parameters at this moment
-  dynamic? params;
+  dynamic params;
 
   NoActionFoundError([this.routeName, this.params]) {
     this.message = 'No Action Found For Route';

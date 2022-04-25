@@ -17,19 +17,10 @@ import 'package:flutter/material.dart'
         TextSpan,
         TextStyle,
         Widget;
+import '../constances/enumeration.dart';
 import '../constances/constances.dart';
 import '../routes/router.dart' show RouteMode;
 
-enum KareeErrorCode {
-  NO_INITIAL_SCREEN,
-  SCREEN_NOT_FOUND,
-  NO_ROUTE_FOUND,
-  GENERAL_ERROR,
-  NOT_ROUTABLE_WIDGET,
-  NOT_KAREE_SCREEN,
-  BAD_USE_OF_ROUTABLE_WIDGET,
-  NO_TRANSLATION_FILE
-}
 var errorSolution =
     <KareeErrorCode, Widget Function(BuildContext ct, List env)>{
   KareeErrorCode.NO_INITIAL_SCREEN:
@@ -177,7 +168,7 @@ var errorSolution =
                               style: TextStyle(color: Colors.white),
                             ),
                             TextSpan(
-                              text: " ${RouteMode.NONE} ",
+                              text: " ${RouteMode.INTERNAL} ",
                               style: TextStyle(
                                   color: Colors.blue,
                                   fontWeight: FontWeight.w500),
@@ -420,7 +411,7 @@ var errorSolution =
                       children: [
                         TextSpan(
                           text:
-                              "Try to verify that the name you enter as route. It seems not correct\n",
+                              "Try to verify that the name you entered as route. It seems not correct\n",
                           style: TextStyle(color: Colors.white),
                         ),
                       ])),

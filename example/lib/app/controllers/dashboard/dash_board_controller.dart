@@ -46,32 +46,32 @@ class DashBoardController {
   }
 
   void constants() {
-    screen(DashboardConstantsScreen(), RouteMode.NONE,
+    screen(DashboardConstantsScreen(), RouteMode.INTERNAL,
         routerName: #dashboardRouter);
   }
 
   void controllers() {
-    screen(DashboardControllersScreen(), RouteMode.NONE,
+    screen(DashboardControllersScreen(), RouteMode.INTERNAL,
         routerName: #dashboardRouter);
   }
 
   void resources() {
-    screen(DashboardResourcesScreen(), RouteMode.NONE,
+    screen(DashboardResourcesScreen(), RouteMode.INTERNAL,
         routerName: #dashboardRouter);
   }
 
   void routage() {
-    screen(DashboardRoutageScreen(), RouteMode.NONE,
+    screen(DashboardRoutageScreen(), RouteMode.INTERNAL,
         routerName: #dashboardRouter);
   }
 
   void services() {
-    screen(DashboardServicesScreen(), RouteMode.NONE,
+    screen(DashboardServicesScreen(), RouteMode.INTERNAL,
         routerName: #dashboardRouter);
   }
 
   void screenTab() {
-    screen(DashboardScreenTabScreen(), RouteMode.NONE,
+    screen(DashboardScreenTabScreen(), RouteMode.INTERNAL,
         routerName: #dashboardRouter);
   }
 }

@@ -4,9 +4,11 @@ import 'package:karee/core.dart';
 import 'core/core.dart';
 
 ///
-/// @Author Champlain Marius Bakop
-/// @Email champlainmarius20@gmail.com
-/// @Github ChamplainLeCode
+/// @Author **Champlain Marius Bakop**
+///
+/// @Email [champlainmarius20@gmail.com](mailto://champlainmarius20@hotmail.com)
+///
+/// @Github [ChamplainLeCode](https://github.com/ChamplainLeCode)
 ///
 
 void main() async {
@@ -30,6 +32,7 @@ class MyKareeApp extends StatelessWidget {
     // Don't change this widget
 
     return KareeMaterialApp(
+        kind: ApplicationKind.material,
         locale: Locale('fr'),
         supportedLocales: [Locale('en')],
         observables: [sideMenuSelected],
@@ -45,8 +48,8 @@ class MyKareeApp extends StatelessWidget {
         /// you need you access to your error contact address use the static variable
         /// KareeMaterialApp.globalErrorContactAddress
         errorContactAddress: ErrorContactAddress(
-          appName: 'Karee',
-          appSupportEmail: 'bncmarius@hotmail.com',
+          appName: 'Karee Sample App',
+          appSupportEmail: 'champlainmarius20@gmail.com',
           appVersion: 'v9.0.3',
         ),
         // locale: Locale('en'),

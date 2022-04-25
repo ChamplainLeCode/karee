@@ -1,10 +1,12 @@
+import 'dart:async';
+
 import 'package:flutter/cupertino.dart' as cupertino;
 import 'package:flutter/material.dart';
-import 'package:karee_inject/karee_inject.dart' show ControllerReflectable;
+import '../modules/library.dart';
 import '../errors/exceptions/widget_error.dart';
-import '../widgets/library.dart' show StatefulScreen, StatelessScreen;
+import '../widgets/screen_widget.dart' show StatefulScreen, StatelessScreen;
 import '../constances/constances.dart' show KareeConstants;
-import '../errors/errors_solutions.dart' show KareeErrorCode;
+import '../constances/enumeration.dart' show KareeErrorCode;
 import '../errors/exceptions/no_action_found_error.dart';
 import '../errors/exceptions/no_route_found_error.dart';
 import 'internal_route.dart';
@@ -20,12 +22,53 @@ Map<Symbol, RouterWidgetState> _internalRouter = {};
 ///
 /// Notes: Karee provides different ways to navigate between screens. RouteMode helps you to set what kind of navigation policy you want.
 ///
-/// RouteMode.EMPTY. Means that you want to clean navigation before adding current path. Assume that your current navigation path is /settings/user/profile and you want to go back /home, to avoid to remove one by one and push new path, you can use RouteMode.EMPTY,
-/// RouteMode.POP: Used to remove current context ( screen ) and return to the previous screen. Assume you are now on the user settings screen ( /settings/user ) and you want to go back to /settings you can call KareeRouter.goBack function with current context (BuildContext) that uses previous constant
-/// RouteMode.PUSH: Used to add new navigation context on last one
-/// RouteMode.REPLACE: If you want to pop current context and add new one without make two calls KareeRouter.goBack and KareeRouter.goto
+/// [RouteMode.REPLACE] : If you want to pop current context and add new one
+/// without make two calls KareeRouter.goBack and KareeRouter.goto
+///
+/// [RouteMode.PUSH] : Used to add new navigation context on last one
+///
+///
+/// [RouteMode.PUSH] : Used to add new navigation context on last one
+///
+///
+/// [RouteMode.EMPTY] : Means that you want to clean navigation before adding
+/// current path. Assume that your current navigation path is
+/// /settings/user/profile and you want to go back /home, to avoid to remove
+/// one by one and push new path, you can use RouteMode.EMPTY,
+///
+enum RouteMode {
+  ///
+  /// RouteMode.REPLACE: If you want to pop current context and add new one
+  /// without make two calls KareeRouter.goBack and KareeRouter.goto
+  REPLACE,
 
-enum RouteMode { REPLACE, PUSH, EMPTY, NONE }
+  ///
+  /// RouteMode.PUSH: Used to add new navigation context on last one
+  ///
+  PUSH,
+
+  ///
+  /// RouteMode.EMPTY. Means that you want to clean navigation before adding
+  /// current path. Assume that your current navigation path is
+  /// /settings/user/profile and you want to go back /home, to avoid to remove
+  /// one by one and push new path, you can use RouteMode.EMPTY,
+  ///
+  EMPTY,
+
+  ///
+  /// RouteMode.INTERNAL: Used to indicate to KareeRouter that the current route
+  /// should be send to a Routable Widget inside flutter tree.
+  ///
+  INTERNAL,
+
+  ///
+  /// RouteMode.NONE: Used to indicate to KareeRouter that the current route
+  /// should be send to a Routable Widget inside flutter tree.
+  ///
+  /// See [INTERNAL]
+  @deprecated
+  NONE
+}
 
 ///
 /// RouteDirection: Not yet implemented, it will be use as screen entry direction
@@ -48,21 +91,45 @@ class Route {
       <String, List<dynamic>>{};
   static Map<RouteActivation, List<String>> _routeActivationMap = {};
 
-  static const String pathVariableGroup = '([0-9a-zA-Z\-_]+)';
-  static final RegExp pathVariableRegExp = RegExp(r'{[a-zA-Z0-9\-_]+}');
+  ///
+  /// Path variable regex used to extract path variable in route.
+  ///
+  static const String _pathVariableGroup = '([0-9a-zA-Z\-_]+)';
 
+  ///
+  /// Path variable regex used to detect whether there is a path var in the
+  /// route
+  ///
+  static final RegExp _pathVariableRegExp = RegExp(r'{[a-zA-Z0-9\-_]+}');
+
+  ///
+  /// This function is the default Route Guard when it's not defined.
+  /// Means that, when you define your routes in `routes.dart, and you
+  /// don't specify the activation for each route, in default case, we
+  /// allow exection through this function.
+  ///
   static bool defaultRouteActivation() => true;
 
+  ///
+  /// This function is used to register your application in Karee Router module.
+  ///
+  /// [route] is the string that represents the resource location.
+  ///
+  /// [action] is the action to perform when resource represented by [route] is
+  /// needed.
+  ///
+  /// [canActivated] is the route guard, use to allow the request to access to
+  /// the desired resource.
   static void on(String route, dynamic action,
       {RouteActivation canActivated = defaultRouteActivation}) {
     assert(action != null && action.toString().isNotEmpty);
     assert(route.isNotEmpty);
 
-    if (route.contains(pathVariableRegExp)) {
+    if (route.contains(_pathVariableRegExp)) {
       var meta = <dynamic>[action];
-      var newPath = route.replaceAllMapped(pathVariableRegExp, (m) {
+      var newPath = route.replaceAllMapped(_pathVariableRegExp, (m) {
         meta.add(route.substring(m.start + 1, m.end - 1));
-        return pathVariableGroup;
+        return _pathVariableGroup;
       });
       _routeWithParams[newPath] = meta;
     } else {
@@ -182,41 +249,44 @@ void doInternalRouting(Symbol routerName, dynamic screenName, dynamic param) {
 /// doRouting: Fonction used to load resource from controller
 /// Can be use for application navigation, or to request data.
 dynamic doRouting(String control, String method, dynamic params) {
-  try {
-    var controllerInstance = ControllerReflectable.reflectors[control];
-    if (controllerInstance?.hasReflectee ?? false) {
-      if (params is List) {
-        return controllerInstance?.invoke(method, params);
-      } else {
-        if (params == null) {
-          return controllerInstance?.invoke(method, []);
-        }
-        return controllerInstance?.invoke(method, [params]);
-      }
-    }
-  } catch (ex, stack) {
-    print(ex);
-    KareeRouter.goto(KareeConstants.kareeErrorPath, parameter: {
-      #title: (ex as dynamic).message,
-      #stack: stack,
-      #env: (params == null
-          ? []
-          : params is List
-              ? params
-              : [])
-        ..reversed.toList()
-        ..addAll([control, method]),
-      #errorCode: KareeErrorCode.NO_ROUTE_FOUND
-    });
-  }
+  // try {
+  //   var controllerInstance =  ControllerReflectable.reflectors[control];
+  //   if (controllerInstance?.hasReflectee ?? false) {
+  //     if (params is List) {
+  //       return controllerInstance?.invoke(method, params);
+  //     } else {
+  //       if (params == null) {
+  //         return controllerInstance?.invoke(method, []);
+  //       }
+  //       return controllerInstance?.invoke(method, [params]);
+  //     }
+  //   }
+  // } catch (ex, stack) {
+  //   print(ex);
+  //   KareeRouter.goto(KareeConstants.kareeErrorPath, parameter: {
+  //     #title: (ex as dynamic).message,
+  //     #stack: stack,
+  //     #env: (params == null
+  //         ? []
+  //         : params is List
+  //             ? params
+  //             : [])
+  //       ..reversed.toList()
+  //       ..addAll([control, method]),
+  //     #errorCode: KareeErrorCode.NO_ROUTE_FOUND
+  //   });
+  // }
 }
 
 ///
-/// `KareeRouter`: To navigate between screens you may use KareeRouter that offers you two ways to go forward and to go back
+/// `KareeRouter`: To navigate between screens you may use KareeRouter that
+///  offers you two ways to go forward and to go back. KareeRouter provides
+/// also the to consume route between your application modules
 ///
 /// `KareeRouter.goto( routeName, parameter )`
 ///
-/// `routeName` it is the same path or event defined in the Routes.dart file
+/// `routeName` it is the same path or event defined in the Routes.dart of your
+/// module.
 /// `parameter` it is the arguments list that should be injected in your Route action
 ///
 /// `KareeRouter.goBack( context )`
@@ -242,7 +312,7 @@ class KareeRouter {
         orElse: () => MapEntry(Route.defaultRouteActivation, []));
     if (!canActivatedEntry.key()) {
       /// Route Guard refused access to this routes
-      return false;
+      return;
     }
 
     KareeRouter._currentRoute = routeName;
@@ -257,17 +327,32 @@ class KareeRouter {
           if (parameter == null) {
             return action();
           } else
-            return action(parameter);
-        } else if (action is String) {
-          List<String> li = action.split('@');
-          if (li.length == 2) {
-            String controllerName = li[0];
-            String methodName = li[1];
-            return doRouting(controllerName, methodName, parameter);
-          }
+            return Function.apply(
+                action,
+                parameter is List
+                    ? parameter
+                    : parameter == null
+                        ? []
+                        : [parameter]);
+          // action(parameter);
         }
+
         throw NoActionFoundError(routeName, parameter);
       } else {
+        ///
+        /// When the route is not found! we will try to check whether it starts
+        /// with the path that represents a module that is not loaded yet.
+        ///
+        try {
+          var subscription = KareeModule.modules.entries.firstWhere(
+              (subscription) => routeName.startsWith(subscription.key));
+          if (subscription.value.isInitialized == false) {
+            return Future.sync(() async {
+              await subscription.value.initialize();
+              return await goto(routeName, parameter: parameter);
+            });
+          }
+        } on StateError {}
         throw NoRouteFoundError(routeName, parameter);
         // cupertino.Navigator.push(ctxt, launchErrorPage);
         // print('No action for this route');
@@ -280,21 +365,22 @@ class KareeRouter {
           #env: [routeName, if (parameter != null) parameter],
           #errorCode: KareeErrorCode.NO_ROUTE_FOUND
         });
-        return;
-      }
-      screen(KareeConstants.kareeErrorScreenName, RouteMode.PUSH, argument: {
-        #title: (e as dynamic).message,
-        #stack: st,
-        #env: [routeName, if (parameter != null) parameter],
-        #errorCode: KareeErrorCode.GENERAL_ERROR
-      });
+      } else
+        screen(KareeConstants.kareeErrorScreenName, RouteMode.PUSH, argument: {
+          #title: (e as dynamic).message,
+          #stack: st,
+          #env: [routeName, if (parameter != null) parameter],
+          #errorCode: KareeErrorCode.GENERAL_ERROR
+        });
     }
   }
 
+  ///
   /// Function used to get specific action from a path route.
   ///
   /// This function also setup **KareeRouter.pathVariables** value when the path
   /// represented by this route contains url parameters
+  ///
   static dynamic findActionFor(String ro) {
     MapEntry<String, dynamic> action = Route._routeMap.entries.firstWhere(
         (entry) => entry.key == ro,

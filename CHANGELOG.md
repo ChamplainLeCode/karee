@@ -1,3 +1,8 @@
+## [v2.2.0] - Plane: 6 April 2022.
+  * Plane: Karee framework fix.
+    * Bucket Widget fix disposing on **didUpdate**
+    * Remove dependency to Reflectable
+  * Adding Modularization Support.
 ## [v2.1.3] - Plane: 17 September 2021.
   * Plane: Karee framework fix.
     * Adding Bucket Widget

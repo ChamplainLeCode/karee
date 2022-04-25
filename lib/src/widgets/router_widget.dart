@@ -4,6 +4,25 @@ import '../../internationalization.dart';
 import '../routes/router.dart';
 import '../observables/observable_widget.dart';
 
+///
+/// RouterWidget is widget that allow you to use internal navigation in your
+/// application
+///
+/// To use this widget you need to specify the name, which is unique symbol that
+/// references your widget router. and the initial widget displayed
+///
+/// ```dart
+/// RouterWidget(
+///   name: #myDashboardRouter,
+///   initial: Center(
+///     child: Text('Welcome on my dashboard')
+///   )
+/// )
+/// ```
+/// See [RoutableWidget]
+///
+/// See [RouteMode.INTERNAL]
+///
 class RouterWidget extends StatefulWidget {
   final Symbol name;
   final Widget initial;
@@ -46,8 +65,28 @@ class _RouterWidgetState extends RouterWidgetState {
   }
 }
 
+///
+/// RoutableWidget, is an abstract widget that allow you to extends injectable
+/// widget in your RouterWidget.
+///
+/// ```dart
+/// class PendingTransactionTab extends RoutableWidget {
+///
+///   Widget builder(BuildContext context, Object? parameter) => Center(
+///     child: Text('Pending transaction')
+///   );
+/// }
+/// ```
+///
+/// See [RouteMode.INTERNAL]
+///
+/// See [RouterWidget]
+///
 abstract class RoutableWidget extends StatelessWidget {
+  RoutableWidget({Key? key}) : super(key: key);
+
   final _RoutableWidgetParameter _parameter = _RoutableWidgetParameter();
+
   void onParam(Object? parameters) {
     _parameter.value = parameters;
   }
@@ -63,7 +102,7 @@ abstract class RoutableWidget extends StatelessWidget {
 }
 
 class _RoutableWidgetParameter {
-  dynamic? value;
+  dynamic value;
 
   _RoutableWidgetParameter([this.value]);
 }
