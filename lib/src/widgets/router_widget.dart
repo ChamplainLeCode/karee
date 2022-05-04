@@ -4,6 +4,25 @@ import '../../internationalization.dart';
 import '../routes/router.dart';
 import '../observables/observable_widget.dart';
 
+///
+/// RouterWidget is widget that allow you to use internal navigation in your
+/// application
+///
+/// To use this widget you need to specify the name, which is unique symbol that
+/// references your widget router. and the initial widget displayed
+///
+/// ```dart
+/// RouterWidget(
+///   name: #myDashboardRouter,
+///   initial: Center(
+///     child: Text('Welcome on my dashboard')
+///   )
+/// )
+/// ```
+/// See [RoutableWidget]
+///
+/// See [RouteMode.INTERNAL]
+///
 class RouterWidget extends StatefulWidget {
   final Symbol name;
   final Widget initial;
@@ -32,6 +51,7 @@ class _RouterWidgetState extends RouterWidgetState {
   }
 
   Widget? child;
+  @override
   void load(RoutableWidget child) {
     this.child = child;
     setState(() {});
@@ -46,18 +66,44 @@ class _RouterWidgetState extends RouterWidgetState {
   }
 }
 
+///
+/// RoutableWidget, is an abstract widget that allow you to extends injectable
+/// widget in your RouterWidget.
+///
+/// ```dart
+/// class PendingTransactionTab extends RoutableWidget {
+///
+///   Widget builder(BuildContext context, Object? parameter) => Center(
+///     child: Text('Pending transaction')
+///   );
+/// }
+/// ```
+///
+/// See [RouteMode.INTERNAL]
+///
+/// See [RouterWidget]
+///
 abstract class RoutableWidget extends StatelessWidget {
-  late final dynamic? _parameter;
+  RoutableWidget({Key? key}) : super(key: key);
+
+  final _RoutableWidgetParameter _parameter = _RoutableWidgetParameter();
+
   void onParam(Object? parameters) {
-    _parameter = parameters;
+    _parameter.value = parameters;
   }
 
-  Widget builder(BuildContext context, dynamic parameter);
+  Widget builder(BuildContext context, Object? parameter);
 
   @override
   Widget build(BuildContext context) {
     return Observer.on<AppLocalization>(
         tag: KareeConstants.kApplicationLocalizationTag,
-        builder: (_, l) => builder(context, _parameter));
+        builder: (_, l) => builder(context, _parameter.value));
   }
+}
+
+class _RoutableWidgetParameter {
+  dynamic value;
+
+  _RoutableWidgetParameter([this.value]);
 }

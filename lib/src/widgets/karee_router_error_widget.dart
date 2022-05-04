@@ -2,7 +2,8 @@ import 'dart:async';
 
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
-import '../constances/library.dart' show KareeConstants, KareeInstanceProfile;
+import '../constances/library.dart'
+    show KareeConstants, KareeInstanceProfile, KareeErrorCode;
 import '../errors/errors_solutions.dart';
 import '../routes/router.dart';
 import '../screens/screens.dart';
@@ -18,8 +19,8 @@ class KareeRouterErrorWidget extends StatefulScreen {
 
   KareeRouterErrorWidget([this._title, this._stack, this.errorCode, this.env]);
   @override
-  _KareeRouterErrorWidgetState createState() => _KareeRouterErrorWidgetState(
-      this._title, this._stack, this.env, this.errorCode);
+  _KareeRouterErrorWidgetState createState() =>
+      _KareeRouterErrorWidgetState(_title, _stack, env, errorCode);
 }
 
 class _KareeRouterErrorWidgetState extends ScreenState<KareeRouterErrorWidget>
@@ -43,20 +44,22 @@ class _KareeRouterErrorWidgetState extends ScreenState<KareeRouterErrorWidget>
   Future<List<StackErrorEntry>> get loadStackTrace async {
     int i = 0;
     List<String> trace = _stack?.toString().split('\n') ?? [];
-    if (trace.length > 0)
+    if (trace.isNotEmpty) {
       return trace.map((e) {
-        if (e.length > 0) {
+        if (e.isNotEmpty) {
           e = kIsWeb ? e.trim() : e.substring(e.indexOf(' ')).trim();
         }
-        return new StackErrorEntry(e, i++);
+        return StackErrorEntry(e, i++);
       }).toList();
+    }
     return [StackErrorEntry("Error (path/package) ", ++i)];
   }
 
   @override
   Widget builder(BuildContext context) {
-    if (KareeMaterialApp.globalProfile == KareeInstanceProfile.development)
+    if (KareeMaterialApp.globalProfile == KareeInstanceProfile.development) {
       return devErrorScreen();
+    }
     return prodErrorScreen();
   }
 
@@ -65,8 +68,9 @@ class _KareeRouterErrorWidgetState extends ScreenState<KareeRouterErrorWidget>
         (entry) => entry[#name] == KareeConstants.kareeErrorScreenName,
         orElse: () => {#screen: null})[#screen];
     if (prodErrorWidgetBuilder == null ||
-        prodErrorWidgetBuilder!().runtimeType == widget.runtimeType)
+        prodErrorWidgetBuilder!().runtimeType == widget.runtimeType) {
       return KareeRouterDefaultProdErrorWidget();
+    }
 
     return prodErrorWidgetBuilder();
   }
@@ -200,17 +204,19 @@ class _KareeRouterErrorWidgetState extends ScreenState<KareeRouterErrorWidget>
                   child: FutureBuilder<List<StackErrorEntry>>(
                     future: loadStackTrace,
                     builder: (context, snapshot) {
-                      if (snapshot.hasError)
+                      if (snapshot.hasError) {
                         return Center(
                           child: TextButton(
                             child: Text('Error occurs ${snapshot.error}'),
                             onPressed: null,
                           ),
                         );
-                      if (!snapshot.hasData)
+                      }
+                      if (!snapshot.hasData) {
                         return Center(
                           child: CircularProgressIndicator(),
                         );
+                      }
 
                       return ListView.builder(
                           itemCount: snapshot.data?.length ?? 0,
@@ -261,19 +267,20 @@ class StackErrorEntry {
   int? index;
 
   StackErrorEntry(String e, this.index) {
-    if (e.length > 0) {
+    if (e.isNotEmpty) {
       int indexEndTitle = e.indexOf('(');
       int indexBeginTile = e.lastIndexOf(')');
       int? lastIndex;
-      this.title = kIsWeb
+      title = kIsWeb
           ? e.substring((lastIndex = e.lastIndexOf(' ')))
           : e.substring(0, indexEndTitle > 0 ? indexEndTitle : e.length);
-      this.path = kIsWeb
+      path = kIsWeb
           ? e.substring(0, lastIndex).trim()
           : e.substring(indexEndTitle + 1,
               indexBeginTile > 0 ? indexBeginTile : e.length);
     }
   }
 
+  @override
   String toString() => {#title: title, #path: path, #index: index}.toString();
 }

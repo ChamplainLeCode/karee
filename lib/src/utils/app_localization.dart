@@ -36,6 +36,23 @@ class KareeInternationalization {
   /// Retrieve the current AppLocalization observable Object.
   static Of<AppLocalization> get appLocalization => _appLocalization;
 
+  ///
+  /// This function is used to initialize appLocalization, this function is call
+  /// both in KareeMaterialApp and KareeModule.initialize(). Because
+  /// `_appLocalization` is marked as **late** and it's called in two place, then
+  /// it's important to avoid `LateInitializationError`, Karee will surrounds it
+  /// with try-catch structure
+  ///
+  static Of<AppLocalization> initAppLocalization() {
+    try {
+      return KareeInternationalization.appLocalization;
+    } catch (e) {
+      KareeInternationalization._appLocalization =
+          Of.tag(AppLocalization(), KareeConstants.kApplicationLocalizationTag);
+      return KareeInternationalization.appLocalization;
+    }
+  }
+
   /// Only for internal call. `AppLocalization.init` is a static function used to initialize the appLocalization
   /// instance in Karee framework
   static Future<void> init(Locale? locale, List<Locale> supportedLocale) async {
@@ -88,12 +105,32 @@ class AppLocalization {
   }
 
   Future<void> _readTranslationFile(Locale locale) async {
-    String translationString = await loadConfig(
-        '${KareeConstants.kApplicationLocalizationRessourcDir}'
-        '/${locale.languageCode.toLowerCase()}'
-        "${locale.countryCode != null ? '_${locale.countryCode!.toLowerCase()}' : ''}.json");
+    var path = '''${KareeConstants.kApplicationLocalizationRessourcDir}'''
+        '''/${locale.languageCode.toLowerCase()}'''
+        '''${locale.countryCode != null ? '_${locale.countryCode!.toLowerCase()}' : ''}.json''';
+    String translationString = await loadConfig(path);
+
     try {
       translation = jsonDecode(translationString);
+      // ignore: empty_catches
+    } catch (e) {}
+  }
+}
+
+extension AppLocalizationExtension on AppLocalization {
+  Future<void> readModuleTranslationFile(Locale locale, String package) async {
+    var path = '''$package'''
+        '''${KareeConstants.kApplicationLocalizationRessourcDir}'''
+        '''/${locale.languageCode.toLowerCase()}'''
+        '''${locale.countryCode != null ? '_${locale.countryCode!.toLowerCase()}' : ''}.json''';
+    String translationString = await loadConfig(path);
+    try {
+      if (translation == null) {
+        translation = jsonDecode(translationString);
+      } else {
+        translation!.addAll(jsonDecode(translationString));
+      }
+      // ignore: empty_catches
     } catch (e) {}
   }
 }

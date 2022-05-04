@@ -3,11 +3,19 @@ import 'persistent_context.dart';
 typedef ObservableListener<T> = void Function(T value);
 
 abstract class Observable<T> {
+  ///
+  /// Entry point to add a subscriber to an observable
+  ///
   void listen(ObservableListener<T> listener);
+
+  ///
+  /// Entry point to remove a subscriber to an observable
+  ///
   void unListen(ObservableListener<T> listener);
 
-  /// Manually refresh this observale. Useful in case of
-  /// unmanagable object. if you have an Object like
+  /// Manually refresh this observale.
+  ///
+  /// Useful in case of unmanagable object. if you have an Object like
   /// ```dart
   ///     class User {
   ///       String name;
@@ -16,7 +24,7 @@ abstract class Observable<T> {
   ///     }
   /// ```
   /// and you want to use instance of this class as observable. you can
-  /// do something like this to notify all observer of change.
+  /// do something like this to notify all observers that some change happened.
   /// ```
   /// final userObs = Of(User('Patrick', 23));
   ///
@@ -52,23 +60,30 @@ class Of<T> implements Observable<T> {
   static void free<E>(Of<E> obs) => PersistentContext.remove<E>(obs);
 
   /// Permanent listeners on this observable
+  // ignore: prefer_final_fields
   Set<ObservableListener<T>> _listener = {};
 
   /// Ephemeral listeners on this observable.
   /// Means that, every time that this observable change
   /// its value, this set is clean.
+  // ignore: prefer_final_fields
   Set<ObservableListener<T>> _alert = {};
 
   /// Method used to set new value of an observable. this will call all listener
   /// that listen to this.
   set value(T value) {
     _value = value;
-    _listener.forEach((listener) => listener.call(value));
+    for (var listener in _listener) {
+      listener.call(value);
+    }
     _alert
       ..forEach((alerter) => alerter.call(value))
       ..clear();
   }
 
+  ///
+  /// Get the current value of this observable.
+  ///
   T get value => _value;
 
   @override
@@ -81,16 +96,20 @@ class Of<T> implements Observable<T> {
     _listener.remove(listener);
   }
 
+  @override
   String toString() => _value.toString();
 
-  /// Add an ephemeral listener to is observer.
-  /// this listener will be unsubscribe after the next change
+  ///
+  /// Add an ephemeral listener to this observable.
+  /// this listener will be unsubscribe after the next change.
+  ///
   void alert(ObservableListener<T> alerter) => _alert.add(alerter);
 
-  /// Manuel refresh of observable
   @override
   void refresh() {
-    _listener.forEach((listener) => listener.call(value));
+    for (var listener in _listener) {
+      listener.call(value);
+    }
     _alert
       ..forEach((alerter) => alerter.call(value))
       ..clear();

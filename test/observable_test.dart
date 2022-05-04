@@ -1,5 +1,4 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:karee/core.dart';
 import 'package:karee/src/errors/exceptions/observable_error.dart';
 import 'package:karee/src/observables/library.dart';
 
@@ -49,17 +48,17 @@ void main() {
       var ofPerson = Of(person2);
       Person? person1;
       ofPerson.alert((p) => person1 = p);
-      ofPerson..value = person3;
-      ofPerson..value = person4;
+      ofPerson.value = person3;
+      ofPerson.value = person4;
       expect(person1!, person3);
     });
     test('Test observable Listener', () {
       var ofPerson = Of(person2);
       Person? person1;
       ofPerson.listen((p) => person1 = p);
-      ofPerson..value = person3;
+      ofPerson.value = person3;
       expect(person1!, person3);
-      ofPerson..value = person4;
+      ofPerson.value = person4;
       expect(person1!, person4);
     });
     test('Free observable from cache', () {

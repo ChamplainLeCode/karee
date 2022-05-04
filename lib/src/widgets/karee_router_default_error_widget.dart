@@ -56,7 +56,8 @@ class _KareeRouterDefaultProdErrorWidgetState
           ),
           Container(
             child: Text(
-              '${KareeMaterialApp.globalErrorContactAddress?.appName ?? 'Karee App'}',
+              KareeMaterialApp.globalErrorContactAddress?.appName ??
+                  'Karee App',
               style: TextStyle(
                   fontSize: 15,
                   color: Colors.primaries.first,
@@ -76,7 +77,7 @@ class _KareeRouterDefaultProdErrorWidgetState
           Container(
             margin: EdgeInsets.only(top: 10),
             child: Text(
-              '${KareeMaterialApp.globalErrorContactAddress?.appSupportEmail ?? ''}',
+              KareeMaterialApp.globalErrorContactAddress?.appSupportEmail ?? '',
               style: TextStyle(
                   color: Colors.primaries.first,
                   fontSize: 12,

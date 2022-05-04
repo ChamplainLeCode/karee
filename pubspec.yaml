@@ -1,21 +1,25 @@
 name: karee
 description: Another way to build Flutter applications using the power of MVC Design Pattern.
-version: 2.1.1
+version: 2.2.0
 homepage: https://github.com/ChamplainLeCode/karee
+repository: https://github.com/ChamplainLeCode/karee
+issue_tracker: https://github.com/ChamplainLeCode/karee/issues
+report_issue: https://github.com/ChamplainLeCode/karee/issues/new
+
 environment:
-  sdk: '>=2.12.0 <3.0.0'
+  sdk: '>=2.15.0 <3.0.0'
   flutter: ">=1.17.0"
 
 dependencies:
   flutter:
     sdk: flutter
-  karee_inject: ^1.0.2
+  karee_inject: ^1.0.3
   yaml: ^3.1.0
-  reflectable: ^3.0.1
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
+  lints: ^1.0.1
 flutter:
   assets:
     - assets/

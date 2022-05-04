@@ -2,29 +2,35 @@ import 'package:karee/src/errors/exceptions/observable_error.dart';
 
 import '../observables/observable.dart';
 
+///
 /// Cache implementation for observable state.
+///
 class PersistentContext {
   static final _context = <Type, dynamic>{};
 
+  ///
+  /// Get all data in cache level.
+  ///
   Map get cache => _context;
 
-  static Of<T> of<T>() => PersistentContext.getObsWithTag(T, #base);
+  static Of<T> of<T>() => PersistentContext.getObsWithTag<T>(#base);
   static Of<T> withTag<T>(dynamic tag) => PersistentContext.getObsByTag<T>(tag);
 
-  // static Of<T> tag<T>(dynamic tag) {
-  //   assert(tag != null);
-  //   return _context[tag];
-  // }
-
+  ///
+  /// Setup an observable in cas using its runtime type and observable tag as cache key.
+  ///
   static void value<T>(Of<T> obs) {
     assert(obs.value != null);
     if (_context[obs.value.runtimeType] == null) {
       _context[obs.value.runtimeType] = {};
     }
-    obs.tag = #base;
+    obs.tag ??= #base;
     _context[obs.value.runtimeType][obs.tag] = obs;
   }
 
+  ///
+  /// Persist an observable in cache level with its tag and runtime type.
+  ///
   static Of<T> valueWithTag<T>(T value, dynamic tag) {
     assert(tag != null);
     var obs = Of(value)..tag = tag;
@@ -35,6 +41,9 @@ class PersistentContext {
     return obs;
   }
 
+  ///
+  /// Get an observable from its tag.
+  ///
   static Of<T> getObsByTag<T>(dynamic tag) {
     var entries = _context.entries;
     for (var obsTagEntry in entries) {
@@ -50,15 +59,21 @@ class PersistentContext {
     throw NoObservableFoundWithTagError(tag);
   }
 
-  static Of<T> getObsWithTag<T>(Type t, [dynamic tag = #base]) {
+  ///
+  /// Get and observable from it tag and type.
+  ///
+  static Of<T> getObsWithTag<T>([dynamic tag = #base]) {
     return _context[T]?[tag];
   }
 
+  ///
+  /// Remove persisted observable from Cache level.
+  ///
   static void remove<E>(Of<E> obs) {
     assert(obs.value != null);
     assert(obs.tag != null);
-    var ld;
-    if ((ld = _context[E]) == null) {
+    var ld = _context[E];
+    if (ld == null) {
       return;
     }
     (ld as Map).remove(obs.tag);

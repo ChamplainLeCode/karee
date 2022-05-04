@@ -8,12 +8,13 @@ class NoActionFoundError implements Exception {
   String? routeName;
 
   /// Environment parameters at this moment
-  dynamic? params;
+  dynamic params;
 
   NoActionFoundError([this.routeName, this.params]) {
-    this.message = 'No Action Found For Route';
+    message = 'No Action Found For Route';
   }
 
+  @override
   String toString() {
     return 'Exception: NoActionException( $message ): with routeName: $routeName and params $params}';
   }

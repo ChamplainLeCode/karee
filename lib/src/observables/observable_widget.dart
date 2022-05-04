@@ -6,7 +6,7 @@ import '../widgets/screen_widget.dart';
 /// An overriding of WidgetBuilder
 typedef _OfBuilder<K> = Widget Function(BuildContext ctx);
 
-/// An overloading of see [_OfBuilder<K>] use tu send state on building
+/// An overloading of see [_OfBuilder<K>] use to send state on building
 typedef _OfBuilderWithState<K> = Widget Function(BuildContext ctx, Of<K> state);
 
 /// ### Observer<T>
@@ -30,9 +30,9 @@ class Observer<T> extends _ObservableElement<T> {
   ///
   /// see also [Observer.withProviders]
   static _OfWidgetBuilder<E> on<E>(
-      {dynamic? tag, required _OfBuilderWithState<E> builder}) {
+      {dynamic tag, required _OfBuilderWithState<E> builder}) {
     return _OfWidgetBuilder<E>(
-        of: PersistentContext.getObsWithTag(E, tag), child: builder);
+        of: PersistentContext.getObsWithTag<E>(tag), child: builder);
   }
 
   /// ### Definition
@@ -66,6 +66,14 @@ class Observer<T> extends _ObservableElement<T> {
   ///
   /// and provide a widget builder that will be used when your watched object changes.
   ///
+  /// ### Parameters
+  ///
+  /// **of**: Master observable to bind with this observer
+  ///
+  /// **child**: Widget builder of this observer
+  ///
+  /// **slaves**: Additional observables that should been bound to this observer. This params is optional
+  ///
   /// ### Usage
   /// To use this, you should first setup the provider for this type. Means you should
   ///
@@ -83,9 +91,13 @@ class Observer<T> extends _ObservableElement<T> {
   /// see [Observer.withProviders]
   ///
   /// see also [Observer.on]
-  Observer({required Of<T> of, required _OfBuilder<T> child})
-      : super(of, child);
+  Observer(
+      {required Of<T> of,
+      required _OfBuilder<T> child,
+      List<Of> slaves = const []})
+      : super(of, child, slaves);
 
+  @override
   _OfWidgetManager<T> createState() => _OfWidgetManager<T>();
 }
 
@@ -118,9 +130,9 @@ class _OfWidgetProvider<T> extends StatelessComponent {
   final List<Of<T>> obs;
   final _OfBuilder<T> child;
   _OfWidgetProvider({required this.obs, required this.child}) {
-    obs.forEach((obs) {
+    for (var obs in obs) {
       PersistentContext.value(obs);
-    });
+    }
   }
 
   @override
@@ -131,15 +143,19 @@ class _OfWidgetProvider<T> extends StatelessComponent {
 
 abstract class _ObservableElement<E> extends StatefulComponent {
   late final Of<E> of;
-
+  late final List<Of> slaveObservables;
   late final _OfBuilder<E> child;
-  _ObservableElement(this.of, this.child);
+  _ObservableElement(this.of, this.child, [this.slaveObservables = const []]);
 }
 
 abstract class _ObservableState<E>
     extends ComponentState<_ObservableElement<E>> {
+  @override
   initState() {
     widget.of.listen(_notifyUpdate);
+    for (var ob in widget.slaveObservables) {
+      ob.listen(_notifyUpdateSlave);
+    }
     super.initState();
   }
 
@@ -154,6 +170,11 @@ abstract class _ObservableState<E>
 
   @mustCallSuper
   void _notifyUpdate(E value) {
+    if (mounted) super.update();
+  }
+
+  @mustCallSuper
+  void _notifyUpdateSlave(dynamic value) {
     if (mounted) super.update();
   }
 
@@ -178,6 +199,7 @@ abstract class _ObservableElementWithState<E> extends StatefulComponent {
 
 abstract class _ObservableStateWithObs<E>
     extends ComponentState<_ObservableElementWithState<E>> {
+  @override
   initState() {
     widget.of.listen(_notifyUpdate);
     super.initState();

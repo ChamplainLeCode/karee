@@ -1,7 +1,4 @@
-import './constances.dart';
-
-import '../widgets/karee_material_app.dart';
-
+///
 /// KareeInstanceProfile enumeration used to set the profile of the application
 ///
 /// Application profile is used by Karee to know whether the application is running
@@ -37,10 +34,40 @@ import '../widgets/karee_material_app.dart';
 ///   }
 /// ```
 /// In addition, you can set contact address of your application and use it everywhere
-/// in your application through [KareeMaterialApp.globalErrorContactAddress] or get the
+/// in your application through [KareeMaterialApp.globalErrorContactAddress]('') or get the
 /// current profile with [KareeMaterialApp.globalProfile]('')
 ///
-/// see [KareeConstants]
-/// see [KareeMaterialApp]
+/// See [KareeConstants]('')
+///
+/// See [KareeMaterialApp]('')
 
 enum KareeInstanceProfile { development, production }
+
+///
+/// KareeApplicationType used to know whether the running instance of Karee's
+/// instance is application or module
+///
+enum KareeApplicationType { application, module }
+
+///
+/// This enumeration is used to know which kind of application will be run,
+/// MaterialApp or CupertinoApp
+///
+enum ApplicationKind { cupertino, material }
+
+///
+/// KareeErrorCode is an enumeration that define all keys associated with a
+/// specific widget displayed in Error Screen in dev mode.
+///
+/// See [KareeInstanceProfile]('')
+///
+enum KareeErrorCode {
+  noInitialScreen,
+  screenNotFound,
+  noRouteFound,
+  generalError,
+  notRoutableWidget,
+  notKareeScreen,
+  badUseOfRoutableWidget,
+  noTranslationFile
+}

@@ -8,12 +8,13 @@ class NoRouteFoundError implements Exception {
   String? routeName;
 
   /// Environment parameters at this moment
-  dynamic? params;
+  dynamic params;
 
   NoRouteFoundError([this.routeName, this.params]) {
-    this.message = "No Route Found with name $routeName";
+    message = "No Route Found with name $routeName";
   }
 
+  @override
   String toString() {
     return 'Exception: NoRouteFoundException( $message ): with routeName: $routeName and params $params}';
   }

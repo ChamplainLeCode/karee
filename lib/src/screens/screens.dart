@@ -3,7 +3,7 @@ import 'package:flutter/widgets.dart';
 import '../widgets/screen_widget.dart';
 import '../widgets/router_widget.dart';
 import '../constances/constances.dart' show KareeConstants;
-import '../errors/errors_solutions.dart';
+import '../constances/enumeration.dart' show KareeErrorCode;
 import '../errors/exceptions/widget_error.dart';
 import '../widgets/karee_router_error_widget.dart';
 import '../routes/router.dart';
@@ -29,7 +29,7 @@ void subscribeScreen(Map<Symbol, dynamic> screen) => screens.add(screen);
 void screen(dynamic screen, RouteMode mode,
     {dynamic argument,
     Symbol? routerName,
-    RouteDirection direction = RouteDirection.LEFT_TO_RIGHT,
+    // RouteDirection direction = RouteDirection.LEFT_TO_RIGHT,
     cupertino.BuildContext? context}) {
   try {
     var isString = screen is String,
@@ -39,13 +39,13 @@ void screen(dynamic screen, RouteMode mode,
     if (!(isString || isStls || isStfs || isRoutable)) {
       throw NotManageableWidgetException(screen);
     }
-    if (routerName != null && mode != RouteMode.NONE) {
+    if (routerName != null && mode != RouteMode.INTERNAL) {
       throw BadUseOfRouterWidgetException(routerName, mode);
     }
 
     /// Internal Routing using RouterWidget
     if (routerName != null) {
-      doInternalRouting(routerName, screen, argument);
+      Future.microtask(() => doInternalRouting(routerName, screen, argument));
       return;
     }
     switch (mode) {
@@ -100,7 +100,7 @@ void screen(dynamic screen, RouteMode mode,
       #title: ex.message,
       #stack: st,
       #env: [screen, KareeRouter.currentRoute!, mode, argument],
-      #errorCode: KareeErrorCode.NOT_KAREE_SCREEN
+      #errorCode: KareeErrorCode.notKareeScreen
     });
   } on BadUseOfRouterWidgetException catch (ex, st) {
     KareeRouter.goto(KareeConstants.kareeErrorPath, parameter: {
@@ -112,7 +112,7 @@ void screen(dynamic screen, RouteMode mode,
         KareeRouter.currentRoute!,
         argument
       ],
-      #errorCode: KareeErrorCode.BAD_USE_OF_ROUTABLE_WIDGET
+      #errorCode: KareeErrorCode.badUseOfRoutableWidget
     });
   }
 }

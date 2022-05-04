@@ -1,5 +1,8 @@
 import 'dart:ui';
 
+///
+/// AppLanguage: define the model of current language for internationalization
+///
 class AppLanguage {
   Locale? locale;
 
