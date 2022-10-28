@@ -87,6 +87,35 @@ enum RouteMode {
 typedef RouteActivation = bool Function();
 
 ///
+/// [_RouteEntry]: represents record use to subscribe the path in
+/// the [KareeRouter]
+///
+class _RouteEntry {
+  String path;
+  dynamic action;
+  RouteActivation activation;
+
+  _RouteEntry(this.path, this.action, this.activation);
+}
+
+///
+/// [_ParameterizedRouteParams] is used to for each route with parameters
+/// what is the named parameter values
+///
+class _ParameterizedRoute {
+  _RouteEntry originalRoute;
+
+  ///
+  /// Parameter's name list in the path
+  ///
+  List<String> parameters;
+
+  _ParameterizedRoute(this.originalRoute, this.parameters);
+
+  dynamic get action => this.originalRoute.action;
+}
+
+///
 /// Route: class designed to subscribe events (route) in application.
 ///
 /// Route.on associates the event represented by the path to a specific action .
@@ -94,10 +123,17 @@ typedef RouteActivation = bool Function();
 ///
 class Route {
   // ignore: prefer_final_fields
-  static Map<String, dynamic> _routeMap = {};
+  static Map<String, _RouteEntry?> _routeMap = {};
   // ignore: prefer_final_fields
-  static Map<String, List<dynamic>> _routeWithParams =
-      <String, List<dynamic>>{};
+  ///
+  /// [_routeActivationMap] is the map that contains for each parameterized
+  /// route a List where:
+  /// - first Item is the action associated to the path
+  /// - the rest of list (excluded the first) contains parameter's names of the
+  /// route
+  ///
+  static Map<String, _ParameterizedRoute> _routeWithParams =
+      <String, _ParameterizedRoute>{};
   // ignore: prefer_final_fields
   static Map<RouteActivation, List<String>> _routeActivationMap = {};
 
@@ -124,32 +160,34 @@ class Route {
   ///
   /// This function is used to register your application in Karee Router module.
   ///
-  /// [route] is the string that represents the resource location.
+  /// [path] is the string that represents the resource location.
   ///
-  /// [action] is the action to perform when resource represented by [route] is
+  /// [action] is the action to perform when resource represented by [path] is
   /// needed.
   ///
   /// [canActivated] is the route guard, use to allow the request to access to
   /// the desired resource.
-  static void on(String route, dynamic action,
+  static void on(String path, dynamic action,
       {RouteActivation canActivated = defaultRouteActivation}) {
     assert(action != null && action.toString().isNotEmpty);
-    assert(route.isNotEmpty);
+    assert(path.isNotEmpty);
 
-    if (route.contains(_pathVariableRegExp)) {
-      var meta = <dynamic>[action];
-      var newPath = route.replaceAllMapped(_pathVariableRegExp, (m) {
-        meta.add(route.substring(m.start + 1, m.end - 1));
+    var routeEntry = _RouteEntry(path, action, canActivated);
+
+    if (path.contains(_pathVariableRegExp)) {
+      var meta = _ParameterizedRoute(routeEntry, []);
+      var newPath = path.replaceAllMapped(_pathVariableRegExp, (m) {
+        meta.parameters.add(path.substring(m.start + 1, m.end - 1));
         return _pathVariableGroup;
       });
       _routeWithParams[newPath] = meta;
     } else {
-      _routeMap[route] = action;
+      _routeMap[path] = routeEntry;
     }
     // routeMap[route] = action;
     if (canActivated != defaultRouteActivation) {
       var routes = _routeActivationMap[canActivated] ?? <String>[];
-      routes.add(route);
+      routes.add(path);
       _routeActivationMap[canActivated] = routes;
     }
   }
@@ -300,15 +338,24 @@ class KareeRouter {
     /// We reset path variable for this call Session
     _pathVariables = null;
 
-    dynamic action = findActionFor(routeName);
+    _RouteEntry? routeEntry = findActionFor(routeName);
+
+    /// After checking action, we got nullable _RouteEntry, if present,
+    /// then we are sure that the _route entry is exact match of current
+    /// routeName or generic for (route with parameter) of routeName,
+    /// then we apply routeGuard
+    if (!((routeEntry?.activation ?? Route.defaultRouteActivation)())) {
+      /// Route Guard refused access to this routes
+      return;
+    }
     try {
-      if (action != null) {
-        if (action is Function) {
+      if (routeEntry != null) {
+        if (routeEntry.action is Function) {
           if (parameter == null) {
-            return action();
+            return routeEntry.action();
           } else {
             return Function.apply(
-                action,
+                routeEntry.action,
                 parameter is List
                     ? parameter
                     : parameter == null
@@ -363,31 +410,33 @@ class KareeRouter {
   /// This function also setup **KareeRouter.pathVariables** value when the path
   /// represented by this route contains url parameters
   ///
-  static dynamic findActionFor(String ro) {
-    MapEntry<String, dynamic> action = Route._routeMap.entries.firstWhere(
-        (entry) => entry.key == ro,
-        orElse: () => MapEntry('', null));
-    if (action.value == null) {
-      var arg = Route._routeWithParams.entries.firstWhere(
-          (entryParam) => RegExp(entryParam.key).hasMatch(ro),
-          orElse: () => MapEntry('', <String>[]));
-      if (arg.value.isNotEmpty) {
-        var actionAndPathVar = RegExp(arg.key)
+  static _RouteEntry? findActionFor(String ro) {
+    MapEntry<String, _RouteEntry?> routeEntry = Route._routeMap.entries
+        .firstWhere((entry) => entry.key == ro,
+            orElse: () => MapEntry('', null));
+    if (routeEntry.value == null) {
+      MapEntry<String, _ParameterizedRoute> arg = Route._routeWithParams.entries
+          .firstWhere((entryParam) => RegExp(entryParam.key).hasMatch(ro),
+              orElse: () => MapEntry('',
+                  _ParameterizedRoute(_RouteEntry('', null, () => false), [])));
+      if (arg.value.action != null) {
+        var pathVar = RegExp(arg.key)
             .allMatches(ro)
             .map((e) =>
                 e.groups(List<int>.generate(e.groupCount + 1, (ind) => ind)))
             .firstWhere((element) => true, orElse: () => <String>[]);
         KareeRouter._pathVariables = {};
-        for (int i = 1; i < actionAndPathVar.length; i++) {
+        for (int i = 1; i < pathVar.length; i++) {
           KareeRouter._pathVariables!.addEntries([
-            MapEntry(Route._routeWithParams[arg.key]![i], actionAndPathVar[i]!)
+            MapEntry(
+                Route._routeWithParams[arg.key]!.parameters[i - 1], pathVar[i]!)
           ]);
         }
-        return arg.value.first;
+        return arg.value.originalRoute;
       }
       return null;
     }
-    return action.value;
+    return routeEntry.value;
   }
 
   ///
