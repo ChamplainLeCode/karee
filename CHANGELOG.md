@@ -1,3 +1,6 @@
+## v2.2.2
+  * Plane: Karee framework fix.
+    * Fix bug when set route Guard on parameterized route.
 ## v2.2.1
   * Plane: Karee framework fix.
     * Update Dart Sdk version compatibility
