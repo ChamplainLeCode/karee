@@ -166,7 +166,9 @@ void unsubscribeRouterWidget(Symbol name, RouterWidgetState state) {
   _internalRouter.removeWhere((key, value) => key == name && value == state);
 }
 
-/// Function used to get router from cache buy it name
+///
+/// Function used to get router from cache buy it [name]
+///
 RouterWidgetState? findRouterByName(
   Symbol name,
 ) {
@@ -257,39 +259,6 @@ void doInternalRouting(Symbol routerName, dynamic screenName, dynamic param) {
 }
 
 ///
-/// doRouting: Fonction used to load resource from controller
-/// Can be use for application navigation, or to request data.
-dynamic doRouting(String control, String method, dynamic params) {
-  // try {
-  //   var controllerInstance =  ControllerReflectable.reflectors[control];
-  //   if (controllerInstance?.hasReflectee ?? false) {
-  //     if (params is List) {
-  //       return controllerInstance?.invoke(method, params);
-  //     } else {
-  //       if (params == null) {
-  //         return controllerInstance?.invoke(method, []);
-  //       }
-  //       return controllerInstance?.invoke(method, [params]);
-  //     }
-  //   }
-  // } catch (ex, stack) {
-  //   print(ex);
-  //   KareeRouter.goto(KareeConstants.kareeErrorPath, parameter: {
-  //     #title: (ex as dynamic).message,
-  //     #stack: stack,
-  //     #env: (params == null
-  //         ? []
-  //         : params is List
-  //             ? params
-  //             : [])
-  //       ..reversed.toList()
-  //       ..addAll([control, method]),
-  //     #errorCode: KareeErrorCode.noRouteFound
-  //   });
-  // }
-}
-
-///
 /// `KareeRouter`: To navigate between screens you may use KareeRouter that
 ///  offers you two ways to go forward and to go back. KareeRouter provides
 /// also the to consume route between your application modules
@@ -353,7 +322,7 @@ class KareeRouter {
       } else {
         ///
         /// When the route is not found! we will try to check whether it starts
-        /// with the path that represents a module that is not loaded yet.
+        /// with the path that represents a module not loaded yet.
         ///
         try {
           var subscription = KareeModule.modules.entries.firstWhere(
@@ -367,8 +336,7 @@ class KareeRouter {
           // ignore: empty_catches
         } on StateError {}
         throw NoRouteFoundError(routeName, parameter);
-        // cupertino.Navigator.push(ctxt, launchErrorPage);
-        // print('No action for this route');
+        //('No action for this route');
       }
     } catch (e, st) {
       if (e is NoActionFoundError || e is NoRouteFoundError) {

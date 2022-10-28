@@ -1,3 +1,5 @@
+import 'dart:async' show FutureOr;
+
 import 'package:flutter/material.dart';
 import '../../internationalization.dart';
 
@@ -46,11 +48,12 @@ abstract class KareeModule {
   /// when application request for the first time.
   ///
   @mustCallSuper
-  Future<void> initialize() async {
+  FutureOr<void> initialize() {
     _isInitialized = true;
-    KareeInternationalization.initAppLocalization().listen((appLocalization) {
+    KareeInternationalization.initAppLocalization()
+        .listen((appLocalization) async {
       var package = 'packages/$name/';
-      appLocalization.readModuleTranslationFile(
+      await appLocalization.readModuleTranslationFile(
           appLocalization.locale!, package);
     });
   }
@@ -63,8 +66,8 @@ abstract class KareeModule {
 abstract class KareeRoutableModule extends KareeModule {
   String get path;
 
-  void _init() {
-    initialize();
+  FutureOr<void> _init() {
+    return initialize();
   }
 }
 
@@ -78,7 +81,7 @@ class KareeModuleLoader {
   /// application if the [KareeModule.startWithRoot] is set to true, ortherwise
   /// it'll be loaded when needed.
   ///
-  static Future<void> load<T extends KareeModule>(T e) async {
+  static FutureOr<void> load<T extends KareeModule>(T e) async {
     if (e is KareeRoutableModule) {
       //////////////////////////////////////////////////////////////////////////
       /// When we ask to load routable module, we'll init it, only if it's the
@@ -88,7 +91,7 @@ class KareeModuleLoader {
 
       KareeModule._modules[e.path] = e;
 
-      if (e.startWithRoot) return e._init();
+      if (e.startWithRoot) return await e._init();
     }
   }
 }
