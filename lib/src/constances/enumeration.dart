@@ -67,19 +67,21 @@ enum KareeErrorCode {
   ///
   ///  Error constant thrown when there is not initial screen in the whole
   ///  application
-  ///  
-  noInitialScreen,
   ///
-  ///  Error constant thrown when routing is done trough screen name, and the 
+  noInitialScreen,
+
+  ///
+  ///  Error constant thrown when routing is done trough screen name, and the
   ///  screen name is not found
-  /// 
+  ///
   ///  See [Screen]
   ///
   screenNotFound,
+
   ///
-  /// Error constant that specifies some route is triggered and the path represented 
+  /// Error constant that specifies some route is triggered and the path represented
   /// by the string didn't exists
-  /// 
+  ///
   noRouteFound,
   generalError,
   notRoutableWidget,

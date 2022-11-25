@@ -50,17 +50,13 @@ abstract class KareeModule {
   @mustCallSuper
   FutureOr<void> initialize() {
     _isInitialized = true;
-    
-  
+
     var package = 'packages/$name/';
     var obsAppLocalization = KareeInternationalization.initAppLocalization();
-        obsAppLocalization.listen((appLocalization) async =>
-            await appLocalization.readModuleTranslationFile(
-              appLocalization.locale!, package));
-    return obsAppLocalization
-      .value
-      .readModuleTranslationFile(obsAppLocalization.value.locale!, package);
-    
+    obsAppLocalization.listen((appLocalization) async => await appLocalization
+        .readModuleTranslationFile(appLocalization.locale!, package));
+    return obsAppLocalization.value
+        .readModuleTranslationFile(obsAppLocalization.value.locale!, package);
   }
 }
 
