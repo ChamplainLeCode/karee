@@ -1,3 +1,6 @@
+## v2.2.3
+  * Plane: Karee framework fix.
+    * Fix bug Internationalization for module.
 ## v2.2.2
   * Plane: Karee framework fix.
     * Fix bug when set route Guard on parameterized route.
