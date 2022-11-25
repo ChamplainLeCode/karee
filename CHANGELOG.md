@@ -1,4 +1,4 @@
-## v2.2.3
+## v2.2.3+1
   * Plane: Karee framework fix.
     * Fix bug Internationalization for module.
 ## v2.2.2
