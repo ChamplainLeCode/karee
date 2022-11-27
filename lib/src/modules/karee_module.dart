@@ -1,6 +1,8 @@
 import 'dart:async' show FutureOr;
 
 import 'package:flutter/material.dart';
+import 'package:karee/core.dart';
+import 'package:karee/widgets.dart';
 import '../../internationalization.dart';
 
 ///
@@ -55,8 +57,10 @@ abstract class KareeModule {
     var obsAppLocalization = KareeInternationalization.initAppLocalization();
     obsAppLocalization.listen((appLocalization) async => await appLocalization
         .readModuleTranslationFile(appLocalization.locale!, package));
-    return obsAppLocalization.value
-        .readModuleTranslationFile(obsAppLocalization.value.locale!, package);
+    if (KareeMaterialApp.type == KareeApplicationType.application) {
+      return obsAppLocalization.value
+          .readModuleTranslationFile(obsAppLocalization.value.locale!, package);
+    }
   }
 }
 

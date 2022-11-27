@@ -1,6 +1,6 @@
 name: karee
 description: Another way to build Flutter applications for mobile, web and desktop using Karee Architecture.
-version: 2.2.3+1
+version: 2.2.3+2
 homepage: https://github.com/ChamplainLeCode/karee
 repository: https://github.com/ChamplainLeCode/karee
 issue_tracker: https://github.com/ChamplainLeCode/karee/issues
