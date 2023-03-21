@@ -3,18 +3,18 @@ import '../../routes/router.dart' show RouteMode;
 /// NotRoutableWidgetException: Exception thrown when trying to inject a non-routable
 /// widget during internal routing.
 ///
-/// see [RoutableWidget]('')
+/// See [RoutableWidget]('')
 ///
-/// see [RouterWidget]('')
+/// See [RouterWidget]('')
 ///
 class NotRoutableWidgetException implements Exception {
-  /// message of this error
+  /// Message of this error.
   late String message;
 
-  /// route (path) that thrown this error
+  /// Route (path) that thrown this error.
   String routerName;
 
-  /// RuntimeType of widget sent
+  /// RuntimeType of the widget sent.
   Type widgetType;
 
   NotRoutableWidgetException(this.routerName, this.widgetType) {
@@ -29,20 +29,20 @@ class NotRoutableWidgetException implements Exception {
 
 /// BadUseOfRouterWidgetException: Exception thrown when a inappropriate RouteMode is used with Internal Routing.
 ///
-/// see [RoutableWidget]('')
+/// See [RoutableWidget]('')
 ///
-/// see [RouterWidget]('')
+/// See [RouterWidget]('')
 ///
-/// see [RouteMode]('')
+/// See [RouteMode]('')
 ///
 class BadUseOfRouterWidgetException implements Exception {
-  /// message of this error
+  /// Message of this error.
   late String message;
 
-  /// route (path) that thrown this error
+  /// Route (path) that thrown this error.
   Symbol routerName;
 
-  /// RouteMode send during the internal routing
+  /// RouteMode sent during the internal routing.
   RouteMode mode;
 
   BadUseOfRouterWidgetException(this.routerName, this.mode) {
@@ -56,18 +56,18 @@ class BadUseOfRouterWidgetException implements Exception {
   }
 }
 
-/// NotManagableWidgetException: Exception thrown when the application tries to send in navigation an
-/// unmanagable Screen to in KareeRouter.
+/// NotManagableWidgetException: Exception thrown when the application tries to send in navigation, an
+/// unmanagable Screen to the KareeRouter.
 ///
 /// see [StatefulScreen]('')
 ///
 /// see [StatelessScreen]('./../widgets/StatelessScreen')
 ///
 class NotManageableWidgetException implements Exception {
-  /// message of this error
+  /// Message of this error.
   late final String message;
 
-  /// route (path) that thrown this error
+  /// Route (path) that thrown this error.
   final dynamic screen;
 
   NotManageableWidgetException(this.screen) {

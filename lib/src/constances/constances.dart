@@ -12,25 +12,25 @@ class KareeConstants {
   /// Karee error Screen's name.
   ///
   /// To overwrite default kareeScreen in production mode, you may create a
-  /// screen [StatelessScreen] or [StatefulScreen] with this constants as name.
+  /// screen [StatelessScreen] or [StatefulScreen] with this constant as name.
   ///
-  /// See also [KareeInstanceProfile]
+  /// See also [KareeInstanceProfile].
   static const String kareeErrorScreenName = '__karee_internal_error_widget__';
 
-  /// Karee github repository
+  /// Karee github repository.
   static const String kareeGithub = 'https://github.com/ChamplainLeCode/karee';
 
-  /// Name of the path when an error occurs
+  /// Name of the path when an error occurs.
   static const String kareeErrorPath = '__karee_internal__error__';
 
-  /// This is the location of application config file
+  /// This is the location of the application config file.
   static final String kApplicationRessourceFile =
       'resources${kIsWeb ? '/' : Platform.pathSeparator}config${kIsWeb ? '/' : Platform.pathSeparator}application.yaml';
 
-  /// This is the location of i18n directory
+  /// This is the location of the i18n directory.
   static final String kApplicationLocalizationRessourcDir =
       'resources${kIsWeb ? '/' : Platform.pathSeparator}i18n';
 
-  /// Default tag used to maintains instance of current localization in karee.
+  /// Default tag used to maintain the instance of current localization in karee.
   static const Symbol kApplicationLocalizationTag = #base;
 }

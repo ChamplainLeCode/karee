@@ -1,13 +1,13 @@
-/// NoRouteFoundError: Exception thrown when the application send an unknow route (path) in KareeRouter.
+/// NoRouteFoundError: Exception thrown when the application sent an unknown route (path) in KareeRouter.
 ///
 class NoRouteFoundError implements Exception {
-  /// message of this error
+  /// Message of this error.
   String? message;
 
-  /// route (path) that thrown this error
+  /// Route (path) that thrown this error.
   String? routeName;
 
-  /// Environment parameters at this moment
+  /// Environment parameters at this moment.
   dynamic params;
 
   NoRouteFoundError([this.routeName, this.params]) {

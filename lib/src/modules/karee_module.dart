@@ -2,48 +2,49 @@ import 'package:flutter/material.dart';
 import '../../internationalization.dart';
 
 ///
-/// Interface that should be implements by every module.
+/// Interface that should be implemented by every module.
 ///
 abstract class KareeModule {
   ///
-  /// This String represents the name of the module, this value represents also
-  /// the directory and the flutter application name in pubspect of the module
+  /// This String `Getter` represents the name of the module.
+  /// This value represents also the directory and the flutter application name
+  /// in the pubspec of the module.
   ///
   String get name;
 
   ///
-  /// This object, is used to keep in memory a reference to all module of this
-  /// karee's application.
+  /// This object, is used to keep in memory a reference to all modules of this
+  /// karee application.
   ///
   static final Map<String, KareeModule> _modules = {};
 
   ///
-  /// Get the list of subscribed modules in this application,
+  /// `Getter` of the list of subscribed modules in this application.
   /// The key is the base path of the module.
   /// The value is the module instance.
   ///
   static Map<String, KareeModule> get modules => _modules;
 
   ///
-  /// This getter is used to know whether the current module should be loaded
-  /// during the application startup or late when it will be required
+  /// This `Getter`, is used to know whether the current module should be loaded
+  /// during the application startup or late when it will be required.
   ///
   bool get startWithRoot;
 
   ///
-  /// this variable is used to set module as already initialized
+  /// This variable is used to set module as already initialized.
   ///
   bool _isInitialized = false;
 
   ///
-  /// Check whether the module is already initialized
+  /// Check whether the module is already initialized.
   ///
   bool get isInitialized => _isInitialized;
 
   ///
-  /// This function is call when the Module is being initialized.
-  /// Whe launch a module automaticaly when it's marked as root or
-  /// when application request for the first time.
+  /// This function is called when the module is being initialized.
+  /// We launch a module automaticaly when it's marked as root or
+  /// when the application request the module for the first time.
   ///
   @mustCallSuper
   Future<void> initialize() async {
@@ -57,10 +58,11 @@ abstract class KareeModule {
 }
 
 ///
-/// Interface implemented by each module that share the same Router with the root
-/// application
+/// Interface implemented by each modules that shares the same Router with the root
+/// application.
 ///
 abstract class KareeRoutableModule extends KareeModule {
+  /// The module path.
   String get path;
 
   void _init() {
@@ -69,21 +71,21 @@ abstract class KareeRoutableModule extends KareeModule {
 }
 
 ///
-/// Class use to load module in Root application
+/// Class used to load a module in the Root application.
 ///
 class KareeModuleLoader {
   ///
-  /// Function used to subcribe our module in Karee. it not means that the
-  /// will be immediatly loaded, it will be loaded at same time with the root
-  /// application if the [KareeModule.startWithRoot] is set to true, ortherwise
-  /// it'll be loaded when needed.
+  /// Function used to subcribe our module in Karee. It does not means that it
+  /// will be immediatly loaded. It will be loaded at same time with the root
+  /// application if the [KareeModule.startWithRoot] is set to true.
+  /// Otherwise it will be loaded when needed.
   ///
   static Future<void> load<T extends KareeModule>(T e) async {
     if (e is KareeRoutableModule) {
       //////////////////////////////////////////////////////////////////////////
-      /// When we ask to load routable module, we'll init it, only if it's the
-      /// root module, otherwise, we'll load later on navigation fails by filte-
-      /// ring by route starts with path
+      /// When we ask to load a routable module, we'll init it only if it's the
+      /// root module. Otherwise, we'll load it later on navigation fails by filte-
+      /// ring by route starts with path.
       //////////////////////////////////////////////////////////////////////////
 
       KareeModule._modules[e.path] = e;
