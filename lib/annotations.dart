@@ -1,5 +1,5 @@
 /// ## Karee Annotation
-/// This library help you to know all annotations used by Karee.
+/// This library helps you to know all the annotations used by Karee.
 /// Each of them are useful and works with code generation.
 /// ## Annotations exposed
 /// - [Autowired]

@@ -1,6 +1,6 @@
 /// ## Karee Resources
 ///
-/// To better manage application configuration of your app.
+/// To better manage the application configurations of your app.
 ///
 library karee.core.resources;
 

@@ -1,4 +1,4 @@
-/// This Library is used to add support for modularize application in Karee.
+/// This Library is used to add support for modularized applications in Karee.
 library karee.core.module;
 
 export './karee_module.dart';

@@ -1,17 +1,17 @@
 ///
-/// Karee internationalization.
+/// Karee Internationalization.
 ///
 /// Karee provides this library as a simplest way to work with
-/// internationalization, this lib gives you translation support trough the
+/// internationalization. This lib gives you translation support trough the
 /// string extension defined and named [StringTranslator] by adding two methods
 /// [StringTranslator.translate] and [StringTranslator.translateWithParams].
 ///
 /// To define you translation dictionary, get open file in
 /// {@PROJECT_DIR@/resources/i18n/locale.json}.
 ///
-/// Karee Internationalization also provides a simplest way to change lang in
-/// your application, you need to call [KareeInternationalization.changeLanguage]
-/// with Locale that matches with you dictionary files.
+/// Karee Internationalization also provides a simplest way to change language in
+/// your application. You need to call [KareeInternationalization.changeLanguage]
+/// with Locale that matches with your dictionary files.
 ///
 /// eg:
 /// ```dart
@@ -56,7 +56,7 @@ extension StringTranslator on String {
   ///
   /// Method that considers a string as a key from i18n and replace all the
   /// translation parameters [params] with their values and return the
-  /// translated string
+  /// translated string.
   ///
   String translateWithParams(Map<String, String> params) {
     String self = KareeInternationalization

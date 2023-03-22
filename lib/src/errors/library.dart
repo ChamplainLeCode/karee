@@ -1,4 +1,4 @@
-/// Library used to manage errors reporting and exception in Karee Framework
+/// Library used to manage errors reporting and exception in Karee Framework.
 library karee.core.errors;
 
 export './error_contact_address.dart';

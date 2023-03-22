@@ -8,7 +8,7 @@ import '../errors/exceptions/widget_error.dart';
 import '../widgets/karee_router_error_widget.dart';
 import '../routes/router.dart';
 
-/// screens represents the collections of all screens in the
+/// **screens** Represents the collections of all screens in the
 /// karee application.
 ///
 List<Map<Symbol, dynamic>> screens = [
@@ -18,13 +18,13 @@ List<Map<Symbol, dynamic>> screens = [
   }
 ];
 
-/// subscribeScreen Function: Function use by application to subscribes their
-/// screens in core library
+/// **subscribeScreen()**: Function used by applications to subscribe their
+/// screens in core library.
 ///
 void subscribeScreen(Map<Symbol, dynamic> screen) => screens.add(screen);
 
-/// screen Function: Function use by core KareeRouter to launch screen on
-/// navigate
+/// **screen()**: Function used by the core KareeRouter to launch screen on
+/// navigate.
 ///
 void screen(dynamic screen, RouteMode mode,
     {dynamic argument,
@@ -43,7 +43,7 @@ void screen(dynamic screen, RouteMode mode,
       throw BadUseOfRouterWidgetException(routerName, mode);
     }
 
-    /// Internal Routing using RouterWidget
+    /// Internal Routing using RouterWidget.
     if (routerName != null) {
       Future.microtask(() => doInternalRouting(routerName, screen, argument));
       return;

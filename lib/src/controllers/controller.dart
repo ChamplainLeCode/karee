@@ -1,5 +1,5 @@
 /// ## Karee Controller
-/// `Karee Core Controller` Library that manages controller in Karee Core
+/// `Karee Core Controller` Library that manages controllers in Karee Core.
 ///
 library karee.core.annotations.controllers;
 

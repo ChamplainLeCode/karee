@@ -5,18 +5,18 @@ import 'package:karee/widgets.dart';
 import 'package:flutter/widgets.dart';
 
 ///
-/// This class is used to know whether Root is launched as application or module
+/// This class is used to know whether Root is launched as application or module.
 ///
 class PackageManager {
   ///
-  /// Cache used to map Module name by type
+  /// Cache used to map Module name by type.
   ///
   // ignore: prefer_final_fields
   static Map<Type, String?> _packageManager = {};
 
   ///
   /// This function is used to determine whether the widget will be displayed or
-  /// not depending of running mode
+  /// not, depending of running mode.
   ///
   /// see [KareeApplicationType]
   ///
@@ -27,42 +27,42 @@ class PackageManager {
   /// This function is used to get the package name by Module type.
   ///
   /// When loading an asset, we can optionally specify the package name where we
-  /// want to retrieve the asset from. We cannot get asset of the current package
-  /// with non null value of this property  even if it's the current package's
+  /// want to retrieve the asset from. We cannot get assets of the current package
+  /// with non null value of this property even if it is the current package's
   /// name.
   ///
-  /// Running the root Karee projet in application mode, means that the
-  /// rootBundle refer to the current application, and the resources of module
-  /// should be load with the package name value.
+  /// Running the root Karee project in application mode, means that the
+  /// rootBundle refers to the current application, and the resources of modules
+  /// should be loaded with the package name value.
   ///
-  /// To allow running a module without getting an error on load resources from
+  /// To allow running a module without getting an error on loading resources from
   /// assets, we should know the mode of execution.
   ///
-  ///   - In Application Mode
+  ///   - In Application Mode:
   ///
-  /// To load image defined in the module named *payment*, we need to specify
+  /// To load an image defined in the module named *payment*, we need to specify
   /// the name of the module.
   ///
   /// ```dart
   ///   AssetImage('assets/images/icon_payment.png', package: 'payment');
   /// ```
   ///
-  /// When running application in this mode, the root bundle refers to the
-  /// current instance, so we need to set the package to allow the module to
+  /// When running application in this mode, the rootBundle refers to the
+  /// current instance. So we need to set the package to allow the module to
   /// load their own asset ressources.
   ///
   ///   - In Module Mode
   ///
-  /// To load image defined in the current module named *payment*, we don't have
+  /// To load an image defined in the current module named *payment*, we don't have
   /// to specify the name of the module. If we do that, it'll mean that we are
-  /// looking for resources outside the current package, and we'll get an error
+  /// looking for resources outside the current package, and we'll get an error:
   /// `unable to load resource from assets`.
   ///
   /// ```dart
   ///   AssetImage('assets/images/icon_payment.png');
   /// ```
   ///
-  /// To avoid checking the execution mode, you just need to use `PackageManage.resourceOf()` to
+  /// To avoid checking the execution mode, you just need to use `PackageManager.resourceOf()` to
   /// get the right package definition.
   ///
   /// ```dart

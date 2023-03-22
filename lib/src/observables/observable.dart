@@ -1,15 +1,17 @@
 import 'persistent_context.dart';
 
+/// Type definition of the callback function to execute on observable
+/// subscription events.
 typedef ObservableListener<T> = void Function(T value);
 
 abstract class Observable<T> {
   ///
-  /// Entry point to add a subscriber to an observable
+  /// Entry point to add a subscriber to an observable.
   ///
   void listen(ObservableListener<T> listener);
 
   ///
-  /// Entry point to remove a subscriber to an observable
+  /// Entry point to remove a subscriber to an observable.
   ///
   void unListen(ObservableListener<T> listener);
 
@@ -23,8 +25,8 @@ abstract class Observable<T> {
   ///       User(this.name, this.age);
   ///     }
   /// ```
-  /// and you want to use instance of this class as observable. you can
-  /// do something like this to notify all observers that some change happened.
+  /// and you want to use an instance of this class as an observable. you can
+  /// do something like this to notify all observers that some changes happened.
   /// ```
   /// final userObs = Of(User('Patrick', 23));
   ///
@@ -35,42 +37,45 @@ abstract class Observable<T> {
   void refresh();
 }
 
-/// This basic implementation of Observable, this offer a lite observable.
-/// Observer subscribes to an Observable. Then that observer reacts to whatever
-/// item the Observable emits.
+/// This is a basic implementation of an Observable. This offers a lite observable.
+/// An Observer will subscribe to an Observable. Then that observer reacts to
+/// whatever item the Observable emits.
 class Of<T> implements Observable<T> {
+  /// The observable value.
   T _value;
+
+  /// The observable tag reference.
   dynamic tag;
 
   /// Build an observable from a value
   Of(this._value) : tag = #base;
 
-  /// build an Observable from a type
+  /// Build an Observable from a type.
   factory Of.type() => PersistentContext.of<T>();
 
-  /// Create an observable from value and tag. then persis to cache
+  /// Create an observable from value and tag. then persist to cache.
   ///
   factory Of.tag(T value, [dynamic tag = #base]) =>
       PersistentContext.valueWithTag(value, tag);
 
-  /// Get persisted observable by tag
+  /// Get persisted observable by tag.
   static withTag<T>(dynamic tag) => PersistentContext.withTag<T>(tag);
 
-  /// Free observable from cache
+  /// Free observable from cache.
   static void free<E>(Of<E> obs) => PersistentContext.remove<E>(obs);
 
-  /// Permanent listeners on this observable
+  /// Permanent listeners on this observable.
   // ignore: prefer_final_fields
   Set<ObservableListener<T>> _listener = {};
 
   /// Ephemeral listeners on this observable.
-  /// Means that, every time that this observable change
-  /// its value, this set is clean.
+  /// Meaning that, every time that this observable changes its value,
+  /// this set is cleared.
   // ignore: prefer_final_fields
   Set<ObservableListener<T>> _alert = {};
 
-  /// Method used to set new value of an observable. this will call all listener
-  /// that listen to this.
+  /// Method used to set the new value of an observable. This will call all
+  /// listeners who listen to this.
   set value(T value) {
     _value = value;
     for (var listener in _listener) {
@@ -82,15 +87,21 @@ class Of<T> implements Observable<T> {
   }
 
   ///
-  /// Get the current value of this observable.
+  /// `Getter` of the current value of this observable.
   ///
   T get value => _value;
 
+  ///
+  /// **listen()** Adds a permanent listener to this observable.
+  ///
   @override
   listen(ObservableListener<T> listener) {
     _listener.add(listener);
   }
 
+  ///
+  /// **unListen()** Removes a permanent listener from this observable.
+  ///
   @override
   unListen(ObservableListener<T> listener) {
     _listener.remove(listener);
@@ -100,7 +111,7 @@ class Of<T> implements Observable<T> {
   String toString() => _value.toString();
 
   ///
-  /// Add an ephemeral listener to this observable.
+  /// **alert()** Add an ephemeral listener to this observable.
   /// this listener will be unsubscribe after the next change.
   ///
   void alert(ObservableListener<T> alerter) => _alert.add(alerter);

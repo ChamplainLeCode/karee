@@ -1,4 +1,4 @@
-/// `Karee Core` Base library for Karee
+/// `Karee Core` Base library for Karee.
 library karee.core;
 
 export 'constances/library.dart';
