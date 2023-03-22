@@ -9,26 +9,31 @@ import '../errors/translation/translation_file_not_exists.dart';
 
 import '../resources/io.dart';
 
+///
+/// `KareeInternationalization`: Class that provides internationalization for
+/// your Karee applications.
+///
 class KareeInternationalization {
-  /// Used to know whether Internationalization has be init yet or not.
-  /// it preserves framework  for multiple initialization.
+  /// Used to know whether Internationalization has been init yet or not.
+  /// It preserves frameworks for multiple initializations.
   static bool _init = false;
 
-  /// Global Application Localization instance
-  /// see [AppLocalization]
+  /// Global Application Localization instance.
+  /// See [AppLocalization]
   static late Of<AppLocalization> _appLocalization;
 
   /// ## KareeInternationalization.changeLanguage
   ///
-  /// Statically call to change application language. This will automatically
-  /// refresh all loaded screens and components of the application
+  /// Statically call this function to change application language.
+  /// This will automatically refresh all loaded screens and components of the
+  /// application.
   ///
   static void changeLanguage(Locale locale) {
     AppLocalization._changeLanguage(_appLocalization, locale);
   }
 
   /// ### @get currentLocale
-  /// Get the current locale used in the application
+  /// Get the current locale used in the application.
   static Locale? get currentLocale => _appLocalization.value.locale;
 
   /// ### @get appLocalization
@@ -37,11 +42,11 @@ class KareeInternationalization {
   static Of<AppLocalization> get appLocalization => _appLocalization;
 
   ///
-  /// This function is used to initialize appLocalization, this function is call
-  /// both in KareeMaterialApp and KareeModule.initialize(). Because
-  /// `_appLocalization` is marked as **late** and it's called in two place, then
-  /// it's important to avoid `LateInitializationError`, Karee will surrounds it
-  /// with try-catch structure
+  /// This function is used to initialize appLocalization. This function is
+  /// called both in KareeMaterialApp and KareeModule.initialize(). Because
+  /// `_appLocalization` is marked as **late** and is called in two places,
+  /// it's important to avoid `LateInitializationError`. Karee will surround it
+  /// with a try-catch structure.
   ///
   static Of<AppLocalization> initAppLocalization() {
     try {
@@ -53,8 +58,8 @@ class KareeInternationalization {
     }
   }
 
-  /// Only for internal call. `AppLocalization.init` is a static function used to initialize the appLocalization
-  /// instance in Karee framework
+  /// Only for internal call. `AppLocalization.init` is a static function used
+  /// to initialize the appLocalization instance in Karee framework.
   static Future<void> init(Locale? locale, List<Locale> supportedLocale) async {
     if (_init) return;
     KareeInternationalization._appLocalization =
@@ -83,17 +88,19 @@ class KareeInternationalization {
 }
 
 /// ## AppLocalization
-/// Class use to better manage internationalization within your Karee Application.
+/// Class used to better manage internationalization within your Karee
+/// Application.
 ///
 class AppLocalization {
   Of<AppLanguage>? _currentLanguage;
   Map<String, dynamic>? translation;
 
+  /// `Getter` of the current application locale.
   Locale? get locale => _currentLanguage?.value.locale;
 
-  /// Only for internal call. `AppLocalization._setCurrentLanguage` is the function that
-  /// internally, update the current language locale, and propagate the update in
-  /// all the application
+  /// Only for internal call. `AppLocalization._changeLanguage` is the function
+  /// that internally updates the current language locale, and propagate the
+  /// update in all the application.
   static void _changeLanguage(
       Of<AppLocalization> appLObs, Locale locale) async {
     if (appLObs.value._currentLanguage?.value != null) {
@@ -104,6 +111,8 @@ class AppLocalization {
     }
   }
 
+  /// **_readTranslationFile()** Permits to load the content of the matching
+  /// translation file asset from a given locale.
   Future<void> _readTranslationFile(Locale locale) async {
     var path = '''${KareeConstants.kApplicationLocalizationRessourcDir}'''
         '''/${locale.languageCode.toLowerCase()}'''
@@ -117,7 +126,12 @@ class AppLocalization {
   }
 }
 
+/// `AppLocalizationExtension`: Provides a set of methods compatible to
+/// AppLocalization objects, and hence can be applied on them.
+///
 extension AppLocalizationExtension on AppLocalization {
+  /// **readModuleTranslationFile()** Permits to load the content of the
+  /// matching translation file asset from a given locale of a module.
   Future<void> readModuleTranslationFile(Locale locale, String package) async {
     var path = '''$package'''
         '''${KareeConstants.kApplicationLocalizationRessourcDir}'''
