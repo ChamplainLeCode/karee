@@ -17,59 +17,59 @@ import '../widgets/router_widget.dart';
 import '../screens/screens.dart' show screen, screens;
 
 ///
-/// cash of RouterWidget mounted
+/// Cache of RouterWidgets mounted.
 ///
 Map<Symbol, RouterWidgetState> _internalRouter = {};
 
 ///
-/// Notes: Karee provides different ways to navigate between screens. RouteMode helps you to set what kind of navigation policy you want.
+/// Notes: Karee provides different ways to navigate between screens.
+/// RouteMode helps you to set what kind of navigation policy you want.
 ///
-/// [RouteMode.REPLACE] : If you want to pop current context and add new one
-/// without make two calls KareeRouter.goBack and KareeRouter.goto
+/// [RouteMode.REPLACE] : If you want to pop the current context and add new one
+/// without making two calls KareeRouter.goBack and KareeRouter.goto.
 ///
-/// [RouteMode.PUSH] : Used to add new navigation context on last one
+/// [RouteMode.PUSH] : Used to add a new navigation context on last one.
 ///
+/// [RouteMode.INTERNAL] : Used to indicate to KareeRouter that the current
+/// route should be sent to a Routable Widget inside the Flutter tree.
 ///
-/// [RouteMode.PUSH] : Used to add new navigation context on last one
-///
-///
-/// [RouteMode.EMPTY] : Means that you want to clean navigation before adding
+/// [RouteMode.EMPTY] : Meaning that you want to clean navigation before adding
 /// current path. Assume that your current navigation path is
 /// /settings/user/profile and you want to go back /home, to avoid to remove
-/// one by one and push new path, you can use RouteMode.EMPTY,
+/// one by one and push new path, you can use RouteMode.EMPTY.
 ///
 enum RouteMode {
   ///
   /// RouteMode.REPLACE: If you want to pop current context and add new one
-  /// without make two calls KareeRouter.goBack and KareeRouter.goto
+  /// without making two calls KareeRouter.goBack and KareeRouter.goto.
   // ignore: constant_identifier_names
   REPLACE,
 
   ///
-  /// RouteMode.PUSH: Used to add new navigation context on last one
+  /// RouteMode.PUSH: Used to a add new navigation context on last one.
   ///
   // ignore: constant_identifier_names
   PUSH,
 
   ///
-  /// RouteMode.EMPTY. Means that you want to clean navigation before adding
+  /// RouteMode.EMPTY. Meaning that you want to clean navigation before adding
   /// current path. Assume that your current navigation path is
   /// /settings/user/profile and you want to go back /home, to avoid to remove
-  /// one by one and push new path, you can use RouteMode.EMPTY,
+  /// one by one and push new path, you can use RouteMode.EMPTY.
   ///
   // ignore: constant_identifier_names
   EMPTY,
 
   ///
   /// RouteMode.INTERNAL: Used to indicate to KareeRouter that the current route
-  /// should be send to a Routable Widget inside flutter tree.
+  /// should be sent to a Routable Widget inside the Flutter tree.
   ///
   // ignore: constant_identifier_names
   INTERNAL,
 
   ///
   /// RouteMode.NONE: Used to indicate to KareeRouter that the current route
-  /// should be send to a Routable Widget inside flutter tree.
+  /// should be sent to a Routable Widget inside the flutter tree.
   ///
   /// See [INTERNAL]
   @Deprecated('Use INTERNAL instead')
@@ -78,8 +78,8 @@ enum RouteMode {
 }
 
 ///
-/// RouteDirection: Not yet implemented, it will be use as screen entry direction
-/// during navigation
+/// RouteDirection: Not yet implemented, it will be used as the screen entry
+/// direction during navigation.
 ///
 ///
 // enum RouteDirection { LEFT_TO_RIGHT, RIGHT_TO_LEFT, UP_TO_DOWN, DOWN_TO_UP }
@@ -87,10 +87,9 @@ enum RouteMode {
 typedef RouteActivation = bool Function();
 
 ///
-/// Route: class designed to subscribe events (route) in application.
+/// Route: class designed to subscribe (route) events in the application.
 ///
-/// Route.on associates the event represented by the path to a specific action .
-///
+/// Route.on associates the event represented by the path to a specific action.
 ///
 class Route {
   // ignore: prefer_final_fields
@@ -108,16 +107,16 @@ class Route {
   static const String _pathVariableGroup = '([0-9a-zA-Z\-_]+)';
 
   ///
-  /// Path variable regex used to detect whether there is a path var in the
-  /// route
+  /// Path variable regex used to detect whether there is a path variable in
+  /// the route.
   ///
   static final RegExp _pathVariableRegExp = RegExp(r'{[a-zA-Z0-9\-_]+}');
 
   ///
   /// This function is the default Route Guard when it's not defined.
-  /// Means that, when you define your routes in `routes.dart, and you
+  /// Meaning that, when you define your routes in `routes.dart`, and you
   /// don't specify the activation for each route, in default case, we
-  /// allow exection through this function.
+  /// allow execution through this function.
   ///
   static bool defaultRouteActivation() => true;
 
@@ -155,18 +154,18 @@ class Route {
   }
 }
 
-/// When a new Router Widget is added in Flutter tree, it is automatically registered
-/// available internal router cache
+/// When a new Router Widget is added in the Flutter tree, it is automatically
+/// registered and available in the internal router cache.
 void subscribeRouterWidget(Symbol name, RouterWidgetState state) =>
     _internalRouter[name] = state;
 
-/// When a new Router Widget is removed from Flutter tree, it is automatically unregistered
-/// available internal router cache
+/// When a new Router Widget is removed from the Flutter tree, it is
+/// automatically unregistered and (un)available in the internal router cache.
 void unsubscribeRouterWidget(Symbol name, RouterWidgetState state) {
   _internalRouter.removeWhere((key, value) => key == name && value == state);
 }
 
-/// Function used to get router from cache buy it name
+/// Function used to get a router from the cache by its name.
 RouterWidgetState? findRouterByName(
   Symbol name,
 ) {
@@ -177,10 +176,10 @@ RouterWidgetState? findRouterByName(
 }
 
 ///
-/// Use to perform internal routing.
+/// Used to perform internal routing.
 ///
-/// see [RoutableWidget]
-/// see [RouterWidget]
+/// See [RoutableWidget]
+/// See [RouterWidget]
 void doInternalRouting(Symbol routerName, dynamic screenName, dynamic param) {
   try {
     var router = findRouterByName(routerName);
@@ -257,8 +256,8 @@ void doInternalRouting(Symbol routerName, dynamic screenName, dynamic param) {
 }
 
 ///
-/// doRouting: Fonction used to load resource from controller
-/// Can be use for application navigation, or to request data.
+/// doRouting: Function used to load resources from a controller.
+/// Can be used for application navigation, or to request data.
 dynamic doRouting(String control, String method, dynamic params) {
   // try {
   //   var controllerInstance =  ControllerReflectable.reflectors[control];
@@ -290,18 +289,17 @@ dynamic doRouting(String control, String method, dynamic params) {
 }
 
 ///
-/// `KareeRouter`: To navigate between screens you may use KareeRouter that
+/// `KareeRouter`: To navigate between screens, you may use KareeRouter, that
 ///  offers you two ways to go forward and to go back. KareeRouter provides
-/// also the to consume route between your application modules
+///  also a way to consume routes between your application modules.
 ///
 /// `KareeRouter.goto( routeName, parameter )`
 ///
-/// `routeName` it is the same path or event defined in the Routes.dart of your
+/// `routeName` It is the same path or event defined in the Routes.dart of your
 /// module.
-/// `parameter` it is the arguments list that should be injected in your Route action
+/// `parameter` It is the arguments list that should be injected in your Route action.
 ///
 /// `KareeRouter.goBack( context )`
-///
 ///
 class KareeRouter {
   static final GlobalKey<NavigatorState> _navigatorKey =
@@ -322,13 +320,13 @@ class KareeRouter {
         (entry) => entry.value.contains(routeName),
         orElse: () => MapEntry(Route.defaultRouteActivation, []));
     if (!canActivatedEntry.key()) {
-      /// Route Guard refused access to this routes
+      /// Route Guard refused access to this routes.
       return;
     }
 
     KareeRouter._currentRoute = routeName;
 
-    /// We reset path variable for this call Session
+    /// We reset the path variable for this call Session.
     _pathVariables = null;
 
     dynamic action = findActionFor(routeName);
@@ -352,7 +350,7 @@ class KareeRouter {
         throw NoActionFoundError(routeName, parameter);
       } else {
         ///
-        /// When the route is not found! we will try to check whether it starts
+        /// When the route is not found!, we will try to check whether it starts
         /// with the path that represents a module that is not loaded yet.
         ///
         try {
@@ -390,10 +388,10 @@ class KareeRouter {
   }
 
   ///
-  /// Function used to get specific action from a path route.
+  /// Function used to get the specific action from a path route.
   ///
   /// This function also setup **KareeRouter.pathVariables** value when the path
-  /// represented by this route contains url parameters
+  /// represented by this route contains url parameters.
   ///
   static dynamic findActionFor(String ro) {
     MapEntry<String, dynamic> action = Route._routeMap.entries.firstWhere(
@@ -423,7 +421,7 @@ class KareeRouter {
   }
 
   ///
-  /// General router for application. Overload by Karee to override default navigator
+  /// General router for the application. Overloaded by Karee to override default navigator.
   ///
   static get getRouter => (cupertino.RouteSettings rs) {
         return appRoute(rs);
@@ -485,7 +483,7 @@ class KareeRouter {
   }
 
   ///
-  /// Function used to find initial screen for `/`. screen selected should set
+  /// Function used to find initial screen for `/`. Screen selected should set
   /// isInitial to `true`
   ///
   static cupertino.Widget initialScreen() {
@@ -500,7 +498,7 @@ class KareeRouter {
   }
 
   ///
-  /// This function return the screen view from its name
+  /// This function returns the screen view from its name.
   ///
   static cupertino.Widget componentForRouteName(String s) {
     try {
@@ -517,7 +515,7 @@ class KareeRouter {
   }
 
   ///
-  /// Implementation of navigator to goback to previous context
+  /// Implementation of navigator to goback to previous context.
   ///
   static goBack() {
     if (KareeRouter.navigatorKey.currentState!.canPop()) {
@@ -526,7 +524,7 @@ class KareeRouter {
   }
 
   ///
-  /// Default Karee Router
+  /// Default Karee Router.
   ///
   static router(cupertino.BuildContext context) {
     launchInternalRoute();
@@ -535,7 +533,7 @@ class KareeRouter {
 }
 
 ///
-/// Default Karee Transition
+/// Default Karee Transition.
 ///
 class RouteTransition<T> extends cupertino.CupertinoPageRoute<T> {
   RouteTransition(
