@@ -1,5 +1,5 @@
 /// ## Karee Widget
-/// `Karee Core Widget` Library for all important widgets
+/// `Karee Core Widget` Library for all important widgets.
 /// ## Widgets exposed
 /// - [Bucket]
 /// - [BucketActionButton]
