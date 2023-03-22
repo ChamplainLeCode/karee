@@ -1,12 +1,8 @@
 import 'package:flutter/material.dart';
 
-
 class CongratCard extends StatelessWidget {
-
-    
   @override
   Widget build(BuildContext context) {
-
     return Container(
       height: 200,
       width: MediaQuery.of(context).size.width,
@@ -18,17 +14,16 @@ class CongratCard extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisSize: MainAxisSize.max,
           children: [
-            Text('👌', 
-              style: TextStyle(
-                fontSize: 70
-              ),
+            Text(
+              '👌',
+              style: TextStyle(fontSize: 70),
             ),
-            Text('It works pecfectly', 
+            Text(
+              'It works pecfectly',
               style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-                color: Colors.blueGrey[500]
-              ),
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.blueGrey[500]),
             )
           ],
         ),

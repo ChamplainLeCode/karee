@@ -61,7 +61,7 @@ class _HomeScreenState extends ScreenState<HomeScreen> {
                           }
                         },
                         style: ElevatedButton.styleFrom(
-                            primary: Colors.primaries.first),
+                            backgroundColor: Colors.primaries.first),
                         child: Text('Get\'s started'),
                       ),
                       SizedBox(height: 10),
@@ -70,7 +70,7 @@ class _HomeScreenState extends ScreenState<HomeScreen> {
                           KareeRouter.goto('/dashboard');
                         },
                         style: ElevatedButton.styleFrom(
-                            primary: Style.warningColor, elevation: 10),
+                            backgroundColor: Style.warningColor, elevation: 10),
                         icon: Icon(
                           Icons.dashboard_customize,
                           size: 15,

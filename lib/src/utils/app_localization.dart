@@ -94,7 +94,7 @@ class AppLocalization {
   /// Only for internal call. `AppLocalization._setCurrentLanguage` is the function that
   /// internally, update the current language locale, and propagate the update in
   /// all the application
-  static void _changeLanguage(
+  static Future<void> _changeLanguage(
       Of<AppLocalization> appLObs, Locale locale) async {
     if (appLObs.value._currentLanguage?.value != null) {
       appLObs.value._currentLanguage?.value = AppLanguage.fromLocale(locale);

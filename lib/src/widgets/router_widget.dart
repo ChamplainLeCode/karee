@@ -24,16 +24,39 @@ import '../observables/observable_widget.dart';
 /// See [RouteMode.INTERNAL]
 ///
 class RouterWidget extends StatefulWidget {
+  ///
+  /// [name] The tag of this router; it's used to identify this.
+  ///
   final Symbol name;
+
+  ///
+  /// [initial] Refers to the initial child of this router before routing is
+  /// triggered
+  ///
   final Widget initial;
 
+  ///
+  /// Constructor for new Router Widget.
+  ///
+  /// [name] The tag of this router; it's used to identify this.
+  ///
+  /// [initial] Refers to the initial child of this router before routing is
+  /// triggered
+  ///
   RouterWidget({required this.name, required this.initial});
 
   @override
   RouterWidgetState createState() => _RouterWidgetState();
 }
 
+///
+/// [RouterWidgetState] represents the state of the router. this state may
+/// change with time and routing event
+///
 abstract class RouterWidgetState extends State<RouterWidget> {
+  ///
+  /// Method used to load [child] in the router while applying routing.
+  ///
   load(RoutableWidget child);
 }
 
@@ -84,14 +107,20 @@ class _RouterWidgetState extends RouterWidgetState {
 /// See [RouterWidget]
 ///
 abstract class RoutableWidget extends StatelessWidget {
-  RoutableWidget({Key? key}) : super(key: key);
+  RoutableWidget({Key? key});
 
   final _RoutableWidgetParameter _parameter = _RoutableWidgetParameter();
 
+  ///
+  /// [onParam] is used when passing argument during internal navigation.
+  ///
   void onParam(Object? parameters) {
     _parameter.value = parameters;
   }
 
+  ///
+  /// Describes the part of the user interface represented by this widget.
+  ///
   Widget builder(BuildContext context, Object? parameter);
 
   @override
@@ -103,7 +132,8 @@ abstract class RoutableWidget extends StatelessWidget {
 }
 
 class _RoutableWidgetParameter {
+  /// The value of the paramenter sent for internal navigation.
   dynamic value;
 
-  _RoutableWidgetParameter([this.value]);
+  _RoutableWidgetParameter();
 }

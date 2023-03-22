@@ -254,7 +254,7 @@ class _DashboardSideMenuState extends ComponentState<DashboardSideMenu> {
                 style: ElevatedButton.styleFrom(
                     elevation: 4,
                     shape: CircleBorder(),
-                    primary: (KareeInternationalization
+                    backgroundColor: (KareeInternationalization
                                 .currentLocale?.languageCode ==
                             'fr'
                         ? Style.whiteText
@@ -269,7 +269,7 @@ class _DashboardSideMenuState extends ComponentState<DashboardSideMenu> {
                 style: ElevatedButton.styleFrom(
                     elevation: 4,
                     shape: CircleBorder(),
-                    primary: (KareeInternationalization
+                    backgroundColor: (KareeInternationalization
                                 .currentLocale?.languageCode ==
                             'en'
                         ? Style.whiteText
