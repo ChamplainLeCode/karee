@@ -2,6 +2,7 @@ import 'io.dart';
 import 'package:yaml/yaml.dart';
 import '../constances/constances.dart';
 
+/// Application Yaml configuration object.
 late final YamlMap _appConfig;
 
 ///
@@ -12,8 +13,8 @@ final Map<String, dynamic> appConfig = {};
 ///
 /// Function used to read [application.yaml]() from resources/config directory.
 ///
-/// the parameter [package] is optionally used to etermine whether the
-/// configuration should be load inside a module or not
+/// the parameter [package] is optionally used to determine whether the
+/// configuration should be loaded inside a module or not.
 ///
 Future<void> loadAppConfig([String package = '']) async {
   var stringConfig =
@@ -32,7 +33,7 @@ Future<void> loadAppConfig([String package = '']) async {
 }
 
 ///
-/// Function that reads value of Yaml node.
+/// Function that reads the value of Yaml node.
 ///
 void _loadYamlMap(String parentKey, Object m) {
   if (m is String) {
@@ -56,11 +57,11 @@ void _loadYamlMap(String parentKey, Object m) {
 }
 
 ///
-/// Function used to read configuration variable from application config in
+/// Function used to read configuration variables from application config in
 /// memory.
 ///
-/// This function is used when we inject value via **@Value([variable](''))**
-/// where variable is the parameter
+/// This function is used when we inject a value via **@Value([variable](''))**
+/// where `variable` is the parameter.
 ///
 dynamic readConfig(String variable) {
   assert(variable.startsWith('@{') &&
