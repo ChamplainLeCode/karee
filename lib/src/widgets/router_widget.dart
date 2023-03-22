@@ -5,11 +5,11 @@ import '../routes/router.dart';
 import '../observables/observable_widget.dart';
 
 ///
-/// RouterWidget is widget that allow you to use internal navigation in your
-/// application
+/// RouterWidget is a widget that allows you to use internal navigation in your
+/// application.
 ///
-/// To use this widget you need to specify the name, which is unique symbol that
-/// references your widget router. and the initial widget displayed
+/// To use this widget you need to specify the name, which is a unique symbol that
+/// references your widget router, and the initial widget displayed.
 ///
 /// ```dart
 /// RouterWidget(
@@ -24,7 +24,10 @@ import '../observables/observable_widget.dart';
 /// See [RouteMode.INTERNAL]
 ///
 class RouterWidget extends StatefulWidget {
+  /// The unique symbol that reference the widget router.
   final Symbol name;
+
+  /// The initial widget displayed.
   final Widget initial;
 
   RouterWidget({required this.name, required this.initial});
@@ -50,6 +53,10 @@ class _RouterWidgetState extends RouterWidgetState {
     super.dispose();
   }
 
+  /// The widget to be displayed in the router widget.
+  /// It should be a routable widget.
+  ///
+  /// See [RoutableWidget]
   Widget? child;
   @override
   void load(RoutableWidget child) {
@@ -67,7 +74,7 @@ class _RouterWidgetState extends RouterWidgetState {
 }
 
 ///
-/// RoutableWidget, is an abstract widget that allow you to extends injectable
+/// `RoutableWidget`, is an abstract widget that allows you to extend injectable
 /// widget in your RouterWidget.
 ///
 /// ```dart
@@ -86,12 +93,16 @@ class _RouterWidgetState extends RouterWidgetState {
 abstract class RoutableWidget extends StatelessWidget {
   RoutableWidget({Key? key}) : super(key: key);
 
+  /// The Routable widget parameters object.
   final _RoutableWidgetParameter _parameter = _RoutableWidgetParameter();
 
+  /// **onParam()**: Function to set the Routable widget parameters value.
   void onParam(Object? parameters) {
     _parameter.value = parameters;
   }
 
+  /// **builder()**: Function that provides the widget localization in the tree
+  /// (context), and the widget parameter.
   Widget builder(BuildContext context, Object? parameter);
 
   @override
@@ -102,6 +113,10 @@ abstract class RoutableWidget extends StatelessWidget {
   }
 }
 
+///
+/// `_RoutableWidgetParameter`: Object representing the Routable widget
+/// parameter instance.
+///
 class _RoutableWidgetParameter {
   dynamic value;
 

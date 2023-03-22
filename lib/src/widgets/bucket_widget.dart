@@ -205,7 +205,7 @@ class BucketState extends ComponentState<Bucket> {
     }
   }
 
-  /// **isBucketOpen** Getter used to know whether the bucket is open or not
+  /// **isBucketOpen** Getter used to know whether the bucket is opened or not.
   bool get isBucketOpen => !_bucketActionLock;
 
   ///
@@ -234,36 +234,36 @@ class BucketState extends ComponentState<Bucket> {
 }
 
 ///
-/// BucketActionButton, is used as the default button to manage event on Bucket
+/// BucketActionButton, is used as the default button to manage event on Bucket.
 ///
 class BucketActionButton extends StatefulComponent {
   ///
-  /// **icon** an Animated Icon Data, used when bucket changes its state
+  /// **icon** an `AnimatedIconData`, used when bucket changes its state.
   ///
   final AnimatedIconData icon;
 
   ///
-  /// **iconColor** the butcket action button icon `color`
+  /// **iconColor** the butcket action button icon `Color`.
   ///
   final Color? iconColor;
 
   ///
-  /// **iconSize** the butcket action button icon `size`
+  /// **iconSize** the butcket action button icon `Size`.
   ///
   final double? iconSize;
 
   ///
-  /// **iconSemanticLabel** the butcket action button icon `semantic label`
+  /// **iconSemanticLabel** the butcket action button icon `SemanticLabel`.
   ///
   final String? iconSemanticLabel;
 
   ///
-  /// **iconTextDirection** the butcket action button icon `text direction`
+  /// **iconTextDirection** the butcket action button icon `TextDirection`.
   ///
   final TextDirection? iconTextDirection;
 
   ///
-  /// BucketActionButton, is used as the default button to manage event on Bucket
+  /// BucketActionButton, is used as the default button to manage event on Bucket.
   ///
   BucketActionButton(this.iconSemanticLabel, this.iconTextDirection,
       {required this.icon, this.iconColor, this.iconSize, Key? key})
@@ -326,13 +326,13 @@ class BucketActionButtonState extends ComponentState<BucketActionButton>
   }
 
   ///
-  /// Method used to animate the passed icon
+  /// Method used to animate the passed icon.
   ///
   void animateIcon(bool state) => state
       ? Future.microtask(() => _iconAnimationController.animateBack(1))
       : Future.microtask(() => _iconAnimationController.animateTo(0));
 
-  /// Method used to send the *open event* of the default Bucket
+  /// Method used to send the *open event* of the default Bucket.
   ///
   /// Bucket is accessed through **Bucket.of(context)**
   ///

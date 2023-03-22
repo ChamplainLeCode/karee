@@ -7,18 +7,26 @@ import '../routes/router.dart' show KareeRouter;
 ///
 /// StatelessWidget that is used to add some view in Navigation context.
 ///
-/// This widget also allow you to access to context outside the build function.
+/// This widget also allows you to access to context outside the build function.
 ///
 @immutable
 abstract class StatelessScreen extends StatelessWidget {
   dynamic get arguments =>
       ModalRoute.of(KareeRouter.currentContext!)?.settings.arguments;
 
+  /// `Getter`: to retrieve the terminal **size** properties.
+  ///
+  /// See [Size]
   @protected
   Size get screenSize => MediaQuery.of(context).size;
 
+  /// `Getter`: to retrieve the terminal **mediaQuery** properties.
+  ///
+  /// See [MediaQueryData]
   MediaQueryData get mediaQuery => MediaQuery.of(context);
 
+  /// `Getter`: to retrieve the screen navigation **context**.
+  ///
   BuildContext get context => KareeRouter.currentContext!;
 
   @mustCallSuper
@@ -54,11 +62,19 @@ abstract class StatelessComponent extends StatelessWidget {
 
   // BuildContext? _context;
 
+  /// `Getter`: to retrieve the terminal **size** properties.
+  ///
+  /// See [Size]
   @protected
   Size get screenSize => MediaQuery.of(KareeRouter.currentContext!).size;
 
+  /// `Getter`: to retrieve the terminal **mediaQuery** properties.
+  ///
+  /// See [MediaQueryData]
   MediaQueryData get mediaQuery => MediaQuery.of(context);
 
+  /// `Getter`: to retrieve the screen navigation **context**.
+  ///
   BuildContext get context => KareeRouter.currentContext!;
 
   @protected
@@ -72,7 +88,7 @@ abstract class StatelessComponent extends StatelessWidget {
 }
 
 ///
-/// StatefulComponent that is used to substitue StatefulWidget to access
+/// StatefulComponent that is used to substitute the StatefulWidget for accessing
 /// [ComponentState.screenSize], [ComponentState.mediaQuery] and
 /// [ComponentState.arguments]
 ///
@@ -91,8 +107,14 @@ abstract class ComponentState<T extends StatefulComponent> extends State<T> {
   ///
   dynamic get arguments => ModalRoute.of(context)?.settings.arguments;
 
+  /// `Getter`: to retrieve the terminal **mediaQuery** properties.
+  ///
+  /// See [MediaQueryData]
   MediaQueryData get mediaQuery => MediaQuery.of(context);
 
+  /// `Getter`: to retrieve the terminal **size** properties.
+  ///
+  /// See [Size]
   @protected
   Size get screenSize => MediaQuery.of(context).size;
 
@@ -125,8 +147,14 @@ abstract class ScreenState<T extends StatefulScreen> extends State<T> {
   ///
   dynamic get arguments => ModalRoute.of(context)?.settings.arguments;
 
+  /// `Getter`: to retrieve the terminal **mediaQuery** properties.
+  ///
+  /// See [MediaQueryData]
   MediaQueryData get mediaQuery => MediaQuery.of(context);
 
+  /// `Getter`: to retrieve the terminal **size** properties.
+  ///
+  /// See [Size]
   @protected
   Size get screenSize => MediaQuery.of(context).size;
 

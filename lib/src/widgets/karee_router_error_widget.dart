@@ -11,10 +11,21 @@ import '../widgets/karee_material_app.dart';
 import '../widgets/karee_router_default_error_widget.dart';
 import './library.dart' show StatefulScreen, ScreenState;
 
+///
+/// `KareeRouterErrorWidget`: Default error Screen to be displayed on debug
+///  mode error cases.
+///
 class KareeRouterErrorWidget extends StatefulScreen {
+  /// The error title.
   final String? _title;
+
+  /// The error stack trace.
   final StackTrace? _stack;
+
+  /// List containing the route name, and its parameters if any.
   final List<String>? env;
+
+  /// The error code.
   final KareeErrorCode? errorCode;
 
   KareeRouterErrorWidget([this._title, this._stack, this.errorCode, this.env]);

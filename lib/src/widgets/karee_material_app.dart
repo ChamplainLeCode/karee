@@ -42,7 +42,7 @@ import 'karee_router_error_widget.dart';
 /// ### KareeMaterialApp
 ///
 /// Simple Material App based on Flutter MaterialApp
-/// with custom configuration for Karee
+/// with custom configuration for Karee.
 ///
 class KareeMaterialApp extends StatelessWidget {
   final List<NavigatorObserver> navigatorObservers;
@@ -74,22 +74,22 @@ class KareeMaterialApp extends StatelessWidget {
   /// see [Observer]
   final List<Of> observables;
 
-  /// Global Application profile on execution
+  /// Global Application profile on execution.
   ///
   /// see [KareeInstanceProfile]
   static KareeInstanceProfile? globalProfile;
 
   ///
-  /// Global Application type
+  /// Global Application type.
   ///
   static KareeApplicationType type = KareeApplicationType.application;
 
-  /// Global Application Contact address
+  /// Global Application Contact address.
   /// see [ErrorContactAddress]
   static ErrorContactAddress? globalErrorContactAddress;
 
   ///
-  /// Kind of applicatoin
+  /// Kind of application.
   ///
   final ApplicationKind kind;
   final Map<Type, Action<Intent>>? actions;
