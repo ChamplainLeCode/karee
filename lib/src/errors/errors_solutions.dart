@@ -21,6 +21,25 @@ import '../constances/enumeration.dart';
 import '../constances/constances.dart';
 import '../routes/router.dart' show RouteMode;
 
+///
+/// Map of `KareeErrorCode` as keys and `error screens widget trees` as values.
+///
+/// See [KareeErrorCode.noInitialScreen]
+///
+/// See [KareeErrorCode.badUseOfRoutableWidget]
+///
+/// See [KareeErrorCode.notRoutableWidget]
+///
+/// See [KareeErrorCode.notKareeScreen]
+///
+/// See [KareeErrorCode.noTranslationFile]
+///
+/// See [KareeErrorCode.noRouteFound]
+///
+/// See [KareeErrorCode.generalError]
+///
+/// See [KareeErrorCode.screenNotFound]
+///
 var errorSolution =
     <KareeErrorCode, Widget Function(BuildContext ct, List env)>{
   KareeErrorCode.noInitialScreen:

@@ -9,15 +9,20 @@ class PersistentContext {
   static final _context = <Type, dynamic>{};
 
   ///
-  /// Get all data in cache level.
+  /// `Getter` of all data in cache level.
   ///
   Map get cache => _context;
 
+  /// **of()** Method to retrieve an observable.
   static Of<T> of<T>() => PersistentContext.getObsWithTag<T>(#base);
+
+  /// **withTag()** Method to retrieve an observable from a provider `tag`
+  /// reference.
   static Of<T> withTag<T>(dynamic tag) => PersistentContext.getObsByTag<T>(tag);
 
   ///
-  /// Setup an observable in cas using its runtime type and observable tag as cache key.
+  /// **value()** Setup an observable in Cache using its runtime type and
+  /// observable tag as Cache key.
   ///
   static void value<T>(Of<T> obs) {
     assert(obs.value != null);
@@ -29,7 +34,8 @@ class PersistentContext {
   }
 
   ///
-  /// Persist an observable in cache level with its tag and runtime type.
+  /// **valueWithTag()** Persist an observable in Cache level with its tag and
+  /// runtime type.
   ///
   static Of<T> valueWithTag<T>(T value, dynamic tag) {
     assert(tag != null);
@@ -42,7 +48,7 @@ class PersistentContext {
   }
 
   ///
-  /// Get an observable from its tag.
+  /// **getObsByTag()** Get an observable from its tag.
   ///
   static Of<T> getObsByTag<T>(dynamic tag) {
     var entries = _context.entries;
@@ -60,14 +66,14 @@ class PersistentContext {
   }
 
   ///
-  /// Get and observable from it tag and type.
+  /// **getObsWithTag()** Get and observable from its tag and type.
   ///
   static Of<T> getObsWithTag<T>([dynamic tag = #base]) {
     return _context[T]?[tag];
   }
 
   ///
-  /// Remove persisted observable from Cache level.
+  /// **remove()** Remove persisted observable from Cache level.
   ///
   static void remove<E>(Of<E> obs) {
     assert(obs.value != null);

@@ -5,8 +5,8 @@ import '../screens/library.dart' show screen;
 ///
 /// Load internal route used inside of Karee.
 ///
-/// The unique route known inside Karee is error path. this is used in prod
-/// mode when a runTime error happens
+/// The unique route known inside Karee is the error path. This is used in prod
+/// mode when a runTime error happens.
 ///
 void launchInternalRoute() {
   Route.on(KareeConstants.kareeErrorPath, (param) {

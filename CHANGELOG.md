@@ -1,3 +1,6 @@
+## v2.2.3+3
+  * Plane: Karee framework fix.
+    * Update BucketActionButton.
 ## v2.2.3+2
   * Plane: Karee framework fix.
     * Fix bug Internationalization for module.

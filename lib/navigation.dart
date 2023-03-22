@@ -1,7 +1,7 @@
 /// ## Karee Navigation
 ///
 /// This library contains the set of tools used to manage navigation
-/// in Karee Application
+/// in Karee Applications.
 /// ## Modules
 /// - KareeRouter
 /// - Route

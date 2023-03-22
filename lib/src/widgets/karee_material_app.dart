@@ -1,3 +1,5 @@
+import 'dart:io' show Platform;
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart'
     show
@@ -13,7 +15,6 @@ import 'package:flutter/material.dart'
         Locale,
         LocaleListResolutionCallback,
         LocaleResolutionCallback,
-        // LocalizationsDelegate,
         LogicalKeySet,
         MaterialApp,
         NavigatorObserver,
@@ -42,7 +43,7 @@ import 'karee_router_error_widget.dart';
 /// ### KareeMaterialApp
 ///
 /// Simple Material App based on Flutter MaterialApp
-/// with custom configuration for Karee
+/// with custom configuration for Karee.
 ///
 class KareeMaterialApp extends StatelessWidget {
   final List<NavigatorObserver> navigatorObservers;
@@ -74,22 +75,22 @@ class KareeMaterialApp extends StatelessWidget {
   /// see [Observer]
   final List<Of> observables;
 
-  /// Global Application profile on execution
+  /// Global Application profile on execution.
   ///
   /// see [KareeInstanceProfile]
   static KareeInstanceProfile? globalProfile;
 
   ///
-  /// Global Application type
+  /// Global Application type.
   ///
   static KareeApplicationType type = KareeApplicationType.application;
 
-  /// Global Application Contact address
+  /// Global Application Contact address.
   /// see [ErrorContactAddress]
   static ErrorContactAddress? globalErrorContactAddress;
 
   ///
-  /// Kind of applicatoin
+  /// Kind of application.
   ///
   final ApplicationKind kind;
   final Map<Type, Action<Intent>>? actions;
@@ -151,13 +152,15 @@ class KareeMaterialApp extends StatelessWidget {
       });
     }, test: (exception) => exception is TranslationFileNotExists);
 
-    ErrorWidget.builder = (FlutterErrorDetails detail) {
-      return KareeRouterErrorWidget(
-          detail.summary.name,
-          detail.stack,
-          KareeErrorCode.generalError,
-          detail.context!.getChildren().map((e) => e.name ?? '').toList());
-    };
+    if (!Platform.environment.containsKey('FLUTTER_TEST')) {
+      ErrorWidget.builder = (FlutterErrorDetails detail) {
+        return KareeRouterErrorWidget(
+            detail.summary.name,
+            detail.stack,
+            KareeErrorCode.generalError,
+            detail.context!.getChildren().map((e) => e.name ?? '').toList());
+      };
+    }
   }
 
   @override

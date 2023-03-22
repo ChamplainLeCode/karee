@@ -2,6 +2,10 @@ import 'package:flutter/material.dart';
 
 import './karee_material_app.dart';
 
+///
+/// `KareeRouterDefaultProdErrorWidget`: Default error Widget to be displayed on
+/// production mode error cases.
+///
 class KareeRouterDefaultProdErrorWidget extends StatefulWidget {
   @override
   _KareeRouterDefaultProdErrorWidgetState createState() =>

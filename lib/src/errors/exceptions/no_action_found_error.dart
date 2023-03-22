@@ -1,13 +1,13 @@
 /// NoActionFoundError: Exception thrown when an unknown action is mapped to a route.
 ///
 class NoActionFoundError implements Exception {
-  /// message of this error
+  /// Message of this error.
   String? message;
 
-  /// route (path) that thrown this error
+  /// Route (path) that thrown this error.
   String? routeName;
 
-  /// Environment parameters at this moment
+  /// Environment parameters at this moment.
   dynamic params;
 
   NoActionFoundError([this.routeName, this.params]) {
