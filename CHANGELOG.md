@@ -1,3 +1,6 @@
+## v2.2.3+5
+  * Plane: Karee framework fix navigation.
+    * Exporting RouteActivation and ActivationRouteContext.
 ## v2.2.3+4
   * Plane: Karee framework fix.
     * Fixing bugs on Observer from persisted Observablee.
