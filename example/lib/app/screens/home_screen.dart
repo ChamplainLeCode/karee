@@ -51,7 +51,7 @@ class HomeScreenState extends ScreenState<HomeScreen> {
                         'version v2.2.0',
                         style: TextStyle(
                             fontSize: 20,
-                            color: Style.whiteText.withOpacity(0.8),
+                            color: Style.whiteText.withValues(alpha: 0.8),
                             fontStyle: FontStyle.italic,
                             fontWeight: FontWeight.w200),
                       ),

@@ -1,3 +1,6 @@
+## v2.2.5
+  * Plane: Karee framework fix i18n for release.
+    * Fix the translation in release mode.
 ## v2.2.4
   * Plane: Karee framework fix navigation.
     * Exporting RouteActivation and ActivationRouteContext.

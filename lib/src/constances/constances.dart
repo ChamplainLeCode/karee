@@ -1,5 +1,3 @@
-import 'dart:io' show Platform;
-
 import 'package:flutter/foundation.dart';
 import 'package:karee/widgets.dart' show StatefulScreen, StatelessScreen;
 
@@ -25,12 +23,29 @@ class KareeConstants {
 
   /// This is the location of the application config file.
   static final String kApplicationRessourceFile =
-      'resources${kIsWeb ? '/' : Platform.pathSeparator}config${kIsWeb ? '/' : Platform.pathSeparator}application.yaml';
+      'resources${kIsWeb ? '/' : platformSeparator}config${kIsWeb ? '/' : platformSeparator}application.yaml';
 
   /// This is the location of the i18n directory.
   static final String kApplicationLocalizationRessourcDir =
-      'resources${kIsWeb ? '/' : Platform.pathSeparator}i18n';
+      'resources${kIsWeb ? '/' : platformSeparator}i18n';
 
   /// Default tag used to maintain the instance of current localization in karee.
   static const Symbol kApplicationLocalizationTag = #base;
+
+  /// Platform specific file separator.
+  /// This is used to build paths in a platform agnostic way.
+  /// For web, the separator is always '/'.
+  /// For Windows, the separator is '\'.
+  /// For other platforms, the separator is '/'.
+  /// This is used to build paths in a platform agnostic way.
+  /// See also [kApplicationRessourceFile] and [kApplicationLocalizationRessourcDir]
+  static get platformSeparator {
+    if (kIsWeb) {
+      return '/';
+    }
+    if (defaultTargetPlatform == TargetPlatform.windows) {
+      return '\\';
+    }
+    return '/';
+  }
 }

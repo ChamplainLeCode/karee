@@ -2,8 +2,9 @@ import 'dart:convert';
 import 'dart:ui';
 
 import 'package:flutter/foundation.dart';
+import 'package:karee/navigation.dart';
 import 'app_language.dart' show AppLanguage;
-import '../constances/library.dart' show KareeConstants;
+import '../constances/library.dart' show KareeConstants, KareeErrorCode;
 import '../observables/library.dart' show Of;
 import '../errors/translation/translation_file_not_exists.dart';
 
@@ -20,7 +21,19 @@ class KareeInternationalization {
 
   /// Global Application Localization instance.
   /// See [AppLocalization]
-  static late Of<AppLocalization> _appLocalization;
+  static Of<AppLocalization>? _appLocalization;
+
+  /// This is used to enable or disable i18n in Karee.
+  /// If set to `true`, Karee will load the translation file from the
+  /// resources/i18n directory.
+  /// If set to `false`, Karee will not load any translation file and will not
+  /// apply any translation.
+  /// This is useful for applications that do not require internationalization.
+  /// If you want to use i18n, set this to `true` in your
+  /// `KareeMaterialApp` or `KareeModule` initialization.
+  /// Default is `false`.
+  ///
+  static bool i18n = false;
 
   /// ## KareeInternationalization.changeLanguage
   ///
@@ -29,17 +42,17 @@ class KareeInternationalization {
   /// application.
   ///
   static void changeLanguage(Locale locale) {
-    AppLocalization._changeLanguage(_appLocalization, locale);
+    AppLocalization._changeLanguage(_appLocalization!, locale);
   }
 
   /// ### @get currentLocale
   /// Get the current locale used in the application.
-  static Locale? get currentLocale => _appLocalization.value.locale;
+  static Locale? get currentLocale => _appLocalization!.value.locale;
 
   /// ### @get appLocalization
   ///
   /// Retrieve the current AppLocalization observable Object.
-  static Of<AppLocalization> get appLocalization => _appLocalization;
+  static Of<AppLocalization> get appLocalization => _appLocalization!;
 
   ///
   /// This function is used to initialize appLocalization. This function is
@@ -60,28 +73,29 @@ class KareeInternationalization {
 
   /// Only for internal call. `AppLocalization.init` is a static function used
   /// to initialize the appLocalization instance in Karee framework.
-  static Future<void> init(Locale? locale, List<Locale> supportedLocale) async {
+  static Future<void> init(Locale locale, List<Locale> supportedLocale,
+      [bool enableI18n = false]) async {
     if (_init) return;
+    KareeInternationalization.i18n = enableI18n;
     KareeInternationalization._appLocalization =
         Of.tag(AppLocalization(), KareeConstants.kApplicationLocalizationTag);
-    var appL = KareeInternationalization._appLocalization.value;
+    var appL = KareeInternationalization._appLocalization!.value;
 
-    appL._currentLanguage = Of.tag(
-        locale == null
-            ? AppLanguage.internal()
-            : AppLanguage(locale.languageCode),
+    appL._currentLanguage = Of.tag(AppLanguage(locale.toLanguageTag()),
         KareeConstants.kApplicationLocalizationTag);
-    if (locale != null) {
-      if (!supportedLocale.contains(locale)) {
-        supportedLocale.add(locale);
-      }
-      appL._currentLanguage!.value = AppLanguage.fromLocale(locale);
-      try {
+    if (!supportedLocale.contains(locale)) {
+      supportedLocale.add(locale);
+    }
+    appL._currentLanguage!.value = AppLanguage.fromLocale(locale);
+    try {
+      if (enableI18n) {
         await appL._readTranslationFile(locale);
-        KareeInternationalization._appLocalization.refresh();
-      } on FlutterError {
-        throw TranslationFileNotExists(locale);
+        KareeInternationalization._appLocalization!.refresh();
+      } else {
+        appL.translation = {};
       }
+    } on FlutterError {
+      throw TranslationFileNotExists(locale);
     }
     _init = true;
   }
@@ -115,14 +129,14 @@ class AppLocalization {
   /// translation file asset from a given locale.
   Future<void> _readTranslationFile(Locale locale) async {
     var path = '''${KareeConstants.kApplicationLocalizationRessourcDir}'''
-        '''/${locale.languageCode.toLowerCase()}'''
-        '''${locale.countryCode != null ? '_${locale.countryCode!.toLowerCase()}' : ''}.json''';
-    String translationString = await loadConfig(path);
+        '''/${locale.toLanguageTag()}.json''';
 
     try {
+      String translationString = await loadConfig(path);
       translation = jsonDecode(translationString);
-      // ignore: empty_catches
-    } catch (e) {}
+    } catch (e) {
+      _handleTranslationFileNotExists(locale, path, e as Error);
+    }
   }
 }
 
@@ -135,16 +149,68 @@ extension AppLocalizationExtension on AppLocalization {
   Future<void> readModuleTranslationFile(Locale locale, String package) async {
     var path = '''$package'''
         '''${KareeConstants.kApplicationLocalizationRessourcDir}'''
-        '''/${locale.languageCode.toLowerCase()}'''
-        '''${locale.countryCode != null ? '_${locale.countryCode!.toLowerCase()}' : ''}.json''';
-    String translationString = await loadConfig(path);
+        '''/${locale.toLanguageTag()}.json''';
     try {
+      String translationString = await loadConfig(path);
       if (translation == null) {
         translation = jsonDecode(translationString);
       } else {
         translation!.addAll(jsonDecode(translationString));
       }
-      // ignore: empty_catches
-    } catch (e) {}
+    } catch (e) {
+      _handleTranslationFileNotExists(locale, path, e as Error);
+    }
   }
+
+  _handleTranslationFileNotExists(Locale locale, String path, Error ex) {
+    KareeRouter.goto(KareeConstants.kareeErrorPath, parameter: {
+      #title: ex.toString().split('.').first,
+      #stack: ex.stackTrace,
+      #env: [
+        '${locale.languageCode}${locale.countryCode == null ? '' : '_${locale.countryCode!.toLowerCase()}'}.json',
+      ],
+      #errorCode: KareeErrorCode.noTranslationFile
+    });
+  }
+}
+
+extension BooleanStateExtension on bool {
+  /// Returns the opposite of the current boolean value.
+  bool get not => !this;
+
+  /// Returns true if the current boolean value is true, otherwise false.
+  bool get isTrue => this;
+
+  /// Returns true if the current boolean value is false, otherwise false.
+  bool get isFalse => !this;
+
+  /// Returns true if the current boolean value is enabled, otherwise false.
+  bool get isEnabled => this;
+
+  /// Returns true if the current boolean value is disabled, otherwise false.
+  bool get isDisabled => !this;
+
+  /// Returns true if the current boolean value is active, otherwise false.
+  bool get isActive => this;
+
+  /// Returns true if the current boolean value is inactive, otherwise false.
+  bool get isInactive => !this;
+
+  /// Returns true if the current boolean value is checked, otherwise false.
+  bool get isChecked => this;
+
+  /// Returns true if the current boolean value is unchecked, otherwise false.
+  bool get isUnchecked => !this;
+
+  /// Returns true if the current boolean value is visible, otherwise false.
+  bool get isVisible => this;
+
+  /// Returns true if the current boolean value is hidden, otherwise false.
+  bool get isHidden => !this;
+
+  /// Returns true if the current boolean value is selected, otherwise false.
+  bool get isSelected => this;
+
+  /// Returns true if the current boolean value is unselected, otherwise false.
+  bool get isUnselected => !this;
 }
