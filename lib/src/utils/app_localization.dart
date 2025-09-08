@@ -62,13 +62,9 @@ class KareeInternationalization {
   /// with a try-catch structure.
   ///
   static Of<AppLocalization> initAppLocalization() {
-    try {
-      return KareeInternationalization.appLocalization;
-    } catch (e) {
-      KareeInternationalization._appLocalization =
-          Of.tag(AppLocalization(), KareeConstants.kApplicationLocalizationTag);
-      return KareeInternationalization.appLocalization;
-    }
+    KareeInternationalization._appLocalization ??=
+        Of.tag(AppLocalization(), KareeConstants.kApplicationLocalizationTag);
+    return KareeInternationalization.appLocalization;
   }
 
   /// Only for internal call. `AppLocalization.init` is a static function used
@@ -77,7 +73,7 @@ class KareeInternationalization {
       [bool enableI18n = false]) async {
     if (_init) return;
     KareeInternationalization.i18n = enableI18n;
-    KareeInternationalization._appLocalization =
+    KareeInternationalization._appLocalization ??=
         Of.tag(AppLocalization(), KareeConstants.kApplicationLocalizationTag);
     var appL = KareeInternationalization._appLocalization!.value;
 
@@ -174,6 +170,7 @@ extension AppLocalizationExtension on AppLocalization {
   }
 }
 
+/// Extension on boolean values to provide additional utility methods.
 extension BooleanStateExtension on bool {
   /// Returns the opposite of the current boolean value.
   bool get not => !this;

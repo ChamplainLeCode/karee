@@ -9,7 +9,7 @@ typedef _OfBuilder<K> = Widget Function(BuildContext ctx);
 /// An overloading of see [_OfBuilder<K>] used to send state on building.
 typedef _OfBuilderWithState<K> = Widget Function(BuildContext ctx, Of<K> state);
 
-/// ### Observer<T>
+/// ### `Observer<T>`
 /// Used as base Widget of this library. When you want to watch changes on an object,
 /// add this widget in your flutter tree.
 ///

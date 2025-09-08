@@ -48,4 +48,7 @@ class KareeConstants {
     }
     return '/';
   }
+
+  /// Private constructor to avoid external instantiation.
+  KareeConstants._();
 }

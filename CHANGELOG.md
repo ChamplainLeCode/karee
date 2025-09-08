@@ -1,3 +1,9 @@
+## v2.2.6
+  * Plane: Karee framework fix i18n for release.
+    * Minor Fix.
+## v2.2.5+1
+  * Plane: Karee framework fix i18n for release.
+    * Fix translation for module loaded at same time as root.
 ## v2.2.5
   * Plane: Karee framework fix i18n for release.
     * Fix the translation in release mode.

@@ -58,7 +58,8 @@ abstract class KareeModule {
     var obsAppLocalization = KareeInternationalization.initAppLocalization();
     obsAppLocalization.listen((appLocalization) async => await appLocalization
         .readModuleTranslationFile(appLocalization.locale!, package));
-    if (KareeMaterialApp.type == KareeApplicationType.application) {
+    if (KareeMaterialApp.type == KareeApplicationType.application &&
+        obsAppLocalization.value.locale != null) {
       return obsAppLocalization.value
           .readModuleTranslationFile(obsAppLocalization.value.locale!, package);
     }
@@ -101,4 +102,9 @@ class KareeModuleLoader {
       if (e.startWithRoot) return await e._init();
     }
   }
+
+  ///
+  /// Private constructor to avoid external instantiation.
+  ///
+  KareeModuleLoader._();
 }
