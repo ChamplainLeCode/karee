@@ -45,6 +45,7 @@ class BadUseOfRouterWidgetException implements Exception {
   /// RouteMode sent during the internal routing.
   RouteMode mode;
 
+  /// Constructor of this exception. It requires the route name and the RouteMode used.
   BadUseOfRouterWidgetException(this.routerName, this.mode) {
     message =
         'Cannot use $mode with #${routerName.toString().substring(8, routerName.toString().length - 2)}';
@@ -70,6 +71,7 @@ class NotManageableWidgetException implements Exception {
   /// Route (path) that thrown this error.
   final dynamic screen;
 
+  /// Constructor of this exception. It requires the screen that is not manageable.
   NotManageableWidgetException(this.screen) {
     message = '$screen is not a manageable screen';
   }

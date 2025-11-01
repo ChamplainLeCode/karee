@@ -7,7 +7,7 @@
 /// [StringTranslator.translate] and [StringTranslator.translateWithParams].
 ///
 /// To define you translation dictionary, get open file in
-/// {@PROJECT_DIR@/resources/i18n/locale.json}.
+/// {PROJECT_DIR@/resources/i18n/locale.json}.
 ///
 /// Karee Internationalization also provides a simplest way to change language in
 /// your application. You need to call [KareeInternationalization.changeLanguage]
@@ -33,6 +33,8 @@
 ///
 library karee.internationalization;
 
+import 'dart:developer';
+
 import 'src/utils/app_localization.dart';
 export 'src/utils/app_language.dart';
 export 'src/utils/app_localization.dart';
@@ -48,6 +50,9 @@ extension StringTranslator on String {
   /// translation (value associated in your i18n to this key).
   ///
   String translate() {
+    if (KareeInternationalization.i18n.isDisabled) {
+      log('Karee Internationalization is disabled, translation will not be applied for "$this"');
+    }
     return KareeInternationalization.appLocalization.value.translation?[this]
             ?.toString() ??
         this;

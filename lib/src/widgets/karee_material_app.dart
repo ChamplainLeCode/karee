@@ -1,4 +1,4 @@
-import 'dart:io' show Platform;
+import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart'
@@ -93,16 +93,33 @@ class KareeMaterialApp extends StatelessWidget {
   /// Kind of application.
   ///
   final ApplicationKind kind;
+
+  /// Actions that can be used in the application.
+  /// see [Action]
+  /// see [Intent]
+  /// see [LogicalKeySet]
   final Map<Type, Action<Intent>>? actions;
 
+  /// High contrast dark theme for the application.
+  /// see [ThemeData.highContrastDarkTheme]
   final ThemeData? highContrastDarkTheme;
 
+  /// High contrast theme for the application.
+  /// see [ThemeData.highContrastDarkTheme]
   final ThemeData? highContrastTheme;
 
+  /// Key to access the ScaffoldMessengerState of the application.
+  /// see [ScaffoldMessengerState]
+  /// see [GlobalKey]
   final GlobalKey<ScaffoldMessengerState>? scaffoldMessengerKey;
+
+  /// Restoration ID to save and restore the state of the application.
+  /// See [RestorationScope] for more information.
 
   final String? restorationScopeId;
 
+  /// Constructor of KareeMaterialApp
+  ///
   KareeMaterialApp(
       {Key? key,
       required this.kind,
@@ -116,6 +133,7 @@ class KareeMaterialApp extends StatelessWidget {
       this.theme,
       this.darkTheme,
       this.themeMode = ThemeMode.system,
+      bool enableI18n = false,
       this.locale,
       this.localeListResolutionCallback,
       this.localeResolutionCallback,
@@ -133,12 +151,29 @@ class KareeMaterialApp extends StatelessWidget {
       this.highContrastTheme,
       required this.observables,
       this.errorContactAddress}) {
-    assert(profile == KareeInstanceProfile.development ||
-        (profile == KareeInstanceProfile.production &&
-            errorContactAddress != null));
+    KareeMaterialApp.$assert(
+        profile == KareeInstanceProfile.development ||
+            (profile == KareeInstanceProfile.production &&
+                errorContactAddress != null),
+        'If you use KareeInstanceProfile.production, you must provide an error contact address.',
+        [
+          'profile: $profile',
+          'errorContactAddress: ${errorContactAddress?.toString() ?? 'null'}'
+        ]);
+    KareeMaterialApp.$assert(
+        (enableI18n && (locale != null || supportedLocales.isNotEmpty)) ||
+            (!enableI18n && locale == null && supportedLocales.isEmpty),
+        'If you enable i18n, you must provide a locale or a list of supported locales.',
+        [
+          'enableI18n: $enableI18n',
+          'locale: ${locale?.toLanguageTag()}',
+          'supportedLocales: ${supportedLocales.toString()}'
+        ],
+        KareeErrorCode.enableI18nError);
     KareeMaterialApp.globalProfile = profile;
     KareeMaterialApp.globalErrorContactAddress = errorContactAddress;
-    KareeInternationalization.init(locale, supportedLocales.toList())
+    KareeInternationalization.init(locale ?? Locale(Platform.localeName),
+            supportedLocales.toList(), enableI18n)
         .catchError((onError, st) {
       var ex = onError as TranslationFileNotExists;
 
@@ -152,15 +187,16 @@ class KareeMaterialApp extends StatelessWidget {
       });
     }, test: (exception) => exception is TranslationFileNotExists);
 
-    if (!Platform.environment.containsKey('FLUTTER_TEST')) {
-      ErrorWidget.builder = (FlutterErrorDetails detail) {
-        return KareeRouterErrorWidget(
-            detail.summary.name,
-            detail.stack,
-            KareeErrorCode.generalError,
-            detail.context!.getChildren().map((e) => e.name ?? '').toList());
-      };
-    }
+    // uncomment for testing
+    // if (!Platform.environment.containsKey('FLUTTER_TEST')) {
+    ErrorWidget.builder = (FlutterErrorDetails detail) {
+      return KareeRouterErrorWidget(
+          detail.summary.name,
+          detail.stack,
+          KareeErrorCode.generalError,
+          detail.context!.getChildren().map((e) => e.name ?? '').toList());
+    };
+    // }
   }
 
   @override
@@ -224,5 +260,23 @@ class KareeMaterialApp extends StatelessWidget {
                     onGenerateRoute: KareeRouter.router(context));
               });
         });
+  }
+
+  ///
+  /// Karee assert function that will check a condition and if false
+  /// will redirect to the Karee error screen with the provided message
+  /// and environment.
+  ///
+  static void $assert(bool condition, String message,
+      [List<String> env = const [],
+      KareeErrorCode errorCode = KareeErrorCode.assertionError]) {
+    if (!condition) {
+      KareeRouter.goto(KareeConstants.kareeErrorPath, parameter: {
+        #title: message,
+        #stack: StackTrace.current,
+        #env: env,
+        #errorCode: errorCode
+      });
+    }
   }
 }

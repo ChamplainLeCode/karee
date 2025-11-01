@@ -5,6 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:karee/widgets.dart';
 
 class DashboardAppBarTool extends StatelessComponent {
+  DashboardAppBarTool({super.key});
+
   @override
   Widget builder(BuildContext context) {
     return Container(
@@ -20,7 +22,7 @@ class DashboardAppBarTool extends StatelessComponent {
                 margin: EdgeInsets.symmetric(horizontal: 10),
                 alignment: Alignment.center,
                 child: IconBadge(
-                  callBack: () => print('callback'),
+                  callBack: () => null,
                   color: Style.whiteText,
                   icon: Icons.email_outlined,
                   number: 4,
@@ -31,7 +33,7 @@ class DashboardAppBarTool extends StatelessComponent {
                 margin: EdgeInsets.symmetric(horizontal: 10),
                 alignment: Alignment.center,
                 child: IconBadge(
-                  callBack: () => print('callback'),
+                  callBack: () => null,
                   color: Style.whiteText,
                   icon: Icons.notifications_outlined,
                   number: 10,
@@ -42,7 +44,7 @@ class DashboardAppBarTool extends StatelessComponent {
                 margin: EdgeInsets.symmetric(horizontal: 10),
                 alignment: Alignment.center,
                 child: IconBadge(
-                  callBack: () => print('callback'),
+                  callBack: () => null,
                   color: Style.whiteText,
                   icon: Icons.flag_outlined,
                   number: 9,
@@ -60,8 +62,8 @@ class DashboardAppBarTool extends StatelessComponent {
                         decoration: BoxDecoration(
                             shape: BoxShape.circle,
                             image: DecorationImage(
-                                image: NetworkImage(
-                                    'https://www.gravatar.com/avatar/db2846ed0959748797a7fa5839ce254f')))))),
+                                image: AssetImage(
+                                    'assets/images/profile.png')))))),
             if (!Utils.isMobileView)
               Align(
                   alignment: Alignment.center,

@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:karee/widgets.dart';
 
 class DashboardFooter extends StatelessComponent {
+  DashboardFooter({super.key});
+
   @override
   Widget builder(BuildContext context) {
     return Container(
@@ -10,6 +12,6 @@ class DashboardFooter extends StatelessComponent {
         padding: EdgeInsets.symmetric(vertical: 5, horizontal: 20),
         height: 30,
         color: Style.whiteBackground,
-        child: Text('© Karee Community 2021'));
+        child: Text('© Karee Community 2022'));
   }
 }

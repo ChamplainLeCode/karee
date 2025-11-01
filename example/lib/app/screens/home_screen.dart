@@ -1,33 +1,33 @@
-import 'package:karee/core.dart';
 import 'package:karee/widgets.dart';
 import 'package:karee/annotations.dart';
 import 'package:karee/navigation.dart';
+import 'package:karee/core.dart';
 import '../utils/style.dart';
 import 'package:flutter/material.dart' hide Page;
 import 'package:url_launcher/url_launcher.dart' as launcher;
 /*
  * @Author Champlain Marius Bakop
  * @email champlainmarius20@gmail.com
- * @github ChamplainLeCode
+ * @github [ChamplainLeCode](https://github.com/ChamplainLeCode)
  * 
  */
 
 @Screen('home', isInitial: true)
 class HomeScreen extends StatefulScreen {
+  HomeScreen({super.key});
+
   @override
-  _HomeScreenState createState() => _HomeScreenState();
+  HomeScreenState createState() => HomeScreenState();
 }
 
-class _HomeScreenState extends ScreenState<HomeScreen> {
+class HomeScreenState extends ScreenState<HomeScreen> {
   @override
   Widget builder(BuildContext context) {
-    return WillPopScope(
-        onWillPop: () async => false,
+    return PopScope(
         child: Scaffold(
             body: Container(
                 alignment: Alignment.center,
-                color: Style
-                    .dashboardSelectedMenu, // Style.primaryColor.withOpacity(0.125),
+                color: Style.dashboardSelectedMenu,
                 padding: EdgeInsets.only(left: 10, right: 10),
                 child: SingleChildScrollView(
                   scrollDirection: Axis.vertical,
@@ -39,7 +39,7 @@ class _HomeScreenState extends ScreenState<HomeScreen> {
                           image:
                               AssetImage('assets/karee.png', package: 'karee')),
                       Text(
-                        'Another way to build Beautiful Application using Flutter with MVC',
+                        'Another way to build Beautiful Application using Flutter',
                         style: TextStyle(
                             fontSize: 30,
                             color: Style.whiteText,
@@ -48,8 +48,12 @@ class _HomeScreenState extends ScreenState<HomeScreen> {
                       ),
                       SizedBox(height: 20),
                       Text(
-                        'Verision v2.1.0',
-                        style: TextStyle(fontSize: 20, color: Style.whiteText),
+                        'version v2.2.0',
+                        style: TextStyle(
+                            fontSize: 20,
+                            color: Style.whiteText.withValues(alpha: 0.8),
+                            fontStyle: FontStyle.italic,
+                            fontWeight: FontWeight.w200),
                       ),
                       SizedBox(height: 20),
                       ElevatedButton(
@@ -77,6 +81,7 @@ class _HomeScreenState extends ScreenState<HomeScreen> {
                         ),
                         label: Text('Dashboard'),
                       ),
+                      SizedBox(height: 10)
                     ],
                   ),
                 ))));

@@ -17,6 +17,9 @@ class ErrorContactAddress {
   /// The support address that you can provide to your end users.
   final String appSupportEmail;
 
+  /// Constructor of this class. All parameters are required.
+  /// You can use this object everywhere in your application through
+  /// KareeMaterialApp.globalErrorContactAddress
   const ErrorContactAddress(
       {required this.appName,
       required this.appSupportEmail,

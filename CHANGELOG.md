@@ -1,3 +1,19 @@
+## v2.2.6
+  * Plane: Karee framework fix i18n for release.
+    * Minor Fix.
+## v2.2.5+1
+  * Plane: Karee framework fix i18n for release.
+    * Fix translation for module loaded at same time as root.
+## v2.2.5
+  * Plane: Karee framework fix i18n for release.
+    * Fix the translation in release mode.
+## v2.2.4
+  * Plane: Karee framework fix navigation.
+    * Exporting RouteActivation and ActivationRouteContext.
+## v2.2.3+4
+  * Plane: Karee framework fix.
+    * Fixing bugs on Observer from persisted Observablee.
+    * Adding context to RouteActivation.
 ## v2.2.3+3
   * Plane: Karee framework fix.
     * Update BucketActionButton.

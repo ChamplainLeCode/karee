@@ -206,8 +206,7 @@ class _KareeRouterErrorWidgetState extends ScreenState<KareeRouterErrorWidget>
                                 fontWeight: FontWeight.bold,
                                 fontSize: 12)),
                       ),
-                      errorSolution[errorCode]?.call(context, env as List) ??
-                          Container()
+                      errorSolution(errorCode, context, env as List)
                     ],
                   ))),
               SizedBox(

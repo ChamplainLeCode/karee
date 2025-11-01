@@ -4,7 +4,7 @@ import 'package:karee/widgets.dart';
 /*
  * @Author Champlain Marius Bakop
  * @email champlainmarius20@gmail.com
- * @github ChamplainLeCode
+ * @github [ChamplainLeCode](https://github.com/ChamplainLeCode)
  * 
  */
 class IconBadge extends StatelessComponent {
@@ -17,7 +17,8 @@ class IconBadge extends StatelessComponent {
   final Color badgeColor;
 
   IconBadge(
-      {this.size = 50,
+      {super.key,
+      this.size = 50,
       this.number = 0,
       required this.icon,
       required this.callBack,

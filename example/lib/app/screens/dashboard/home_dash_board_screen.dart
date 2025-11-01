@@ -13,18 +13,20 @@ import 'components/dashboard_side_menu.dart';
 
 /// Generated Karee Screen
 /// @email champlainmarius20@gmail.com
-/// @github ChamplainLeCode
+/// @github [ChamplainLeCode](https://github.com/ChamplainLeCode)
 ///
 ///
 ///
 /// `HomeDashBoardScreen` is set as Screen with name `dashboard`
 @Screen('dashboard')
 class HomeDashBoardScreen extends StatefulScreen {
+  HomeDashBoardScreen({super.key});
+
   @override
-  _HomeDashboardScreenState createState() => _HomeDashboardScreenState();
+  HomeDashboardScreenState createState() => HomeDashboardScreenState();
 }
 
-class _HomeDashboardScreenState extends ScreenState<HomeDashBoardScreen> {
+class HomeDashboardScreenState extends ScreenState<HomeDashBoardScreen> {
   Of<int>? selectedIndexObs;
 
   int get minWidth => 600;
@@ -54,9 +56,12 @@ class _HomeDashboardScreenState extends ScreenState<HomeDashBoardScreen> {
               child: Column(children: [
             if (!Utils.isMobileView) DashboardAppBarTool(),
             Expanded(
-                child: RouterWidget(
-                    name: #dashboardRouter,
-                    initial: DashboardKareePresentation())),
+                child: SingleChildScrollView(
+                    padding: EdgeInsets.all(30),
+                    controller: ScrollController(),
+                    child: RouterWidget(
+                        name: #dashboardRouter,
+                        initial: DashboardKareePresentation()))),
             DashboardFooter()
           ]))
         ]));

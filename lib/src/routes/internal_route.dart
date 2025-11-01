@@ -10,7 +10,7 @@ import '../screens/library.dart' show screen;
 ///
 void launchInternalRoute() {
   Route.on(KareeConstants.kareeErrorPath, (param) {
-    screen(KareeConstants.kareeErrorScreenName, RouteMode.PUSH,
+    screen(KareeConstants.kareeErrorScreenName, RouteMode.EMPTY,
         argument: param);
   });
 }

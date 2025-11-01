@@ -83,9 +83,26 @@ enum KareeErrorCode {
   /// by the string didn't exists
   ///
   noRouteFound,
+
+  ///
+  /// Represents a general error that does not fit into other specific categories.
   generalError,
+
+  /// Indicates that the widget is not routable within the application's navigation system.
   notRoutableWidget,
+
+  /// Indicates that the widget is not a Karee screen.
   notKareeScreen,
+
+  /// Error thrown when a routable widget is used incorrectly.
   badUseOfRoutableWidget,
-  noTranslationFile
+
+  /// Indicates that the required translation file is missing.
+  noTranslationFile,
+
+  /// Represents an assertion error encountered during execution.
+  assertionError,
+
+  /// Error thrown when enabling internationalization (i18n) fails.
+  enableI18nError,
 }
